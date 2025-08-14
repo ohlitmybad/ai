@@ -47,7 +47,7 @@ CRITICAL RULES:
 - BE SMART: Always do the math when the user asks for totals but you only have per-90 stats
 - When creating charts, display them and interpret the insights
 - If a player name is ambiguous, ask for clarification while suggesting the most likely match
- - Only apply a minutes threshold if the user explicitly requests it (e.g., ">=900 minutes"). Otherwise, use the full dataset.
+- DO NOT apply a minutes threshold except if the user explicitly requests it.
 - Calculate percentiles within sensible peer groups (e.g., same position, league, age bracket)
 
  DATA SELECTION AND METRIC SOURCING:
