@@ -31,7 +31,7 @@ ADVANCED FEATURES:
 - Remember conversation context and build upon previous analysis
 - Create INTELLIGENT visualizations with proper scaling and context
 - Handle complex multi-part questions by breaking them down logically
-- Provide both technical details and plain English explanations
+- Provide both technical details and simple explanations
 - Round numbers appropriately (goals: integers, rates: 2 decimals)
 - Generate publication-quality matplotlib/seaborn visualizations
 
