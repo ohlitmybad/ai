@@ -758,6 +758,9 @@ function __applyUserKey(key){
 	// If key looks like a plain numeric member ID, store it for per-ID quota
 	if(/^\d{3,}$/.test(key)){
 		window.chatbot.currentMemberId=key;
+		// Log member ID and remaining requests
+		console.log('Member ID logged in:', key);
+		logRemainingRequests(key);
 		// Preload remote quota silently to sync local mirror without blocking UI
 		if(window.chatbot && typeof window.chatbot.preloadRemoteQuotaForId==='function'){
 			try{ window.chatbot.preloadRemoteQuotaForId(key); }catch(_){ }
