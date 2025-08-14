@@ -1,757 +1,600 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
-    <script type="module" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
+    <meta name="robots" content="noindex">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
-
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-            background-color: #f5f7fa;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .container {
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(30px);
-            border-radius: 10px;
-            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
-            width: 100%;
-            max-width: 1400px;
-            height: 95vh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.4);
-        }
-
-        .header {
-            background: #ffffff;
-            color: #333333;
-            height: 70px;
-            position: relative;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 28px;
-            border-bottom: 1px solid #e0e0e0;
-        }
-
-        .header h1 {
-            font-size: 32px;
-            font-weight: 900;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: #333333;
-            order: 1;
-        }
-
-        .header p {
-            opacity: 0.95;
-            font-size: 16px;
-            font-weight: 600;
-        }
-
-        .status {
-            background: rgba(255, 255, 255, 0.3);
-            padding: 10px 18px;
-            border-radius: 25px;
-            font-size: 13px;
-            backdrop-filter: blur(15px);
-            font-weight: 700;
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            order: 3;
-            margin-left: auto;
-        }
-
-        .status-indicator {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #4ade80;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        .intelligence-indicator {
-            position: absolute;
-            bottom: 15px;
-            right: 28px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 12px;
-            opacity: 0.8;
-        }
-
-        .brain-icon {
-            width: 16px;
-            height: 16px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            animation: brainPulse 2s infinite;
-        }
-
-        @keyframes brainPulse {
-            0%, 100% { opacity: 0.5; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.1); }
-        }
-
-        .chat-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        .messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 28px;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            gap: 24px;
-            background: linear-gradient(to bottom, #fafbff, #f8fafc);
-        }
-
-        .message {
-            display: flex;
-            gap: 16px;
-            max-width: 95%;
-            animation: messageSlide 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-
-        @keyframes messageSlide {
-            from { opacity: 0; transform: translateY(20px) scale(0.95); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        .message.user {
-            align-self: flex-end;
-            flex-direction: row-reverse;
-        }
-
-        .message-content {
-            background: white;
-            border-radius: 24px;
-            padding: 20px 24px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            line-height: 1.7;
-            font-size: 15px;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            position: relative;
-        }
-
-        .message.user .message-content {
-            background: #e6f0ff;
-            color: #0f172a;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
-            border: 1px solid #c7d7ff;
-        }
-
-        .message.assistant .message-content {
-            background: #ffffff;
-            color: inherit;
-        }
-
-        .avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 18px;
-            flex-shrink: 0;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-            border: 3px solid white;
-            overflow: hidden;
-        }
-
-        .avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        .message.user .avatar {
-            background: #3498db;
-            color: white;
-        }
-
-        .message.assistant .avatar {
-            background: white;
-            color: white;
-        }
-
-        .input-container {
-            padding: 16px 28px 9px 28px;
-            border-top: 1px solid #e2e8f0;
-            background: white;
-            box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.1);
-        }
-
-        .suggestions {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 16px;
-            flex-wrap: wrap;
-            max-height: 80px;
-            overflow-y: auto;
-        }
-
-        .suggestion-chip {
-            background: #f0f0f0;
-            border: 1px solid #ddd;
-            border-radius: 16px;
-            padding: 6px 12px;
-            font-size: 12px;
-            width: 119px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            white-space: nowrap;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .suggestion-chip span {
-            flex: 1;
-            text-align: center;
-        }
-
-        .suggestion-chip:hover {
-            background: #e0e0e0;
-            transform: translateY(-1px);
-        }
-
-        .input-wrapper {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            background: #f8fafc;
-            border-radius: 28px;
-            padding: 8px;
-            border: 2px solid #e2e8f0;
-            transition: all 0.3s ease;
-        }
-
-        .input-wrapper:focus-within {
-            border-color: #3498db;
-            background: white;
-        }
-
-        .input-field {
-            flex: 1;
-            border: none;
-            border-radius: 20px;
-            padding: 16px 14px;
-            font-size: 15px;
-            font-family: inherit;
-            outline: none;
-            resize: none;
-            min-height: 24px;
-            max-height: 150px;
-            background: transparent;
-            line-height: 1.5;
-        }
-
-        .send-button {
-            background: #3498db;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 45px;
-            height: 45px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
-            flex-shrink: 0;
-            box-shadow: 0 8px 24px rgba(52, 152, 219, 0.3);
-        }
-
-        .send-button:hover:not(:disabled) {
-            transform: scale(1.1);
-            box-shadow: 0 12px 32px rgba(52, 152, 219, 0.45);
-        }
-
-        .send-button:active:not(:disabled) {
-            transform: scale(0.95);
-        }
-
-        .send-button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .send-button.stop {
-            background: #3498db;
-            box-shadow: 0 8px 24px rgba(52, 152, 219, 0.3);
-        }
-        .send-button.stop:hover:not(:disabled) {
-            box-shadow: 0 12px 32px rgba(52, 152, 219, 0.45);
-        }
-
-        /* Typing indicator bubble */
-        .typing-message .message-content {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .typing {
-            display: inline-flex;
-            gap: 6px;
-            align-items: center;
-        }
-        .typing-dot {
-            width: 8px;
-            height: 8px;
-            background: #9ec5fe;
-            border-radius: 50%;
-            animation: blink 1.2s infinite ease-in-out;
-        }
-        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
-        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
-        @keyframes blink {
-            0%, 80%, 100% { opacity: 0.3; transform: translateY(0); }
-            40% { opacity: 1; transform: translateY(-2px); }
-        }
-
-        .input-controls {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            /* Ensure symmetrical padding with left side (8px wrapper padding + 20px textarea left padding) */
-            margin-right: 12px;
-        }
-
-        .chart-toggle {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            background: #e2e8f0;
-            color: #64748b;
-            border: none;
-            padding: 10px 14px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            white-space: nowrap;
-            min-width: 90px;
-            position: relative;
-            justify-content: center;
-        }
-
-        .chart-toggle:hover {
-            background: #cbd5e1;
-        }
-
-        .chart-toggle.active {
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: white;
-            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
-        }
-
-        .chart-toggle.active:hover {
-            background: linear-gradient(135deg, #059669, #047857);
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
-        }
-
-        .toggle-text {
-            font-size: 12px;
-            font-weight: 700;
-            text-align: center;
-            width: 100%;
-        }
-
-        .chart-toggle .icon-left {
-            position: absolute;
-            left: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-        /* Header icon button (like chart-toggle but compact and icon-only) */
-        .header-action {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #e2e8f0;
-            color: #64748b;
-            border: none;
-            width: 36px;
-            height: 36px;
-            border-radius: 22px;
-            font-size: 15px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            order: 2;
-            margin-left: 17px;
-        }
-        .header-action:hover { background: #cbd5e1; }
-
-        .loading {
-            display: flex;
-            gap: 6px;
-            align-items: center;
-        }
-
-        .loading-dot {
-            width: 8px;
-            height: 8px;
-            background: white;
-            border-radius: 50%;
-            animation: loadingBounce 1.6s infinite ease-in-out;
-        }
-
-        .loading-dot:nth-child(1) { animation-delay: -0.32s; }
-        .loading-dot:nth-child(2) { animation-delay: -0.16s; }
-
-        @keyframes loadingBounce {
-            0%, 80%, 100% { transform: scale(0.6); opacity: 0.5; }
-            40% { transform: scale(1); opacity: 1; }
-        }
-
-
-
-        .insight-card {
-            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
-            border-radius: 16px;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
-        }
-
-        .insight-card:hover {
-            border-color: #3498db;
-            transform: translateY(-4px);
-            box-shadow: 0 12px 32px rgba(52, 152, 219, 0.2);
-        }
-
-        .insight-value {
-            font-size: 28px;
-            font-weight: 900;
-            color: #3498db;
-            margin-bottom: 8px;
-        }
-
-        .insight-label {
-            font-size: 13px;
-            color: #64748b;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .streaming-indicator {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(34, 197, 94, 0.1);
-            color: #16a34a;
-            padding: 6px 12px;
-            border-radius: 16px;
-            font-size: 12px;
-            font-weight: 600;
-            margin-top: 12px;
-        }
-
-        .streaming-dot {
-            width: 6px;
-            height: 6px;
-            background: #16a34a;
-            border-radius: 50%;
-            animation: pulse 1.5s infinite;
-        }
-
-        .error {
-            background: linear-gradient(135deg, #fef2f2, #fee2e2);
-            border: 2px solid #fca5a5;
-            color: #dc2626;
-            border-radius: 16px;
-            padding: 20px;
-            margin: 16px 0;
-            font-weight: 600;
-        }
-
-        .success {
-            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
-            border: 2px solid #86efac;
-            color: #16a34a;
-            border-radius: 16px;
-            padding: 20px;
-            margin: 16px 0;
-            font-weight: 600;
-        }
-
-        .chart-container {
-            background: white;
-            border-radius: 20px;
-            padding: 24px;
-            margin: 16px 0;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            border: 1px solid #e2e8f0;
-        }
-
-        .player-spotlight {
-            background: #ffffff;
-            color: #333333;
-            border-radius: 20px;
-            padding: 24px;
-            margin: 20px 0;
-            position: relative;
-            overflow: hidden;
-            border: 1px solid #e2e8f0;
-        }
-
-        .player-spotlight::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 100px;
-            height: 100px;
-            background: rgba(0, 0, 0, 0.03);
-            border-radius: 50%;
-            transform: translate(30px, -30px);
-        }
-
-        .performance-bar {
-            background: rgba(255, 255, 255, 0.2);
-            height: 8px;
-            border-radius: 4px;
-            margin: 8px 0;
-            overflow: hidden;
-        }
-
-        .performance-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #4ade80, #22c55e);
-            border-radius: 4px;
-            transition: width 1s ease;
-        }
-
-        pre {
-            background: #1e293b;
-            color: #e2e8f0;
-            border-radius: 16px;
-            padding: 20px;
-            overflow-x: auto;
-            font-size: 14px;
-            margin: 16px 0;
-            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
-            line-height: 1.6;
-        }
-
-        code {
-            background: #f1f5f9;
-            color: #475569;
-            padding: 4px 8px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            font-family: 'SF Mono', Monaco, monospace;
-        }
-
-        .messages::-webkit-scrollbar {
-            width: 10px;
-        }
-
-        .messages::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 5px;
-        }
-
-        .messages::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.05);
-            border-radius: 5px;
-        }
-
-        .player-selector {
-            background: #fff3cd;
-            border: 2px solid #ffeaa7;
-            border-radius: 16px;
-            padding: 16px;
-            margin: 16px 0;
-        }
-
-        .player-option {
-            display: block;
-            width: 100%;
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 12px;
-            margin: 8px 0;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .player-option:hover {
-            background: #f8f9fa;
-            border-color: #3498db;
-        }
-
-        .disclaimer {
-            text-align: center;
-            font-size: 11px;
-            color: #64748b;
-            margin: 8px auto 0 auto;
-            opacity: 0.8;
-            font-weight: 400;
-            display: block;
-            width: 100%;
-        }
-
-        @media (max-width: 768px) {
-
-
-            .header {
-                padding: 20px;
-            }
-
-            .header h1 {
-                font-size: 24px;
-            }
-
-            .messages {
-                padding: 20px;
-            }
-
-
-        }
-        /* Markdown table styling and controls */
-        .table-container {
-            margin-top: 16px;
-            margin-bottom: 16px; /* add spacing after tables to separate following sentences */
-            overflow-x: auto;
-            border-radius: 12px;
-            border: 1px solid #e2e8f0;
-            background: white;
-        }
-        .table-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0;
-            padding: 10px 14px;
-            background-color: #f8fafc;
-            border-radius: 12px 12px 0 0;
-            border-bottom: 1px solid #e2e8f0;
-            font-size: 12px;
-            color: #64748b;
-            font-weight: 600;
-        }
-        .expand-button {
-            background: #3498db;
-            color: #ffffff;
-            border: none;
-            padding: 6px 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: 700;
-        }
-        .expand-button:hover { opacity: 0.9; }
-        table.data-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 14px;
-        }
-        table.data-table th, table.data-table td {
-            padding: 10px 12px;
-            text-align: left;
-            border-bottom: 1px solid #e2e8f0;
-        }
-        table.data-table th {
-            background: #f8fafc;
-            font-weight: 700;
-            color: #334155;
-        }
-        table.data-table tr:hover { background: #f9fafb; }
-        .table-container.collapsed tbody tr:nth-child(n+11) { display: none; }
-        /* Markdown body refinements */
-        .markdown-body { line-height: 1.75; }
-        .markdown-body p { margin: 0 0 1rem 0; }
-        .markdown-body ul, .markdown-body ol {
-            margin: 0.9rem 0 1.1rem 0;
-            padding-left: 1.6rem;
-            list-style-position: outside; /* hang bullets outside the text block */
-        }
-        .markdown-body li + li { margin-top: 0.45rem; }
-        .markdown-body h1, .markdown-body h2, .markdown-body h3,
-        .markdown-body h4, .markdown-body h5, .markdown-body h6 {
-            margin: 0.75rem 0 0.55rem 0;
-            line-height: 1.25;
-        }
-        .markdown-body blockquote {
-            margin: 1rem 0;
-            padding: 0.75rem 1rem;
-            border-left: 5px solid #e2e8f0;
-            background: #f8fafc;
-            border-radius: 6px;
-            color: #475569;
-        }
-        .markdown-body hr {
-            border: none;
-            border-top: 1px solid #e2e8f0;
-            margin: 1.25rem 0;
-        }
-        /* Avoid extra trailing space inside bubbles */
-        .markdown-body > :last-child { margin-bottom: 0 !important; }
-        /* Compact single-line messages */
-        .markdown-body.compact { line-height: 1.45; }
-        .markdown-body.compact p { margin: 0; }
-
-        /* lighter, subtler status text */
-.status { font-weight: 500; }
-.status .status-text { font-weight: 500; opacity: 0.9; }
-   
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.5/dist/purify.min.js"></script>
+
+<style>
+
+    * {
+     margin: 0;
+     padding: 0;
+     box-sizing: border-box;
+}
+ body {
+     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+     background-color: #f5f7fa;
+     min-height: 100vh;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     padding: 20px;
+}
+ .container {
+     background: rgba(255, 255, 255, 0.98);
+     backdrop-filter: blur(30px);
+     border-radius: 10px;
+     box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
+     width: 100%;
+     max-width: 1400px;
+     height: 95vh;
+     display: flex;
+     flex-direction: column;
+     overflow: hidden;
+     border: 1px solid rgba(255, 255, 255, 0.4);
+}
+ .header {
+     background: #ffffff;
+     color: #333333;
+     height: 70px;
+     position: relative;
+     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+     padding: 0 28px;
+     border-bottom: 1px solid #e0e0e0;
+}
+ .header h1 {
+     font-size: 32px;
+     font-weight: 900;
+     display: flex;
+     align-items: center;
+     gap: 12px;
+     color: #333333;
+     order: 1;
+}
+ .header p {
+     opacity: 0.95;
+     font-size: 16px;
+     font-weight: 600;
+}
+ .status {
+     background: rgba(255, 255, 255, 0.3);
+     padding: 10px 18px;
+     border-radius: 25px;
+     font-size: 13px;
+     backdrop-filter: blur(15px);
+     font-weight: 700;
+     border: 1px solid rgba(255, 255, 255, 0.4);
+     display: flex;
+     align-items: center;
+     gap: 8px;
+     order: 3;
+     margin-left: auto;
+}
+ .status-indicator {
+     width: 8px;
+     height: 8px;
+     border-radius: 50%;
+     background: #4ade80;
+     animation: pulse 2s infinite;
+}
+ @keyframes pulse {
+     0%, 100% {
+         opacity: 1;
+    }
+     50% {
+         opacity: 0.5;
+    }
+}
+ .chat-container {
+     flex: 1;
+     display: flex;
+     flex-direction: column;
+     overflow: hidden;
+}
+ .messages {
+     flex: 1;
+     overflow-y: auto;
+     padding: 28px;
+     display: flex;
+     flex-direction: column;
+     justify-content: flex-start;
+     gap: 24px;
+     background: linear-gradient(to bottom, #fafbff, #f8fafc);
+}
+ .message {
+     display: flex;
+     gap: 16px;
+     max-width: 95%;
+     animation: messageSlide 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+ @keyframes messageSlide {
+     from {
+         opacity: 0;
+         transform: translateY(20px) scale(0.95);
+    }
+     to {
+         opacity: 1;
+         transform: translateY(0) scale(1);
+    }
+}
+ .message.user {
+     align-self: flex-end;
+     flex-direction: row-reverse;
+}
+ .message-content {
+     background: white;
+     border-radius: 24px;
+     padding: 20px 24px;
+     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+     line-height: 1.7;
+     font-size: 15px;
+     border: 1px solid rgba(0, 0, 0, 0.05);
+     position: relative;
+}
+ .message.user .message-content {
+     background: #e6f0ff;
+     color: #0f172a;
+     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+     border: 1px solid #c7d7ff;
+}
+ .message.assistant .message-content {
+     background: #ffffff;
+     color: inherit;
+}
+ .avatar {
+     width: 48px;
+     height: 48px;
+     border-radius: 50%;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     font-weight: 800;
+     font-size: 18px;
+     flex-shrink: 0;
+     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+     border: 3px solid white;
+     overflow: hidden;
+}
+ .avatar img {
+     width: 100%;
+     height: 100%;
+     object-fit: cover;
+     display: block;
+}
+ .message.user .avatar {
+     background: #3498db;
+     color: white;
+}
+ .message.assistant .avatar {
+     background: white;
+     color: white;
+}
+ .input-container {
+     padding: 16px 28px 9px 28px;
+     border-top: 1px solid #e2e8f0;
+     background: white;
+     box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.1);
+}
+ .suggestions {
+     display: flex;
+     gap: 8px;
+     margin-bottom: 16px;
+     flex-wrap: wrap;
+     max-height: 80px;
+     overflow-y: auto;
+}
+ .suggestion-chip {
+     background: #f0f0f0;
+     border: 1px solid #ddd;
+     border-radius: 16px;
+     padding: 6px 12px;
+     font-size: 12px;
+     width: 119px;
+     cursor: pointer;
+     transition: all 0.2s ease;
+     white-space: nowrap;
+     display: inline-flex;
+     align-items: center;
+     gap: 6px;
+}
+ .suggestion-chip span {
+     flex: 1;
+     text-align: center;
+}
+ .suggestion-chip:hover {
+     background: #e0e0e0;
+     transform: translateY(-1px);
+}
+ .input-wrapper {
+     display: flex;
+     gap: 8px;
+     align-items: center;
+     background: #f8fafc;
+     border-radius: 28px;
+     padding: 8px;
+     border: 2px solid #e2e8f0;
+     transition: all 0.3s ease;
+}
+ .input-wrapper:focus-within {
+     border-color: #3498db;
+     background: white;
+}
+ .input-field {
+     flex: 1;
+     border: none;
+     border-radius: 20px;
+     padding: 16px 14px;
+     font-size: 15px;
+     font-family: inherit;
+     outline: none;
+     resize: none;
+     min-height: 24px;
+     max-height: 150px;
+     background: transparent;
+     line-height: 1.5;
+}
+ .send-button {
+     background: #3498db;
+     color: white;
+     border: none;
+     border-radius: 50%;
+     width: 45px;
+     height: 45px;
+     cursor: pointer;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     font-size: 20px;
+     transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+     flex-shrink: 0;
+     box-shadow: 0 8px 24px rgba(52, 152, 219, 0.3);
+}
+ .send-button:hover:not(:disabled) {
+     transform: scale(1.1);
+     box-shadow: 0 12px 32px rgba(52, 152, 219, 0.45);
+}
+ .send-button:active:not(:disabled) {
+     transform: scale(0.95);
+}
+ .send-button:disabled {
+     opacity: 0.6;
+     cursor: not-allowed;
+     transform: none;
+}
+ .send-button.stop {
+     background: #3498db;
+     box-shadow: 0 8px 24px rgba(52, 152, 219, 0.3);
+}
+ .send-button.stop:hover:not(:disabled) {
+     box-shadow: 0 12px 32px rgba(52, 152, 219, 0.45);
+}
+/* Typing indicator bubble */
+ .typing-message .message-content {
+     display: inline-flex;
+     align-items: center;
+     gap: 10px;
+}
+ .typing {
+     display: inline-flex;
+     gap: 6px;
+     align-items: center;
+}
+ .typing-dot {
+     width: 8px;
+     height: 8px;
+     background: #9ec5fe;
+     border-radius: 50%;
+     animation: blink 1.2s infinite ease-in-out;
+}
+ .typing-dot:nth-child(2) {
+     animation-delay: 0.2s;
+}
+ .typing-dot:nth-child(3) {
+     animation-delay: 0.4s;
+}
+ @keyframes blink {
+     0%, 80%, 100% {
+         opacity: 0.3;
+         transform: translateY(0);
+    }
+     40% {
+         opacity: 1;
+         transform: translateY(-2px);
+    }
+}
+ .input-controls {
+     display: flex;
+     align-items: center;
+     gap: 8px;
+     margin-right: 12px;
+}
+ .chart-toggle {
+     display: flex;
+     align-items: center;
+     gap: 6px;
+     background: #e2e8f0;
+     color: #64748b;
+     border: none;
+     padding: 10px 14px;
+     border-radius: 20px;
+     font-size: 13px;
+     font-weight: 600;
+     cursor: pointer;
+     transition: all 0.2s ease;
+     white-space: nowrap;
+     min-width: 90px;
+     position: relative;
+     justify-content: center;
+}
+ .chart-toggle:hover {
+     background: #cbd5e1;
+}
+ .chart-toggle.active {
+     background: linear-gradient(135deg, #10b981, #059669);
+     color: white;
+     box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
+ .chart-toggle.active:hover {
+     background: linear-gradient(135deg, #059669, #047857);
+     box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+ .toggle-text {
+     font-size: 12px;
+     font-weight: 700;
+     text-align: center;
+     width: 100%;
+}
+ .chart-toggle .icon-left {
+     position: absolute;
+     left: 12px;
+     top: 50%;
+     transform: translateY(-50%);
+}
+ .header-action {
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     background: #e2e8f0;
+     color: #64748b;
+     border: none;
+     width: 36px;
+     height: 36px;
+     border-radius: 22px;
+     font-size: 15px;
+     cursor: pointer;
+     transition: all 0.2s ease;
+     order: 2;
+     margin-left: 17px;
+}
+ .header-action:hover {
+     background: #cbd5e1;
+}
+ .loading {
+     display: flex;
+     gap: 6px;
+     align-items: center;
+}
+ .loading-dot {
+     width: 8px;
+     height: 8px;
+     background: white;
+     border-radius: 50%;
+     animation: loadingBounce 1.6s infinite ease-in-out;
+}
+ .loading-dot:nth-child(1) {
+     animation-delay: -0.32s;
+}
+ .loading-dot:nth-child(2) {
+     animation-delay: -0.16s;
+}
+ @keyframes loadingBounce {
+     0%, 80%, 100% {
+         transform: scale(0.6);
+         opacity: 0.5;
+    }
+     40% {
+         transform: scale(1);
+         opacity: 1;
+    }
+}
+ .error {
+     background: linear-gradient(135deg, #fef2f2, #fee2e2);
+     border: 2px solid #fca5a5;
+     color: #dc2626;
+     border-radius: 16px;
+     padding: 20px;
+     margin: 16px 0;
+     font-weight: 600;
+}
+ .success {
+     background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+     border: 2px solid #86efac;
+     color: #16a34a;
+     border-radius: 16px;
+     padding: 20px;
+     margin: 16px 0;
+     font-weight: 600;
+}
+ .chart-container {
+     background: white;
+     border-radius: 20px;
+     padding: 24px;
+     margin: 16px 0;
+     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+     border: 1px solid #e2e8f0;
+}
+ pre {
+     background: #1e293b;
+     color: #e2e8f0;
+     border-radius: 16px;
+     padding: 20px;
+     overflow-x: auto;
+     font-size: 14px;
+     margin: 16px 0;
+     font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+     line-height: 1.6;
+}
+ code {
+     background: #f1f5f9;
+     color: #475569;
+     padding: 4px 8px;
+     border-radius: 8px;
+     font-size: 14px;
+     font-weight: 600;
+     font-family: 'SF Mono', Monaco, monospace;
+}
+ .messages::-webkit-scrollbar {
+     width: 10px;
+}
+ .messages::-webkit-scrollbar-thumb {
+     background: #cbd5e1;
+     border-radius: 5px;
+}
+ .messages::-webkit-scrollbar-track {
+     background: rgba(0, 0, 0, 0.05);
+     border-radius: 5px;
+}
+ .disclaimer {
+     text-align: center;
+     font-size: 11px;
+     color: #64748b;
+     margin: 8px auto 0 auto;
+     opacity: 0.8;
+     font-weight: 400;
+     display: block;
+     width: 100%;
+}
+ @media (max-width: 768px) {
+     .header {
+         padding: 20px;
+    }
+     .header h1 {
+         font-size: 24px;
+    }
+     .messages {
+         padding: 20px;
+    }
+}
+/* Markdown table styling and controls */
+ .table-container {
+     margin-top: 16px;
+     margin-bottom: 16px;
+    /* add spacing after tables to separate following sentences */
+     overflow-x: auto;
+     border-radius: 12px;
+     border: 1px solid #e2e8f0;
+     background: white;
+}
+ .table-controls {
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     margin-bottom: 0;
+     padding: 10px 14px;
+     background-color: #f8fafc;
+     border-radius: 12px 12px 0 0;
+     border-bottom: 1px solid #e2e8f0;
+     font-size: 12px;
+     color: #64748b;
+     font-weight: 600;
+}
+ .expand-button {
+     background: #3498db;
+     color: #ffffff;
+     border: none;
+     padding: 6px 10px;
+     border-radius: 8px;
+     cursor: pointer;
+     font-size: 12px;
+     font-weight: 700;
+}
+ .expand-button:hover {
+     opacity: 0.9;
+}
+ table.data-table {
+     width: 100%;
+     border-collapse: collapse;
+     font-size: 14px;
+}
+ table.data-table th, table.data-table td {
+     padding: 10px 12px;
+     text-align: left;
+     border-bottom: 1px solid #e2e8f0;
+}
+ table.data-table th {
+     background: #f8fafc;
+     font-weight: 700;
+     color: #334155;
+}
+ table.data-table tr:hover {
+     background: #f9fafb;
+}
+ .table-container.collapsed tbody tr:nth-child(n+11) {
+     display: none;
+}
+ .markdown-body {
+     line-height: 1.75;
+}
+ .markdown-body p {
+     margin: 0 0 1rem 0;
+}
+ .markdown-body ul, .markdown-body ol {
+     margin: 0.9rem 0 1.1rem 0;
+     padding-left: 1.6rem;
+     list-style-position: outside;
+}
+ .markdown-body li + li {
+     margin-top: 0.45rem;
+}
+ .markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4, .markdown-body h5, .markdown-body h6 {
+     margin: 0.75rem 0 0.55rem 0;
+     line-height: 1.25;
+}
+ .markdown-body blockquote {
+     margin: 1rem 0;
+     padding: 0.75rem 1rem;
+     border-left: 5px solid #e2e8f0;
+     background: #f8fafc;
+     border-radius: 6px;
+     color: #475569;
+}
+ .markdown-body hr {
+     border: none;
+     border-top: 1px solid #e2e8f0;
+     margin: 1.25rem 0;
+}
+ .markdown-body > :last-child {
+     margin-bottom: 0 !important;
+}
+ .markdown-body.compact {
+     line-height: 1.45;
+}
+ .markdown-body.compact p {
+     margin: 0;
+}
+ .status {
+     font-weight: 500;
+}
+ .status .status-text {
+     font-weight: 500;
+     opacity: 0.9;
+}
+ 
    
 
    </style>
-
-
-
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.5/dist/purify.min.js"></script>
 </head>
-
 <body>
 
 
@@ -901,7 +744,7 @@ document.addEventListener('DOMContentLoaded',function(){
 
     <script>
 
-		const _0x1703c5=_0x4ff4;(function(_0x4adef1,_0x4ff36e){const _0x4bb5be=_0x4ff4,_0x3d4478=_0x4adef1();while(!![]){try{const _0x525d97=parseInt(_0x4bb5be(0x27e))/0x1+parseInt(_0x4bb5be(0x1d5))/0x2+-parseInt(_0x4bb5be(0x2c8))/0x3*(-parseInt(_0x4bb5be(0x2d5))/0x4)+parseInt(_0x4bb5be(0x251))/0x5+-parseInt(_0x4bb5be(0x1cb))/0x6+parseInt(_0x4bb5be(0x24d))/0x7+-parseInt(_0x4bb5be(0x267))/0x8;if(_0x525d97===_0x4ff36e)break;else _0x3d4478['push'](_0x3d4478['shift']());}catch(_0x22d7dc){_0x3d4478['push'](_0x3d4478['shift']());}}}(_0x4c1a,0xddfc3));const REMOTE_QUOTA_URL=_0x1703c5(0x28b);function __jsonp(_0xf86115,_0x1fa468=0x1f40){return new Promise((_0x4e7669,_0x183e7a)=>{const _0xc1b988=_0x4ff4,_0x3a4962='cb'+Math['random']()[_0xc1b988(0x2cf)](0x24)['slice'](0x2),_0x5b1407=document[_0xc1b988(0x230)]('script'),_0x1e6461=setTimeout(()=>{_0x1da753(),_0x183e7a(new Error('JSONP\x20timeout'));},_0x1fa468);function _0x1da753(){const _0x203bd2=_0xc1b988;if(_0x5b1407[_0x203bd2(0x24a)])_0x5b1407['parentNode'][_0x203bd2(0x1ce)](_0x5b1407);try{delete window[_0x3a4962];}catch(_0x46b8ea){window[_0x3a4962]=undefined;}clearTimeout(_0x1e6461);}window[_0x3a4962]=_0x4d5034=>{_0x1da753(),_0x4e7669(_0x4d5034);},_0x5b1407['src']=_0xf86115+(_0xf86115[_0xc1b988(0x215)]('?')?'&':'?')+'callback='+_0x3a4962,_0x5b1407['onerror']=()=>{_0x1da753(),_0x183e7a(new Error('JSONP\x20error'));},document[_0xc1b988(0x1b9)]['appendChild'](_0x5b1407);});}function _0x4c1a(){const _0x57c583=['failed','auto','addMessage','Analysis\x20failed:\x20','expanded','radar','then','createObjectURL','push','currentMemberId','Analysis\x20','\x0aHow\x20can\x20I\x20help\x20you\x20today?\x20<br><br>\x0aI\x20am\x20trained\x20on\x20the\x202024/25\x20and\x202025\x20DataMB\x20dataset\x20(40\x20leagues).\x20I\x20can\x20answer\x20any\x20question\x20about\x20the\x20data\x20and\x20handle\x20complex\x20requests\x20—\x20from\x20metric\x20definitions\x20to\x20advanced\x20analysis,\x20scouting\x20reports,\x20and\x20deeper\x20insights.\x20<br><br>Enable\x20the\x20graph\x20toggle\x20for\x20on-demand\x20charts\x20and\x20visual\x20queries.\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','list','assistantId','bootstrapPromise','preventDefault','pollRunStatus','Enter','height','checkQuotaAndIncrement','parentNode','DOMContentLoaded','chartToggle','5752873dQDaKz','count','last_error','setupEventListeners','7429045zPXBJg','Bundesliga','setLoading','.table-container','data-query','message\x20','div','statusText','keypress','messagesContainer','<i\x20class=\x22fas\x20fa-stop\x22></i>','match','xg\x20vs\x20goals','AbortError','</span></div>','https://api.openai.com/v1/threads/','top','suggestions','showDataInsights','querySelector','heatmap','/content','27784000gyNByP','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22status-indicator\x22></div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20class=\x22status-text\x22>','plot','isSending','chatbot','Starting\x20new\x20chat...','Failed\x20to\x20preload\x20quota\x20for','Assistant\x20creation\x20failed:\x20','generateSmartSuggestions','https://api.openai.com/v1/assistants','./instructions.txt','\x0a[ATTACHED\x20FILES:\x20data.csv,\x20guide.html.\x20Access\x20with\x20open(\x27guide.html\x27,\x20encoding=\x27utf-8\x27).]','POST','ready','gpt-4.1-mini','purpose','\x0a\x0a[DEFINITIONS\x20MODE:\x20Use\x20guide.html\x20ONLY\x20for\x20definitions/methodology.\x20Do\x20NOT\x20rely\x20on\x20general\x20knowledge.\x20Quote\x20and\x20cite\x20the\x20relevant\x20section.\x20Parse\x20the\x20local\x20HTML\x20file.\x20Do\x20NOT\x20use\x20network\x20requests.\x20If\x20not\x20found,\x20state:\x20\x22Not\x20specified\x20in\x20the\x20DataMB\x20Guide.\x22]','join','stringify','cancelRun','text/html','\x22\x20alt=\x22Generated\x20Chart\x22\x20style=\x22max-width:\x20100%;\x20border-radius:\x208px;\x20box-shadow:\x200\x202px\x208px\x20rgba(0,0,0,0.08);\x22/>','status','189142QPdwnm','warn','appendChild','replace','formatContent','updateStatus','The\x20ultimate\x20football\x20analytics\x20AI\x20with\x20perfect\x20understanding\x20and\x20natural\x20language\x20processing','Europe\x27s\x20Top\x205','Premier\x20League','isAbortError','forEach','Failed\x20to\x20start\x20a\x20new\x20chat.','&amp;','https://script.google.com/macros/s/AKfycbzeGfINVX-m6MHHga0J520gIhcGONFHFSsyPUNeZdhEiNsaBGshAp9X7L9TQVtZU0IOwA/exec','json','stop','getLatestMessage','radar\x20chart','/messages?limit=1','Cancelled','scatter\x20plot','Ultimate\x20Football\x20Data\x20Analyst','add','/runs','aHR0cHM6Ly93b3JrZXJzLXBsYXlncm91bmQtbGluZ2VyaW5nLWRpc2stMWFhNi5kYXRhbWItZm9vdGJhbGwud29ya2Vycy5kZXYvP3Rva2VuPXN1cGVyc2VjcmV0','newChat','cancelRequested','Create\x20a\x20detailed\x20scouting\x20report\x20for\x20','scrollToBottom','Show\x20All','remove','assistants','MONTHLY_LIMIT','Error','completed','abort','askQuestion','Failed\x20to\x20get\x20response:\x20','Image\x20fetch\x20failed\x20(','saveQuotaCache','&bump=1','/runs/','Serie\x20A','initialize','key','table-container','<br>','\x20results</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20class=\x22expand-button\x22\x20onclick=\x22toggleTable(this)\x22>Show\x20All</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','Run\x20creation\x20failed:\x20','findExistingAssistant','https://api.openai.com/v1/threads','assistant','newChatBtn','tbody\x20tr','classList','fetchController','scrollTop','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','CSV\x20file\x20not\x20found.\x20Status:\x20','scrollHeight','disabled','createThread','&gt;','Loading\x20AI\x20Assistant...','\x0a\x0a[CHARTS\x20ENABLED:\x20Create\x20visualizations\x20when\x20they\x20add\x20value\x20to\x20the\x20analysis]','append','shiftKey','conversationHistory','style','file_id','\x0a[CODE\x20SCAFFOLD:\x0afrom\x20bs4\x20import\x20BeautifulSoup\x0ahtml=open(\x27guide.html\x27,\x20encoding=\x27utf-8\x27).read()\x0asoup=BeautifulSoup(html,\x20\x27html.parser\x27)\x0asec=soup.select_one(\x27#performanceindex\x27)\x20or\x20soup.find(id=\x27performanceindex\x27)\x0aprint(sec.get_text(\x22\x0a\x22,\x20strip=True)\x20if\x20sec\x20else\x20\x22NOT_FOUND\x22)\x0a]','updateContextualSuggestions','application/json','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22error\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','2347719qzcEJE','isInitialized','file','now','addEventListener','</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','Bearer\x20','toString','.message-content','image_file','collapsed','threadId','<i\x20class=\x22fas\x20fa-chevron-up\x22></i>','8wKKWLU','Ligue\x201','value','<div\x20class=\x22suggestion-chip\x22\x20data-query=\x22','message-content','canSendNow','title','Report\x20for\x20','setStopUI','message','toLowerCase','head','acToAdj','renderSuggestions','./guide.html','showError','quotaCache','Eredivisie','displayImageFile','requires_action','contains','min','sendMessage','innerHTML','loading','className','Loading\x20AI\x20assistant...','Status\x20check\x20failed:\x20','trim','4364502MPaktG','Monthly\x20limit\x20(','Unknown\x20error','removeChild','Charts\x20disabled\x20-\x20AI\x20will\x20provide\x20text-only\x20responses','Charts:\x20ON','name','Send','user','You\x20must\x20be\x20logged\x20in','2095464HOvgCk','goals','chart-container','type','background','getElementById','Primeira\x20Liga','#ef4444','playerIndex','age\x20vs\x20performance','createMessageContainer','signal','text/csv','acTo','Quota\x20service\x20unavailable.\x20Please\x20try\x20again\x20later.','toggleCharts','blob','closest','parse','?id=','12px','guideFileId','typingMessageEl','Message\x20failed:\x20','typing-message','code_interpreter','La\x20Liga','Ready!','in_progress','\x20and\x20create\x20a\x20visualization','target','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22typing\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22typing-dot\x22></div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22typing-dot\x22></div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22typing-dot\x22></div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','test','content','DOMPurify','filter','\x20⇒\x20','from','getAttribute','data-table','vs\x20Analysis','assistants=v2','.toggle-text','getQuotaCache','sanitize','Failed\x20to\x20bump\x20quota,\x20updating\x20cache\x20locally:','Login\x20required',')\x20reached\x20for\x20account\x20ID\x20','mwKeyApplied','createAssistant','slice','./data.csv','fileId','uploadCSV','#4ade80','error','after','/cancel','\x20of\x20','textContent','Stop','\x0a[APPLY\x20FILTER:\x20Only\x20include\x20rows\x20where\x20League\x20∈\x20{','role','Setting\x20up\x20conversation...','includes','Monthly\x20limit\x20reached','marked','reuseAssistant','markdown-body','chartsEnabled','sendButton','REMOTE_QUOTA_URL\x20not\x20set','currentRunId','.status-indicator','avatar','https://api.openai.com/v1/files','.suggestion-chip','messageInput','getAdjusted','click','table','length','data','messages','\x0a[GUIDE\x20SEARCH\x20TERM:\x20','active','Upload\x20failed:\x20','resolveLeagueAliases','Compare\x20their\x20key\x20stats\x20with\x20percentiles\x20and\x20visualizations','Running\x20calculations...','OFF','createElement','text','Reading\x20dataset...','best','\x20compact','Service\x20unavailable'];_0x4c1a=function(){return _0x57c583;};return _0x4c1a();}async function remoteGetQuota(_0x55200e){const _0x2564aa=_0x1703c5;if(!REMOTE_QUOTA_URL)throw new Error('REMOTE_QUOTA_URL\x20not\x20set');return __jsonp(REMOTE_QUOTA_URL+_0x2564aa(0x1e8)+encodeURIComponent(_0x55200e));}async function remoteBumpQuota(_0x418aba){const _0x142de4=_0x1703c5;if(!REMOTE_QUOTA_URL)throw new Error(_0x142de4(0x21c));return __jsonp(REMOTE_QUOTA_URL+_0x142de4(0x1e8)+encodeURIComponent(_0x418aba)+_0x142de4(0x2a6));}function _0x4ff4(_0x4d4676,_0x580139){const _0x4c1a9e=_0x4c1a();return _0x4ff4=function(_0x4ff4f8,_0x420413){_0x4ff4f8=_0x4ff4f8-0x1b9;let _0x15e2c6=_0x4c1a9e[_0x4ff4f8];return _0x15e2c6;},_0x4ff4(_0x4d4676,_0x580139);}class UltimateFootballAI{constructor(){const _0x594739=_0x1703c5;this[_0x594739(0x1e2)]=null;const _0x232a54=_0x594739(0x296);this['bootstrapPromise']=fetch(atob(_0x232a54))[_0x594739(0x23c)](_0x5d6e5b=>_0x5d6e5b[_0x594739(0x28c)]())['then'](_0x25a15e=>{const _0x5e1528=_0x594739;return this[_0x5e1528(0x1e2)]=_0x25a15e[_0x5e1528(0x2aa)],this[_0x5e1528(0x1ba)]=this[_0x5e1528(0x223)](),this[_0x5e1528(0x1e2)];}),this[_0x594739(0x243)]=null,this['threadId']=null,this[_0x594739(0x209)]=null,this[_0x594739(0x2c9)]=![],this[_0x594739(0x2c1)]=[],this[_0x594739(0x21d)]=null,this[_0x594739(0x21a)]=![],this[_0x594739(0x218)]=!![],this[_0x594739(0x29e)]=0x1e,this['mwKeyApplied']=![],this[_0x594739(0x23f)]='',this[_0x594739(0x1be)]={},this[_0x594739(0x25a)]=document[_0x594739(0x1da)](_0x594739(0x228)),this[_0x594739(0x222)]=document[_0x594739(0x1da)](_0x594739(0x222)),this[_0x594739(0x21b)]=document['getElementById'](_0x594739(0x21b)),this[_0x594739(0x24c)]=document[_0x594739(0x1da)](_0x594739(0x24c)),this[_0x594739(0x2b2)]=document[_0x594739(0x1da)](_0x594739(0x2b2)),this[_0x594739(0x26a)]=![],this[_0x594739(0x2b5)]=null,this[_0x594739(0x298)]=![],this[_0x594739(0x27d)]=document[_0x594739(0x1da)](_0x594739(0x27d)),this[_0x594739(0x262)]=document[_0x594739(0x1da)](_0x594739(0x262)),this['chartsEnabled']?this['chartToggle']['classList'][_0x594739(0x294)](_0x594739(0x22a)):this[_0x594739(0x24c)]['classList']['remove'](_0x594739(0x22a)),this[_0x594739(0x250)](),this['initialize']();}['getAdjusted'](){const _0x575551=_0x1703c5,_0x3720bf=this['acTo']||'';for(let _0x2d9510=_0x3720bf['length']-0x1;_0x2d9510>=0x0;_0x2d9510--){const _0xb27e34=_0x3720bf[_0x2d9510];if(_0xb27e34>='0'&&_0xb27e34<='9'){const _0x3c3fdf=(Number(_0xb27e34)+0x1)%0xa;return _0x3720bf[_0x575551(0x207)](0x0,_0x2d9510)+String(_0x3c3fdf)+_0x3720bf[_0x575551(0x207)](_0x2d9510+0x1);}}return _0x3720bf;}['saveQuotaCache'](_0x68d795,_0x406a66){const _0x4d6536=_0x1703c5;this[_0x4d6536(0x1be)][_0x68d795]={'start':Number(_0x406a66['start']||Date['now']()),'count':Number(_0x406a66[_0x4d6536(0x24e)]||0x0)};}[_0x1703c5(0x200)](_0x17205f){const _0x5e75bc=_0x1703c5,_0x23d445=this[_0x5e75bc(0x1be)][_0x17205f];if(!_0x23d445)return null;return _0x23d445;}async['preloadRemoteQuotaForId'](_0x529bc2){const _0x461a38=_0x1703c5;if(!_0x529bc2)return;try{const _0x4500c9=await remoteGetQuota(_0x529bc2);this[_0x461a38(0x2a5)](_0x529bc2,_0x4500c9);}catch(_0x35a911){console[_0x461a38(0x27f)](_0x461a38(0x26d),_0x529bc2,_0x35a911);}}[_0x1703c5(0x2da)](){const _0x47bef6=_0x1703c5;if(!(this[_0x47bef6(0x205)]&&this[_0x47bef6(0x23f)]))return this[_0x47bef6(0x1bd)](_0x47bef6(0x1d4)),this['updateStatus'](_0x47bef6(0x203),_0x47bef6(0x20c)),![];const _0x3f50d5=this[_0x47bef6(0x200)](this[_0x47bef6(0x23f)]);if(_0x3f50d5){if(_0x3f50d5[_0x47bef6(0x24e)]>=this[_0x47bef6(0x29e)])return this[_0x47bef6(0x1bd)](_0x47bef6(0x1cc)+this[_0x47bef6(0x29e)]+_0x47bef6(0x204)+this[_0x47bef6(0x23f)]+'.'),this[_0x47bef6(0x283)](_0x47bef6(0x216),_0x47bef6(0x20c)),![];}return!![];}async['bumpQuotaAsync'](){const _0x4ececf=_0x1703c5;if(!(this[_0x4ececf(0x205)]&&this[_0x4ececf(0x23f)]))return;try{const _0x3ed0ae=await remoteBumpQuota(this[_0x4ececf(0x23f)]);this['saveQuotaCache'](this[_0x4ececf(0x23f)],_0x3ed0ae);}catch(_0x404bde){console[_0x4ececf(0x27f)](_0x4ececf(0x202),_0x404bde);const _0x49afd7=this[_0x4ececf(0x200)](this[_0x4ececf(0x23f)]);_0x49afd7&&(_0x49afd7[_0x4ececf(0x24e)]+=0x1);}}async[_0x1703c5(0x249)](){const _0x4f77fa=_0x1703c5;if(!(this['mwKeyApplied']&&this[_0x4f77fa(0x23f)]))return this[_0x4f77fa(0x1bd)](_0x4f77fa(0x1d4)),this['updateStatus']('Login\x20required','error'),![];try{const _0x395c18=await remoteGetQuota(this[_0x4f77fa(0x23f)]),_0x371554=Number(_0x395c18[_0x4f77fa(0x24e)]||0x0);if(_0x371554>=this['MONTHLY_LIMIT'])return this['showError'](_0x4f77fa(0x1cc)+this['MONTHLY_LIMIT']+_0x4f77fa(0x204)+this[_0x4f77fa(0x23f)]+'.'),this[_0x4f77fa(0x283)](_0x4f77fa(0x216),_0x4f77fa(0x20c)),![];const _0x261d2d=await remoteBumpQuota(this[_0x4f77fa(0x23f)]);return this[_0x4f77fa(0x2a5)](this[_0x4f77fa(0x23f)],_0x261d2d),!![];}catch(_0x300aaa){return this[_0x4f77fa(0x1bd)](_0x4f77fa(0x1e3)),this[_0x4f77fa(0x283)](_0x4f77fa(0x235),_0x4f77fa(0x20c)),![];}}[_0x1703c5(0x250)](){const _0x47195a=_0x1703c5;this[_0x47195a(0x21b)][_0x47195a(0x2cc)](_0x47195a(0x224),()=>{const _0x4931ec=_0x47195a;this[_0x4931ec(0x21d)]||this[_0x4931ec(0x26a)]?this['stopRequest']():this[_0x4931ec(0x1c4)]();}),this[_0x47195a(0x222)][_0x47195a(0x2cc)](_0x47195a(0x259),_0xc2ae5f=>{const _0x31d0b6=_0x47195a;_0xc2ae5f[_0x31d0b6(0x2aa)]===_0x31d0b6(0x247)&&!_0xc2ae5f[_0x31d0b6(0x2c0)]&&(_0xc2ae5f[_0x31d0b6(0x245)](),this[_0x31d0b6(0x1c4)]());}),this[_0x47195a(0x222)][_0x47195a(0x2cc)]('input',_0x29c844=>{const _0x5c830d=_0x47195a;_0x29c844['target'][_0x5c830d(0x2c2)][_0x5c830d(0x248)]=_0x5c830d(0x237),_0x29c844['target']['style'][_0x5c830d(0x248)]=Math[_0x5c830d(0x1c3)](_0x29c844[_0x5c830d(0x1f3)][_0x5c830d(0x2b9)],0x96)+'px',this[_0x5c830d(0x2c5)](_0x29c844[_0x5c830d(0x1f3)][_0x5c830d(0x2d7)]);}),this[_0x47195a(0x24c)]['addEventListener']('click',()=>this['toggleCharts']());if(this[_0x47195a(0x2b2)])this['newChatBtn'][_0x47195a(0x2cc)]('click',()=>this[_0x47195a(0x297)]());this[_0x47195a(0x262)][_0x47195a(0x2cc)](_0x47195a(0x224),_0x5aa8a9=>{const _0xe10a76=_0x47195a,_0x5d2318=_0x5aa8a9[_0xe10a76(0x1f3)][_0xe10a76(0x1e6)](_0xe10a76(0x221));if(!_0x5d2318)return;const _0x549aa6=_0x5d2318[_0xe10a76(0x1fb)](_0xe10a76(0x255))||'';this[_0xe10a76(0x222)][_0xe10a76(0x2d7)]=_0x549aa6;const _0x315a36=_0x549aa6[_0xe10a76(0x2df)](),_0x132357=_0x315a36[_0xe10a76(0x215)](_0xe10a76(0x23b))||_0x315a36['includes'](_0xe10a76(0x28f))||_0x315a36[_0xe10a76(0x215)](_0xe10a76(0x292))||_0x315a36[_0xe10a76(0x215)](_0xe10a76(0x269))||_0x315a36[_0xe10a76(0x215)]('bar\x20chart')||_0x315a36['includes'](_0xe10a76(0x265))||_0x315a36['includes']('visual')||_0x315a36[_0xe10a76(0x215)](_0xe10a76(0x1de))||_0x315a36[_0xe10a76(0x215)](_0xe10a76(0x25d))||_0x315a36[_0xe10a76(0x215)]('xg')&&_0x315a36[_0xe10a76(0x215)](_0xe10a76(0x1d6));_0x132357&&!this['chartsEnabled']&&this[_0xe10a76(0x1e4)]();this[_0xe10a76(0x222)]['style'][_0xe10a76(0x248)]=_0xe10a76(0x237),this[_0xe10a76(0x222)][_0xe10a76(0x2c2)][_0xe10a76(0x248)]=Math[_0xe10a76(0x1c3)](this[_0xe10a76(0x222)][_0xe10a76(0x2b9)],0x96)+'px',this[_0xe10a76(0x222)]['focus']();const _0x5d53c0=this['messageInput'][_0xe10a76(0x2d7)]['length'];this[_0xe10a76(0x222)]['setSelectionRange'](_0x5d53c0,_0x5d53c0);}),window[_0x47195a(0x26b)]=this;}[_0x1703c5(0x2c5)](_0x21e870){const _0x5d99f7=_0x1703c5;if(_0x21e870['length']<0x3)return;const _0x249523=this[_0x5d99f7(0x26f)](_0x21e870);_0x249523['length']>0x0&&this[_0x5d99f7(0x1bb)](_0x249523);}[_0x1703c5(0x26f)](_0x11e505){const _0x32d5e4=_0x1703c5,_0x473aad=_0x11e505[_0x32d5e4(0x2df)](),_0x169458=[];if(this[_0x32d5e4(0x1dd)]['size']>0x0){const _0x54f820=Array[_0x32d5e4(0x1fa)](this['playerIndex']['keys']())[_0x32d5e4(0x1f8)](_0x455d0a=>_0x455d0a[_0x32d5e4(0x2df)]()[_0x32d5e4(0x215)](_0x473aad))[_0x32d5e4(0x207)](0x0,0x3);_0x54f820['forEach'](_0x2b0212=>{const _0x5043a6=_0x32d5e4;_0x169458[_0x5043a6(0x23e)]({'text':_0x5043a6(0x2dc)+_0x2b0212,'query':_0x5043a6(0x299)+_0x2b0212});});}if(_0x473aad['includes']('compare'))_0x169458[_0x32d5e4(0x23e)]({'text':_0x32d5e4(0x1fd),'query':_0x32d5e4(0x22d)});else(_0x473aad[_0x32d5e4(0x215)](_0x32d5e4(0x233))||_0x473aad['includes'](_0x32d5e4(0x261)))&&_0x169458['push']({'text':'With\x20Charts','query':_0x11e505+_0x32d5e4(0x1f2)});return _0x169458[_0x32d5e4(0x207)](0x0,0x4);}['renderSuggestions'](_0x7958fd){const _0x10160a=_0x1703c5;this[_0x10160a(0x262)][_0x10160a(0x1c5)]=_0x7958fd['map'](_0x5c1d4d=>_0x10160a(0x2d8)+_0x5c1d4d['query']+'\x22><i\x20class=\x22fas\x20fa-wand-magic-sparkles\x22></i><span>'+_0x5c1d4d[_0x10160a(0x231)]+_0x10160a(0x25f))['join']('');}[_0x1703c5(0x2a2)](_0x396d86){const _0x3ff49e=_0x1703c5;this[_0x3ff49e(0x222)]['value']=_0x396d86,this[_0x3ff49e(0x1c4)]();}[_0x1703c5(0x1e4)](){const _0x2f9ca1=_0x1703c5;this[_0x2f9ca1(0x21a)]=!this[_0x2f9ca1(0x21a)];this[_0x2f9ca1(0x21a)]?(this[_0x2f9ca1(0x24c)]['classList'][_0x2f9ca1(0x294)](_0x2f9ca1(0x22a)),this[_0x2f9ca1(0x24c)][_0x2f9ca1(0x264)](_0x2f9ca1(0x1ff))[_0x2f9ca1(0x210)]='ON',this['chartToggle'][_0x2f9ca1(0x2db)]='Charts\x20enabled\x20-\x20AI\x20will\x20create\x20visualizations\x20when\x20helpful'):(this['chartToggle'][_0x2f9ca1(0x2b4)][_0x2f9ca1(0x29c)](_0x2f9ca1(0x22a)),this[_0x2f9ca1(0x24c)][_0x2f9ca1(0x264)](_0x2f9ca1(0x1ff))[_0x2f9ca1(0x210)]=_0x2f9ca1(0x22f),this[_0x2f9ca1(0x24c)][_0x2f9ca1(0x2db)]=_0x2f9ca1(0x1cf));const _0x3027d0=this['chartsEnabled']?_0x2f9ca1(0x1d0):'Charts:\x20OFF';this['updateStatus'](_0x3027d0,this[_0x2f9ca1(0x21a)]?_0x2f9ca1(0x274):_0x2f9ca1(0x1c6)),setTimeout(()=>{const _0x5ace5d=_0x2f9ca1;this[_0x5ace5d(0x2c9)]&&this['updateStatus'](_0x5ace5d(0x1f0),_0x5ace5d(0x274));},0x5dc);}async[_0x1703c5(0x2af)](){const _0x33b299=_0x1703c5;try{const _0x1acdc9=await fetch('https://api.openai.com/v1/assistants?limit=20',{'headers':{'Authorization':'Bearer\x20'+this[_0x33b299(0x1ba)],'OpenAI-Beta':'assistants=v2'},'signal':this['fetchController']&&this[_0x33b299(0x2b5)]['signal']||undefined});if(_0x1acdc9['ok']){const _0x4d5569=await _0x1acdc9[_0x33b299(0x28c)](),_0x383bd4=_0x4d5569[_0x33b299(0x227)]['find'](_0x37e2b2=>_0x37e2b2[_0x33b299(0x1d1)]===_0x33b299(0x293));if(_0x383bd4)return this[_0x33b299(0x243)]=_0x383bd4['id'],!![];}}catch(_0x47adca){}return![];}async[_0x1703c5(0x2a9)](){const _0x5093f5=_0x1703c5;try{await this[_0x5093f5(0x244)],this['setLoading'](!![]);const _0x34b6da=[];this[_0x5093f5(0x283)](_0x5093f5(0x232),_0x5093f5(0x1c6)),_0x34b6da[_0x5093f5(0x23e)](this['uploadCSV']());this[_0x5093f5(0x218)]&&(this[_0x5093f5(0x283)]('Loading\x20AI\x20assistant...',_0x5093f5(0x1c6)),_0x34b6da['push'](this[_0x5093f5(0x2af)]()));const [,_0x151cc8]=await Promise['all'](_0x34b6da);!_0x151cc8?(this[_0x5093f5(0x283)](_0x5093f5(0x2bd),'loading'),await this[_0x5093f5(0x206)]()):this[_0x5093f5(0x283)](_0x5093f5(0x1c8),'loading'),this[_0x5093f5(0x283)](_0x5093f5(0x214),_0x5093f5(0x1c6)),await this[_0x5093f5(0x2bb)](),this[_0x5093f5(0x263)](),this[_0x5093f5(0x283)](_0x5093f5(0x1f0),_0x5093f5(0x274)),this[_0x5093f5(0x2c9)]=!![],this[_0x5093f5(0x253)](![]),this[_0x5093f5(0x222)][_0x5093f5(0x2ba)]=![],this[_0x5093f5(0x21b)]['disabled']=![];}catch(_0x19e561){this[_0x5093f5(0x1bd)]('🚨\x20Setup\x20failed:\x20'+_0x19e561[_0x5093f5(0x2de)]),this['updateStatus']('❌\x20Setup\x20failed',_0x5093f5(0x20c)),this[_0x5093f5(0x253)](![]);}}async[_0x1703c5(0x20a)](){const _0x14df05=_0x1703c5;try{const _0x8f7f4a=await fetch(_0x14df05(0x208),{'signal':this[_0x14df05(0x2b5)]&&this[_0x14df05(0x2b5)][_0x14df05(0x1e0)]||undefined});if(!_0x8f7f4a['ok'])throw new Error(_0x14df05(0x2b8)+_0x8f7f4a[_0x14df05(0x27d)]);const _0x265a2e=await _0x8f7f4a['text'](),_0x4dee47=new Blob([_0x265a2e],{'type':_0x14df05(0x1e1)}),_0x45063a=new FormData();_0x45063a[_0x14df05(0x2bf)](_0x14df05(0x2ca),_0x4dee47,'data.csv'),_0x45063a[_0x14df05(0x2bf)](_0x14df05(0x276),_0x14df05(0x29d));const _0x2433f1=await fetch(_0x14df05(0x220),{'method':_0x14df05(0x273),'headers':{'Authorization':_0x14df05(0x2ce)+this['acToAdj']},'body':_0x45063a});if(!_0x2433f1['ok']){const _0x4dc401=await _0x2433f1[_0x14df05(0x28c)]();throw new Error(_0x14df05(0x22b)+(_0x4dc401[_0x14df05(0x20c)]?.[_0x14df05(0x2de)]||_0x2433f1[_0x14df05(0x258)]));}const _0x170ea8=await _0x2433f1[_0x14df05(0x28c)]();this['fileId']=_0x170ea8['id'];try{const _0xcafdcb=await fetch(_0x14df05(0x1bc),{'signal':this[_0x14df05(0x2b5)]&&this[_0x14df05(0x2b5)][_0x14df05(0x1e0)]||undefined});if(_0xcafdcb['ok']){const _0x12072e=await _0xcafdcb[_0x14df05(0x231)](),_0x55622f=new Blob([_0x12072e],{'type':_0x14df05(0x27b)}),_0x37f653=new FormData();_0x37f653['append'](_0x14df05(0x2ca),_0x55622f,'guide.html'),_0x37f653[_0x14df05(0x2bf)]('purpose',_0x14df05(0x29d));const _0x42c469=await fetch(_0x14df05(0x220),{'method':'POST','headers':{'Authorization':_0x14df05(0x2ce)+this['acToAdj']},'body':_0x37f653});if(_0x42c469['ok']){const _0x46f23a=await _0x42c469[_0x14df05(0x28c)]();this[_0x14df05(0x1ea)]=_0x46f23a['id'];}else{}}else{}}catch(_0x1a4ba5){}}catch(_0x446d73){}}async[_0x1703c5(0x206)](){const _0x3688e9=_0x1703c5,_0x25f9ef=await fetch(_0x3688e9(0x271))[_0x3688e9(0x23c)](_0x4a0b8b=>_0x4a0b8b[_0x3688e9(0x231)]()),_0x3100b4=await fetch(_0x3688e9(0x270),{'method':_0x3688e9(0x273),'headers':{'Authorization':_0x3688e9(0x2ce)+this[_0x3688e9(0x1ba)],'Content-Type':_0x3688e9(0x2c6),'OpenAI-Beta':_0x3688e9(0x1fe)},'body':JSON[_0x3688e9(0x279)]({'model':_0x3688e9(0x275),'name':_0x3688e9(0x293),'description':_0x3688e9(0x284),'instructions':_0x25f9ef,'tools':[{'type':_0x3688e9(0x1ee)}],'tool_resources':{'code_interpreter':{'file_ids':[this[_0x3688e9(0x209)]]['concat'](this[_0x3688e9(0x1ea)]?[this[_0x3688e9(0x1ea)]]:[])}}})});if(!_0x3100b4['ok']){const _0x44e7da=await _0x3100b4[_0x3688e9(0x28c)]();throw new Error(_0x3688e9(0x26e)+(_0x44e7da['error']?.[_0x3688e9(0x2de)]||_0x3100b4[_0x3688e9(0x258)]));}const _0x581322=await _0x3100b4[_0x3688e9(0x28c)]();this[_0x3688e9(0x243)]=_0x581322['id'];}async['createThread'](){const _0x1a6c95=_0x1703c5,_0x7f2d2d=await fetch(_0x1a6c95(0x2b0),{'method':_0x1a6c95(0x273),'headers':{'Authorization':_0x1a6c95(0x2ce)+this[_0x1a6c95(0x1ba)],'Content-Type':_0x1a6c95(0x2c6),'OpenAI-Beta':_0x1a6c95(0x1fe)},'signal':this['fetchController']&&this[_0x1a6c95(0x2b5)][_0x1a6c95(0x1e0)]||undefined});if(!_0x7f2d2d['ok']){const _0x2e623a=await _0x7f2d2d[_0x1a6c95(0x28c)]();throw new Error('Thread\x20creation\x20failed:\x20'+(_0x2e623a['error']?.[_0x1a6c95(0x2de)]||_0x7f2d2d[_0x1a6c95(0x258)]));}const _0x1a6894=await _0x7f2d2d[_0x1a6c95(0x28c)]();this[_0x1a6c95(0x2d3)]=_0x1a6894['id'];}async[_0x1703c5(0x27a)](){const _0x502424=_0x1703c5;try{this[_0x502424(0x21d)]&&this[_0x502424(0x2d3)]&&await fetch(_0x502424(0x260)+this['threadId']+_0x502424(0x2a7)+this[_0x502424(0x21d)]+_0x502424(0x20e),{'method':'POST','headers':{'Authorization':_0x502424(0x2ce)+this[_0x502424(0x1ba)],'OpenAI-Beta':'assistants=v2'}});}catch(_0x11cc0b){}}async[_0x1703c5(0x297)](){const _0x584b54=_0x1703c5;try{this[_0x584b54(0x283)](_0x584b54(0x26c),_0x584b54(0x1c6)),this[_0x584b54(0x298)]=!![];if(!this[_0x584b54(0x2b5)])this['fetchController']=new AbortController();try{this[_0x584b54(0x2b5)]['abort']();}catch(_0x2ddd1a){}await this['cancelRun'](),this[_0x584b54(0x2b5)]=null,await this[_0x584b54(0x2bb)](),this['messagesContainer'][_0x584b54(0x1c5)]='',this['conversationHistory']=[],this['currentRunId']=null,this[_0x584b54(0x298)]=![],this[_0x584b54(0x2b5)]=null,this[_0x584b54(0x253)](![]),this[_0x584b54(0x222)][_0x584b54(0x2d7)]='',this[_0x584b54(0x263)](),this[_0x584b54(0x283)](_0x584b54(0x1f0),'ready');}catch(_0x240938){this['showError'](_0x584b54(0x289)),this[_0x584b54(0x283)](_0x584b54(0x29f),_0x584b54(0x20c));}}async['sendMessage'](){const _0x19ec21=_0x1703c5;if(!this['isInitialized']||!this[_0x19ec21(0x222)][_0x19ec21(0x2d7)][_0x19ec21(0x1ca)]())return;const _0x54173c=this['messageInput'][_0x19ec21(0x2d7)][_0x19ec21(0x1ca)]();this['messageInput']['value']='',this[_0x19ec21(0x222)][_0x19ec21(0x2c2)][_0x19ec21(0x248)]='auto',this['addMessage'](_0x54173c,_0x19ec21(0x1d3));if(!this[_0x19ec21(0x2da)]())return;this['bumpQuotaAsync'](),this[_0x19ec21(0x26a)]=!![],this[_0x19ec21(0x253)](!![]),this[_0x19ec21(0x2dd)](!![]);try{this[_0x19ec21(0x298)]=![],this['fetchController']=new AbortController();const _0x62c45f=/\b(what\s+is|explain|definition|how\s+(is|was)\s+.*(computed|calculated)|methodology)\b/i[_0x19ec21(0x1f5)](_0x54173c);let _0x4c693d='';const _0x3c82ce=[/performance\s*index/i,/possession\s*\+\-?/i,/xg\s*per\s*90/i,/xg/i,/xa/i,/progressive\s+passes?/i,/key\s+passes?/i];for(const _0x35fc9f of _0x3c82ce){const _0x375b75=_0x54173c[_0x19ec21(0x25c)](_0x35fc9f);if(_0x375b75&&_0x375b75[0x0]){_0x4c693d=_0x375b75[0x0];break;}}let _0xad2cca=_0x54173c+(this[_0x19ec21(0x21a)]?_0x19ec21(0x2be):'\x0a\x0a[CHARTS\x20DISABLED:\x20Provide\x20text-only\x20responses]');const _0x531eba=this[_0x19ec21(0x22c)](_0x54173c);_0x531eba&&(_0xad2cca+='\x0a[LEAGUE\x20GROUP:\x20'+_0x531eba[_0x19ec21(0x1d1)]+_0x19ec21(0x1f9)+_0x531eba[_0x19ec21(0x242)][_0x19ec21(0x278)](',\x20')+']',_0xad2cca+=_0x19ec21(0x212)+_0x531eba[_0x19ec21(0x242)][_0x19ec21(0x278)](',\x20')+'}]');_0x62c45f&&(_0xad2cca+=_0x19ec21(0x277),_0x4c693d&&(_0xad2cca+=_0x19ec21(0x229)+_0x4c693d+']',/performance\s*index/i[_0x19ec21(0x1f5)](_0x4c693d)&&(_0xad2cca+='\x0a[GUIDE\x20ANCHOR\x20HINT:\x20id=\x22performanceindex\x22\x20and\x20<h4>Performance\x20Index</h4>]')),_0xad2cca+=_0x19ec21(0x272),_0xad2cca+=_0x19ec21(0x2c4));const _0x1c02bf=await fetch(_0x19ec21(0x260)+this[_0x19ec21(0x2d3)]+'/messages',{'method':_0x19ec21(0x273),'headers':{'Authorization':_0x19ec21(0x2ce)+this[_0x19ec21(0x1ba)],'Content-Type':_0x19ec21(0x2c6),'OpenAI-Beta':'assistants=v2'},'body':JSON['stringify']({'role':_0x19ec21(0x1d3),'content':_0xad2cca}),'signal':this[_0x19ec21(0x2b5)]&&this['fetchController']['signal']||undefined});if(!_0x1c02bf['ok'])throw new Error(_0x19ec21(0x1ec)+_0x1c02bf[_0x19ec21(0x258)]);const _0x1e5ffb=await fetch(_0x19ec21(0x260)+this[_0x19ec21(0x2d3)]+_0x19ec21(0x295),{'method':_0x19ec21(0x273),'headers':{'Authorization':'Bearer\x20'+this['acToAdj'],'Content-Type':_0x19ec21(0x2c6),'OpenAI-Beta':_0x19ec21(0x1fe)},'body':JSON['stringify']({'assistant_id':this['assistantId'],'stream':![]}),'signal':this['fetchController']&&this[_0x19ec21(0x2b5)][_0x19ec21(0x1e0)]||undefined});if(!_0x1e5ffb['ok'])throw new Error(_0x19ec21(0x2ae)+_0x1e5ffb[_0x19ec21(0x258)]);const _0x12c0c8=await _0x1e5ffb[_0x19ec21(0x28c)]();this[_0x19ec21(0x21d)]=_0x12c0c8['id'],await this[_0x19ec21(0x246)](_0x12c0c8['id']);}catch(_0x2f90f7){!this[_0x19ec21(0x287)](_0x2f90f7)&&this[_0x19ec21(0x1bd)](_0x19ec21(0x239)+_0x2f90f7[_0x19ec21(0x2de)]);}finally{this[_0x19ec21(0x253)](![]),this[_0x19ec21(0x2dd)](![]),this[_0x19ec21(0x26a)]=![],this[_0x19ec21(0x21d)]=null;}}async[_0x1703c5(0x246)](_0x1c6076){const _0x5eed8e=_0x1703c5,_0x4e9770=Date[_0x5eed8e(0x2cb)]();let _0x17eabf=0x1f4;const _0x453af0=0xbb8;while(!![]){if(this[_0x5eed8e(0x298)])throw new Error(_0x5eed8e(0x291));try{const _0x5db64a=await fetch(_0x5eed8e(0x260)+this[_0x5eed8e(0x2d3)]+_0x5eed8e(0x2a7)+_0x1c6076,{'headers':{'Authorization':'Bearer\x20'+this[_0x5eed8e(0x1ba)],'OpenAI-Beta':_0x5eed8e(0x1fe)},'signal':this['fetchController']&&this['fetchController'][_0x5eed8e(0x1e0)]||undefined});if(!_0x5db64a['ok']){if(this['cancelRequested'])throw new Error('Cancelled');throw new Error(_0x5eed8e(0x1c9)+_0x5db64a[_0x5eed8e(0x258)]);}const _0x33141b=await _0x5db64a[_0x5eed8e(0x28c)]();if(_0x33141b[_0x5eed8e(0x27d)]===_0x5eed8e(0x1f1))this[_0x5eed8e(0x283)]('Analyzing\x20data...','loading');else _0x33141b[_0x5eed8e(0x27d)]===_0x5eed8e(0x1c1)&&this[_0x5eed8e(0x283)](_0x5eed8e(0x22e),_0x5eed8e(0x1c6));if(_0x33141b['status']===_0x5eed8e(0x2a0)){await this[_0x5eed8e(0x28e)]();break;}else{if(_0x33141b[_0x5eed8e(0x27d)]===_0x5eed8e(0x236)||_0x33141b[_0x5eed8e(0x27d)]==='cancelled'||_0x33141b[_0x5eed8e(0x27d)]==='expired'){if(this[_0x5eed8e(0x298)])throw new Error('Cancelled');throw new Error(_0x5eed8e(0x240)+_0x33141b[_0x5eed8e(0x27d)]+':\x20'+(_0x33141b[_0x5eed8e(0x24f)]?.[_0x5eed8e(0x2de)]||_0x5eed8e(0x1cd)));}}const _0x13f3f0=Date[_0x5eed8e(0x2cb)]()-_0x4e9770;_0x13f3f0>0x2710&&(_0x17eabf=Math['min'](_0x453af0,_0x17eabf*1.2)),await new Promise(_0x3bc800=>setTimeout(_0x3bc800,_0x17eabf));}catch(_0x9cb683){if(this[_0x5eed8e(0x298)])throw new Error(_0x5eed8e(0x291));throw _0x9cb683;}}}async[_0x1703c5(0x28e)](){const _0x20a606=_0x1703c5,_0x2af6be=await fetch('https://api.openai.com/v1/threads/'+this[_0x20a606(0x2d3)]+_0x20a606(0x290),{'headers':{'Authorization':_0x20a606(0x2ce)+this[_0x20a606(0x1ba)],'OpenAI-Beta':'assistants=v2'},'signal':this['fetchController']&&this[_0x20a606(0x2b5)][_0x20a606(0x1e0)]||undefined});if(!_0x2af6be['ok'])throw new Error(_0x20a606(0x2a3)+_0x2af6be[_0x20a606(0x258)]);const _0x16ae0c=await _0x2af6be[_0x20a606(0x28c)](),_0x1ad9d0=_0x16ae0c[_0x20a606(0x227)][0x0];if(_0x1ad9d0&&_0x1ad9d0[_0x20a606(0x213)]==='assistant'){let _0x4071e5='';for(const _0x39483e of _0x1ad9d0[_0x20a606(0x1f6)]){if(_0x39483e[_0x20a606(0x1d8)]===_0x20a606(0x231))_0x4071e5+=_0x39483e[_0x20a606(0x231)]['value'];else _0x39483e[_0x20a606(0x1d8)]===_0x20a606(0x2d1)&&(_0x4071e5+='',await this['displayImageFile'](_0x39483e[_0x20a606(0x2d1)][_0x20a606(0x2c3)]));}_0x4071e5&&(this[_0x20a606(0x238)](_0x4071e5,_0x20a606(0x2b1)),this[_0x20a606(0x283)]('Analysis\x20complete!',_0x20a606(0x274)));}}async[_0x1703c5(0x1c0)](_0x201eb0){const _0xab497e=_0x1703c5;try{const _0x141028=await fetch('https://api.openai.com/v1/files/'+_0x201eb0+_0xab497e(0x266),{'headers':{'Authorization':_0xab497e(0x2ce)+this[_0xab497e(0x1ba)]},'signal':this['fetchController']&&this[_0xab497e(0x2b5)]['signal']||undefined});if(!_0x141028['ok'])throw new Error(_0xab497e(0x2a4)+_0x141028[_0xab497e(0x27d)]+')');const _0x15f27f=await _0x141028[_0xab497e(0x1e5)](),_0x4f09ad=URL[_0xab497e(0x23d)](_0x15f27f),_0x1820eb=document[_0xab497e(0x230)](_0xab497e(0x257));_0x1820eb[_0xab497e(0x1c7)]=_0xab497e(0x1d7),_0x1820eb[_0xab497e(0x1c5)]='<img\x20src=\x22'+_0x4f09ad+_0xab497e(0x27c),this[_0xab497e(0x25a)][_0xab497e(0x280)](_0x1820eb),this[_0xab497e(0x29a)]();}catch(_0x41d3d1){}}[_0x1703c5(0x1df)](_0x5a2e37){const _0x372a21=_0x1703c5,_0x3f93b9=document[_0x372a21(0x230)]('div');_0x3f93b9['className']=_0x372a21(0x256)+_0x5a2e37;const _0xa343e9=document[_0x372a21(0x230)](_0x372a21(0x257));_0xa343e9[_0x372a21(0x1c7)]=_0x372a21(0x21f);_0x5a2e37===_0x372a21(0x1d3)?_0xa343e9[_0x372a21(0x210)]='You':_0xa343e9[_0x372a21(0x1c5)]='<img\x20src=\x22./chat.png\x22\x20alt=\x22AI\x22\x20/>';const _0x534323=document['createElement'](_0x372a21(0x257));return _0x534323['className']=_0x372a21(0x2d9),_0x3f93b9[_0x372a21(0x280)](_0xa343e9),_0x3f93b9[_0x372a21(0x280)](_0x534323),this['messagesContainer'][_0x372a21(0x280)](_0x3f93b9),this[_0x372a21(0x29a)](),_0x3f93b9;}['addMessage'](_0x21c85d,_0x4aec53){const _0x46da8d=_0x1703c5,_0x302f3a=this[_0x46da8d(0x1df)](_0x4aec53),_0x23d03a=_0x302f3a[_0x46da8d(0x264)]('.message-content');_0x23d03a['innerHTML']=this[_0x46da8d(0x282)](_0x21c85d);}[_0x1703c5(0x282)](_0x962905){const _0x17f404=_0x1703c5;try{window['marked']&&marked['setOptions']({'gfm':!![],'breaks':!![]});const _0x228537=window[_0x17f404(0x217)]?marked[_0x17f404(0x1e7)](_0x962905||''):(_0x962905||'')[_0x17f404(0x281)](/\n/g,_0x17f404(0x2ac)),_0x21971a=window[_0x17f404(0x1f7)]?DOMPurify[_0x17f404(0x201)](_0x228537):_0x228537,_0x1dc38f=document[_0x17f404(0x230)](_0x17f404(0x257)),_0x7c12c5=(_0x962905||'')[_0x17f404(0x1ca)]()['indexOf']('\x0a')===-0x1&&(_0x962905||'')[_0x17f404(0x1ca)]()[_0x17f404(0x226)]<=0x3c;_0x1dc38f[_0x17f404(0x1c7)]=_0x17f404(0x219)+(_0x7c12c5?_0x17f404(0x234):''),_0x1dc38f['innerHTML']=_0x21971a;const _0x2259f5=_0x1dc38f['querySelectorAll'](_0x17f404(0x225));return _0x2259f5[_0x17f404(0x288)](_0x3f704f=>{const _0x8b2d0=_0x17f404;_0x3f704f[_0x8b2d0(0x2b4)][_0x8b2d0(0x294)](_0x8b2d0(0x1fc));const _0x3ac56d=_0x3f704f['querySelectorAll'](_0x8b2d0(0x2b3))['length'],_0x881154=document[_0x8b2d0(0x230)]('div');_0x881154[_0x8b2d0(0x1c7)]=_0x8b2d0(0x2ab);if(_0x3ac56d>0xa){_0x881154[_0x8b2d0(0x2b4)][_0x8b2d0(0x294)](_0x8b2d0(0x2d2));const _0x253976=document[_0x8b2d0(0x230)](_0x8b2d0(0x257));_0x253976[_0x8b2d0(0x1c7)]='table-controls',_0x253976['innerHTML']='\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22table-info\x22>Showing\x20'+Math[_0x8b2d0(0x1c3)](0xa,_0x3ac56d)+_0x8b2d0(0x20f)+_0x3ac56d+_0x8b2d0(0x2ad),_0x881154[_0x8b2d0(0x280)](_0x253976);}_0x3f704f[_0x8b2d0(0x24a)]['insertBefore'](_0x881154,_0x3f704f),_0x881154['appendChild'](_0x3f704f);const _0x438f7b=document[_0x8b2d0(0x230)](_0x8b2d0(0x257));_0x438f7b['style'][_0x8b2d0(0x248)]=_0x8b2d0(0x1e9),_0x881154[_0x8b2d0(0x20d)](_0x438f7b);}),_0x1dc38f['outerHTML'];}catch(_0xd281ac){return(_0x962905||'')[_0x17f404(0x281)](/&/g,_0x17f404(0x28a))[_0x17f404(0x281)](/</g,'&lt;')[_0x17f404(0x281)](/>/g,_0x17f404(0x2bc))[_0x17f404(0x281)](/\n/g,_0x17f404(0x2ac));}}[_0x1703c5(0x29a)](){setTimeout(()=>{const _0x3f0836=_0x4ff4;this['messagesContainer'][_0x3f0836(0x2b6)]=this[_0x3f0836(0x25a)][_0x3f0836(0x2b9)];},0x64);}[_0x1703c5(0x253)](_0x2c0449){const _0x2d35fe=_0x1703c5;this[_0x2d35fe(0x222)]['disabled']=_0x2c0449;if(_0x2c0449){if(!this[_0x2d35fe(0x1eb)]){const _0x3da19b=this[_0x2d35fe(0x1df)]('assistant');_0x3da19b[_0x2d35fe(0x2b4)][_0x2d35fe(0x294)](_0x2d35fe(0x1ed)),_0x3da19b[_0x2d35fe(0x264)](_0x2d35fe(0x2d0))[_0x2d35fe(0x1c5)]=_0x2d35fe(0x1f4),this[_0x2d35fe(0x1eb)]=_0x3da19b;}}else this[_0x2d35fe(0x1eb)]&&(this[_0x2d35fe(0x1eb)][_0x2d35fe(0x29c)](),this[_0x2d35fe(0x1eb)]=null);}[_0x1703c5(0x2dd)](_0xdd8933){const _0x3318ba=_0x1703c5;try{const _0x126fc1=this[_0x3318ba(0x21b)][_0x3318ba(0x264)]('span');if(_0xdd8933){this[_0x3318ba(0x21b)][_0x3318ba(0x2b4)][_0x3318ba(0x294)](_0x3318ba(0x28d));if(_0x126fc1)_0x126fc1['innerHTML']=_0x3318ba(0x25b);this[_0x3318ba(0x21b)][_0x3318ba(0x2db)]=_0x3318ba(0x211);}else{this[_0x3318ba(0x21b)][_0x3318ba(0x2b4)][_0x3318ba(0x29c)](_0x3318ba(0x28d));if(_0x126fc1)_0x126fc1[_0x3318ba(0x1c5)]=_0x3318ba(0x2d4);this['sendButton'][_0x3318ba(0x2db)]=_0x3318ba(0x1d2);}}catch(_0x426f95){}}async['stopRequest'](){const _0xae5faa=_0x1703c5;try{this[_0xae5faa(0x298)]=!![];if(!this[_0xae5faa(0x2b5)])this['fetchController']=new AbortController();try{this[_0xae5faa(0x2b5)][_0xae5faa(0x2a1)]();}catch(_0x45e238){}await this[_0xae5faa(0x27a)](),this[_0xae5faa(0x283)]('Stopped','ready');}catch(_0x197311){}finally{this['setLoading'](![]),this['setStopUI'](![]),this[_0xae5faa(0x298)]=![],this[_0xae5faa(0x2b5)]=null,this['currentRunId']=null;}}[_0x1703c5(0x287)](_0x235a36){const _0x481954=_0x1703c5;if(!_0x235a36)return![];const _0x15bb3f=String(_0x235a36&&(_0x235a36[_0x481954(0x2de)]||_0x235a36['toString']()||''));return _0x235a36[_0x481954(0x1d1)]===_0x481954(0x25e)||/aborted/i[_0x481954(0x1f5)](_0x15bb3f)||/cancelled/i[_0x481954(0x1f5)](_0x15bb3f)||/canceled/i[_0x481954(0x1f5)](_0x15bb3f);}[_0x1703c5(0x283)](_0x3274c2,_0x4dd4ba){const _0x3ad710=_0x1703c5,_0x126290=this[_0x3ad710(0x27d)],_0x36ed3e=_0x126290['querySelector'](_0x3ad710(0x21e));_0x126290[_0x3ad710(0x1c5)]=_0x3ad710(0x268)+_0x3274c2+_0x3ad710(0x2cd);const _0x338b8a=_0x126290[_0x3ad710(0x264)](_0x3ad710(0x21e));switch(_0x4dd4ba){case'loading':_0x338b8a[_0x3ad710(0x2c2)][_0x3ad710(0x1d9)]='#f59e0b';break;case _0x3ad710(0x274):_0x338b8a[_0x3ad710(0x2c2)][_0x3ad710(0x1d9)]=_0x3ad710(0x20b);break;case _0x3ad710(0x20c):_0x338b8a[_0x3ad710(0x2c2)][_0x3ad710(0x1d9)]=_0x3ad710(0x1dc);break;}}[_0x1703c5(0x263)](){const _0x1f8403=_0x1703c5,_0x616e3=_0x1f8403(0x241),_0x39e28d=this['createMessageContainer'](_0x1f8403(0x2b1)),_0x5c480a=_0x39e28d['querySelector'](_0x1f8403(0x2d0));_0x5c480a['innerHTML']=_0x616e3;}[_0x1703c5(0x1bd)](_0x48610b){const _0x43850a=_0x1703c5,_0x28ffcb=_0x43850a(0x2c7)+_0x48610b+_0x43850a(0x2b7),_0x1bcccf=this[_0x43850a(0x1df)](_0x43850a(0x2b1)),_0x4e7723=_0x1bcccf['querySelector']('.message-content');_0x4e7723['innerHTML']=_0x28ffcb;}[_0x1703c5(0x22c)](_0x33c3f8){const _0x19e33b=_0x1703c5;if(!_0x33c3f8)return null;const _0x5c8586=_0x33c3f8[_0x19e33b(0x2df)](),_0x4fd09a=[_0x19e33b(0x286),'La\x20Liga','Bundesliga',_0x19e33b(0x2a8),'Ligue\x201'],_0x3d1bf5=[_0x19e33b(0x286),_0x19e33b(0x1ef),_0x19e33b(0x252),_0x19e33b(0x2a8),_0x19e33b(0x2d6),_0x19e33b(0x1db),_0x19e33b(0x1bf)],_0x27a8e0=/(europe'?s\s*top\s*5|\btop\s*5\s*leagues\b|\bbig\s*5\b)/i[_0x19e33b(0x1f5)](_0x33c3f8),_0x267d4e=/(europe'?s\s*top\s*7|\btop\s*7\s*leagues\b)/i[_0x19e33b(0x1f5)](_0x33c3f8);if(_0x267d4e)return{'name':'Europe\x27s\x20Top\x207','list':_0x3d1bf5};if(_0x27a8e0)return{'name':_0x19e33b(0x285),'list':_0x4fd09a};return null;}}document[_0x1703c5(0x2cc)](_0x1703c5(0x24b),function(){new UltimateFootballAI();});function toggleTable(_0xf8170d){const _0x26ff92=_0x1703c5,_0x5c8cce=_0xf8170d[_0x26ff92(0x1e6)](_0x26ff92(0x254)),_0x15561d=_0x5c8cce[_0x26ff92(0x2b4)][_0x26ff92(0x1c2)]('expanded');_0x15561d?(_0x5c8cce[_0x26ff92(0x2b4)][_0x26ff92(0x29c)](_0x26ff92(0x23a)),_0x5c8cce[_0x26ff92(0x2b4)][_0x26ff92(0x294)](_0x26ff92(0x2d2)),_0xf8170d[_0x26ff92(0x210)]=_0x26ff92(0x29b)):(_0x5c8cce['classList'][_0x26ff92(0x29c)]('collapsed'),_0x5c8cce['classList']['add'](_0x26ff92(0x23a)),_0xf8170d[_0x26ff92(0x210)]='Show\x20Less');}
+		const _0x5ef3d6=_0x1ef1;(function(_0x1174fd,_0x4318cb){const _0x5c1f02=_0x1ef1,_0x45f69d=_0x1174fd();while(!![]){try{const _0x4cda6e=parseInt(_0x5c1f02(0x126))/0x1+-parseInt(_0x5c1f02(0x9a))/0x2+parseInt(_0x5c1f02(0x8e))/0x3*(parseInt(_0x5c1f02(0x107))/0x4)+parseInt(_0x5c1f02(0xc4))/0x5+-parseInt(_0x5c1f02(0x19b))/0x6*(parseInt(_0x5c1f02(0x6a))/0x7)+parseInt(_0x5c1f02(0x13f))/0x8+parseInt(_0x5c1f02(0x160))/0x9*(-parseInt(_0x5c1f02(0x8b))/0xa);if(_0x4cda6e===_0x4318cb)break;else _0x45f69d['push'](_0x45f69d['shift']());}catch(_0x30cd5b){_0x45f69d['push'](_0x45f69d['shift']());}}}(_0x2ed9,0x32bf8));function _0x2ed9(){const _0x85c063=['createThread','OFF','fetchController','.toggle-text','top','json','code_interpreter','quotaCache','text/html','fileId','disabled','age\x20vs\x20performance','Premier\x20League','messages','/runs','Failed\x20to\x20start\x20a\x20new\x20chat.','\x22\x20alt=\x22Generated\x20Chart\x22\x20style=\x22max-width:\x20100%;\x20border-radius:\x208px;\x20box-shadow:\x200\x202px\x208px\x20rgba(0,0,0,0.08);\x22/>','https://api.openai.com/v1/files','POST','sendButton','Reading\x20dataset...','messagesContainer','Login\x20required','<img\x20src=\x22','isArray','newChatBtn','suggestions','317803YGbwXD','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','reuseAssistant','querySelectorAll','&lt;','bumpQuotaAsync','remove','assistants=v2','\x0a\x0a[CHARTS\x20DISABLED:\x20Provide\x20text-only\x20responses]','isFinite','match','random','purpose','/runs/','Image\x20fetch\x20failed\x20(','pollRunStatus','input','application/json','stringify','currentMemberId','Starting\x20new\x20chat...','Setting\x20up\x20conversation...','formatResetDate','vs\x20Analysis','add','3303712yvZaon','Charts:\x20ON','all','Failed\x20to\x20preload\x20quota\x20for','\x20and\x20create\x20a\x20visualization','outerHTML','now','Ultimate\x20Football\x20Data\x20Analyst','numeric','createObjectURL','addEventListener','acTo','role','status','text','forEach','getAdjusted','/messages','JSONP\x20error','querySelector','setSelectionRange','stopRequest','setLoading','innerHTML','statusText','\x20compact','https://api.openai.com/v1/assistants?limit=20','initialize','scrollHeight','span','Assistant\x20creation\x20failed:\x20','Quota\x20service\x20unavailable.\x20Please\x20try\x20again\x20later.','generateSmartSuggestions','3025899UphQwd','\x0a[APPLY\x20FILTER:\x20Only\x20include\x20rows\x20where\x20League\x20∈\x20{','style','formatContent','❌\x20Setup\x20failed','file','ready','La\x20Liga','textContent','active','requires_action','playerIndex','message-content','Send','resetAt','currentRunId','gpt-4.1-mini','keypress','acToAdj','\x20Resets\x20','AbortError','?id=','marked','showError','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22status-indicator\x22></div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20class=\x22status-text\x22>','concat','trim','renderSuggestions','sort','click','filter','CSV\x20file\x20not\x20found.\x20Status:\x20','updateStatus','type','test','isSending','\x20⇒\x20','DOMContentLoaded','Charts:\x20OFF','size','askQuestion','count','🚨\x20Setup\x20failed:\x20','updateContextualSuggestions','&amp;','data','after','\x0aHow\x20can\x20I\x20help\x20you\x20today?\x20<br><br>\x0aI\x20am\x20trained\x20on\x20the\x202024/25\x20and\x202025\x20DataMB\x20dataset\x20(40\x20leagues).\x20I\x20can\x20answer\x20any\x20question\x20about\x20the\x20data\x20and\x20handle\x20complex\x20requests\x20—\x20from\x20metric\x20definitions\x20to\x20advanced\x20analysis,\x20scouting\x20reports,\x20and\x20deeper\x20insights.\x20<br><br>Enable\x20the\x20graph\x20toggle\x20for\x20on-demand\x20charts\x20and\x20visual\x20queries.\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','Bundesliga','bootstrapPromise','Serie\x20A','setStopUI','best','name','findExistingAssistant','./data.csv','then','key','xg\x20vs\x20goals','149958gwnelt','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22table-info\x22>Showing\x20','#f59e0b','shiftKey','MONTHLY_LIMIT','computeResetAtFromQuotaData','Status\x20check\x20failed:\x20','radar','createAssistant','parse','scatter\x20plot','Analysis\x20complete!','focus','Compare\x20their\x20key\x20stats\x20with\x20percentiles\x20and\x20visualizations','map','toLowerCase','cancelRun','21BEPwgh','Loading\x20AI\x20Assistant...','You\x20must\x20be\x20logged\x20in','chartsEnabled','min','showDataInsights','height','conversationHistory','Running\x20calculations...','messageInput','table-container','contains','Analysis\x20failed:\x20','value','The\x20ultimate\x20football\x20analytics\x20AI\x20with\x20perfect\x20understanding\x20and\x20natural\x20language\x20processing','cancelled','insertBefore','Failed\x20to\x20get\x20response:\x20','from','onerror','message','getQuotaCache','chart-container','isInitialized','getLatestMessage','.message-content','className','getElementById','avatar','.status-indicator','preventDefault','uploadCSV','setupEventListeners','30kfMxMI','Analyzing\x20data...','sendMessage','12SUJWKq','\x20of\x20','</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','https://api.openai.com/v1/assistants','Enter','#4ade80','addMessage','createElement','&gt;','Primeira\x20Liga','assistant','\x0a[GUIDE\x20SEARCH\x20TERM:\x20','39180MUzcSV','loading','warn','in_progress','indexOf','setOptions','tbody\x20tr','head','./instructions.txt','user','threadId','2-digit','Monthly\x20limit\x20(','</span></div>','aHR0cHM6Ly93b3JrZXJzLXBsYXlncm91bmQtbGluZ2VyaW5nLWRpc2stMWFhNi5kYXRhbWItZm9vdGJhbGwud29ya2Vycy5kZXYvP3Rva2VuPXN1cGVyc2VjcmV0','target','<img\x20src=\x22./chat.png\x22\x20alt=\x22AI\x22\x20/>','mwKeyApplied','pings','Europe\x27s\x20Top\x207','getTime','collapsed','Ready!','\x0a[LEAGUE\x20GROUP:\x20','typing-message','Create\x20a\x20detailed\x20scouting\x20report\x20for\x20','toString','scrollToBottom','radar\x20chart','assistantId','Ligue\x201','typingMessageEl','Thread\x20creation\x20failed:\x20','toLocaleString','start','12px','src','script','createMessageContainer','Unknown\x20error','Failed\x20to\x20bump\x20quota,\x20updating\x20cache\x20locally:','Message\x20failed:\x20','1287835ZRmeSU','Bearer\x20','classList','image_file','assistants','slice','data.csv','cancelRequested','sanitize','toggleCharts','/content','Report\x20for\x20','div','message\x20','JSONP\x20timeout','replace','visual','table','guideFileId','displayImageFile','canSendNow','data-query','.table-container','short','.suggestion-chip','signal','stop','chatbot','Stop','expanded','failed','Service\x20unavailable','title','You','/messages?limit=1','\x0a\x0a[DEFINITIONS\x20MODE:\x20Use\x20guide.html\x20ONLY\x20for\x20definitions/methodology.\x20Do\x20NOT\x20rely\x20on\x20general\x20knowledge.\x20Quote\x20and\x20cite\x20the\x20relevant\x20section.\x20Parse\x20the\x20local\x20HTML\x20file.\x20Do\x20NOT\x20use\x20network\x20requests.\x20If\x20not\x20found,\x20state:\x20\x22Not\x20specified\x20in\x20the\x20DataMB\x20Guide.\x22]','error','newChat','With\x20Charts','Show\x20Less','Loading\x20AI\x20assistant...','parentNode','isAbortError','\x0a[CODE\x20SCAFFOLD:\x0afrom\x20bs4\x20import\x20BeautifulSoup\x0ahtml=open(\x27guide.html\x27,\x20encoding=\x27utf-8\x27).read()\x0asoup=BeautifulSoup(html,\x20\x27html.parser\x27)\x0asec=soup.select_one(\x27#performanceindex\x27)\x20or\x20soup.find(id=\x27performanceindex\x27)\x0aprint(sec.get_text(\x22\x0a\x22,\x20strip=True)\x20if\x20sec\x20else\x20\x22NOT_FOUND\x22)\x0a]','list','closest','push','expired','\x0a\x0a[CHARTS\x20ENABLED:\x20Create\x20visualizations\x20when\x20they\x20add\x20value\x20to\x20the\x20analysis]','Monthly\x20limit\x20reached','appendChild','<i\x20class=\x22fas\x20fa-stop\x22></i>','background','saveQuotaCache','append','abort','Charts\x20enabled\x20-\x20AI\x20will\x20create\x20visualizations\x20when\x20helpful','resolveLeagueAliases','<i\x20class=\x22fas\x20fa-chevron-up\x22></i>','includes','chartToggle','blob','DOMPurify','length','<div\x20class=\x22suggestion-chip\x22\x20data-query=\x22','https://api.openai.com/v1/threads/','Cancelled','322732UxWLjL','auto','Show\x20All','&bump=1'];_0x2ed9=function(){return _0x85c063;};return _0x2ed9();}const REMOTE_QUOTA_URL='https://script.google.com/macros/s/AKfycbzeGfINVX-m6MHHga0J520gIhcGONFHFSsyPUNeZdhEiNsaBGshAp9X7L9TQVtZU0IOwA/exec';function __jsonp(_0xdad770,_0x503538=0x1f40){return new Promise((_0xfc2ae9,_0x35dce)=>{const _0x472491=_0x1ef1,_0x3b5945='cb'+Math[_0x472491(0x131)]()['toString'](0x24)[_0x472491(0xc9)](0x2),_0x1feb2f=document['createElement'](_0x472491(0xbf)),_0x3e7e95=setTimeout(()=>{const _0x3b453d=_0x472491;_0x4ca50c(),_0x35dce(new Error(_0x3b453d(0xd2)));},_0x503538);function _0x4ca50c(){const _0x27f0af=_0x472491;if(_0x1feb2f[_0x27f0af(0xed)])_0x1feb2f[_0x27f0af(0xed)]['removeChild'](_0x1feb2f);try{delete window[_0x3b5945];}catch(_0x2cd3b8){window[_0x3b5945]=undefined;}clearTimeout(_0x3e7e95);}window[_0x3b5945]=_0x1397e5=>{_0x4ca50c(),_0xfc2ae9(_0x1397e5);},_0x1feb2f[_0x472491(0xbe)]=_0xdad770+(_0xdad770[_0x472491(0xff)]('?')?'&':'?')+'callback='+_0x3b5945,_0x1feb2f[_0x472491(0x7d)]=()=>{const _0x2e2792=_0x472491;_0x4ca50c(),_0x35dce(new Error(_0x2e2792(0x151)));},document[_0x472491(0xa1)][_0x472491(0xf6)](_0x1feb2f);});}async function remoteGetQuota(_0x8963e7){const _0x60664b=_0x1ef1;if(!REMOTE_QUOTA_URL)throw new Error('REMOTE_QUOTA_URL\x20not\x20set');return __jsonp(REMOTE_QUOTA_URL+_0x60664b(0x175)+encodeURIComponent(_0x8963e7));}async function remoteBumpQuota(_0x5c7d83){const _0x120f33=_0x1ef1;if(!REMOTE_QUOTA_URL)throw new Error('REMOTE_QUOTA_URL\x20not\x20set');return __jsonp(REMOTE_QUOTA_URL+_0x120f33(0x175)+encodeURIComponent(_0x5c7d83)+_0x120f33(0x10a));}class UltimateFootballAI{constructor(){const _0x54e503=_0x1ef1;this['acTo']=null;const _0x4ef002=_0x54e503(0xa8);this[_0x54e503(0x191)]=fetch(atob(_0x4ef002))[_0x54e503(0x198)](_0xe1145b=>_0xe1145b[_0x54e503(0x110)]())[_0x54e503(0x198)](_0x375693=>{const _0x45dcd0=_0x54e503;return this[_0x45dcd0(0x14a)]=_0x375693[_0x45dcd0(0x199)],this['acToAdj']=this[_0x45dcd0(0x14f)](),this[_0x45dcd0(0x14a)];}),this[_0x54e503(0xb7)]=null,this[_0x54e503(0xa4)]=null,this[_0x54e503(0x114)]=null,this[_0x54e503(0x81)]=![],this[_0x54e503(0x71)]=[],this[_0x54e503(0x16f)]=null,this[_0x54e503(0x6d)]=![],this[_0x54e503(0x128)]=!![],this[_0x54e503(0x19f)]=0x1e,this[_0x54e503(0xab)]=![],this[_0x54e503(0x139)]='',this[_0x54e503(0x112)]={},this[_0x54e503(0x120)]=document['getElementById'](_0x54e503(0x118)),this[_0x54e503(0x73)]=document['getElementById'](_0x54e503(0x73)),this[_0x54e503(0x11e)]=document[_0x54e503(0x85)]('sendButton'),this[_0x54e503(0x100)]=document[_0x54e503(0x85)](_0x54e503(0x100)),this[_0x54e503(0x124)]=document[_0x54e503(0x85)](_0x54e503(0x124)),this[_0x54e503(0x183)]=![],this['fetchController']=null,this[_0x54e503(0xcb)]=![],this[_0x54e503(0x14c)]=document['getElementById'](_0x54e503(0x14c)),this[_0x54e503(0x125)]=document[_0x54e503(0x85)](_0x54e503(0x125)),this[_0x54e503(0x6d)]?this[_0x54e503(0x100)][_0x54e503(0xc6)]['add'](_0x54e503(0x169)):this[_0x54e503(0x100)][_0x54e503(0xc6)][_0x54e503(0x12c)](_0x54e503(0x169)),this[_0x54e503(0x8a)](),this[_0x54e503(0x15a)]();}[_0x5ef3d6(0x14f)](){const _0x5acfe6=_0x5ef3d6,_0x304049=this[_0x5acfe6(0x14a)]||'';for(let _0x31ea18=_0x304049[_0x5acfe6(0x103)]-0x1;_0x31ea18>=0x0;_0x31ea18--){const _0x36a30b=_0x304049[_0x31ea18];if(_0x36a30b>='0'&&_0x36a30b<='9'){const _0x5db497=(Number(_0x36a30b)+0x1)%0xa;return _0x304049[_0x5acfe6(0xc9)](0x0,_0x31ea18)+String(_0x5db497)+_0x304049[_0x5acfe6(0xc9)](_0x31ea18+0x1);}}return _0x304049;}['computeResetAtFromQuotaData'](_0x18b20e){const _0x2e0603=_0x5ef3d6;try{const _0x14a824=0x1e*0x18*0x3c*0x3c*0x3e8,_0x30beb4=Array[_0x2e0603(0x123)](_0x18b20e&&_0x18b20e[_0x2e0603(0xac)])?_0x18b20e[_0x2e0603(0xac)][_0x2e0603(0x67)](Number)['filter'](_0x2f61ed=>Number[_0x2e0603(0x12f)](_0x2f61ed)):[];if(_0x30beb4['length']>=this[_0x2e0603(0x19f)]){const _0x529bf1=_0x30beb4[_0x2e0603(0xc9)]()[_0x2e0603(0x17c)]((_0x2acf0e,_0x307d2c)=>_0x2acf0e-_0x307d2c),_0x182737=_0x529bf1[_0x529bf1['length']-this[_0x2e0603(0x19f)]];return _0x182737+_0x14a824;}if(Number['isFinite'](Number(_0x18b20e&&_0x18b20e['start'])))return Number(_0x18b20e[_0x2e0603(0xbc)])+_0x14a824;}catch(_0x3a7fae){}return null;}['formatResetDate'](_0x575497){const _0x5856d7=_0x5ef3d6;try{const _0x254f3f=new Date(Number(_0x575497));if(!Number[_0x5856d7(0x12f)](_0x254f3f[_0x5856d7(0xae)]()))return'';return _0x254f3f[_0x5856d7(0xbb)](undefined,{'year':'numeric','month':_0x5856d7(0xdb),'day':_0x5856d7(0x147),'hour':_0x5856d7(0xa5),'minute':'2-digit'});}catch(_0x4a0177){return'';}}[_0x5ef3d6(0xf9)](_0x3500c0,_0xc0719){const _0x3200e0=_0x5ef3d6;this[_0x3200e0(0x112)][_0x3500c0]={'start':Number(_0xc0719[_0x3200e0(0xbc)]||Date[_0x3200e0(0x145)]()),'count':Number(_0xc0719['count']||0x0),'resetAt':this[_0x3200e0(0x1a0)](_0xc0719)};}[_0x5ef3d6(0x7f)](_0x3148aa){const _0xdfbeef=_0x5ef3d6,_0x4a05c6=this[_0xdfbeef(0x112)][_0x3148aa];if(!_0x4a05c6)return null;return _0x4a05c6;}async['preloadRemoteQuotaForId'](_0x2f0f1d){const _0x2ec191=_0x5ef3d6;if(!_0x2f0f1d)return;try{const _0x9113a=await remoteGetQuota(_0x2f0f1d);this[_0x2ec191(0xf9)](_0x2f0f1d,_0x9113a);}catch(_0x2f550f){console[_0x2ec191(0x9c)](_0x2ec191(0x142),_0x2f0f1d,_0x2f550f);}}[_0x5ef3d6(0xd8)](){const _0xe4d2d4=_0x5ef3d6;if(!(this['mwKeyApplied']&&this[_0xe4d2d4(0x139)]))return this[_0xe4d2d4(0x177)](_0xe4d2d4(0x6c)),this['updateStatus']('Login\x20required',_0xe4d2d4(0xe8)),![];const _0x3b6ae5=this[_0xe4d2d4(0x7f)](this[_0xe4d2d4(0x139)]);if(_0x3b6ae5){if(_0x3b6ae5[_0xe4d2d4(0x189)]>=this['MONTHLY_LIMIT']){const _0x317547=_0x3b6ae5[_0xe4d2d4(0x16e)]?_0xe4d2d4(0x173)+this[_0xe4d2d4(0x13c)](_0x3b6ae5[_0xe4d2d4(0x16e)])+'.':'';return this['showError'](_0xe4d2d4(0xa6)+this[_0xe4d2d4(0x19f)]+')\x20reached\x20for\x20account\x20ID\x20'+this[_0xe4d2d4(0x139)]+'.'+_0x317547),this['updateStatus'](_0xe4d2d4(0xf5),_0xe4d2d4(0xe8)),![];}}return!![];}async[_0x5ef3d6(0x12b)](){const _0x539a68=_0x5ef3d6;if(!(this[_0x539a68(0xab)]&&this[_0x539a68(0x139)]))return;try{const _0x332d8e=await remoteBumpQuota(this[_0x539a68(0x139)]);this[_0x539a68(0xf9)](this[_0x539a68(0x139)],_0x332d8e);}catch(_0x2897ac){console[_0x539a68(0x9c)](_0x539a68(0xc2),_0x2897ac);const _0x166385=this[_0x539a68(0x7f)](this['currentMemberId']);_0x166385&&(_0x166385[_0x539a68(0x189)]+=0x1);}}async['checkQuotaAndIncrement'](){const _0x226a59=_0x5ef3d6;if(!(this[_0x226a59(0xab)]&&this[_0x226a59(0x139)]))return this[_0x226a59(0x177)]('You\x20must\x20be\x20logged\x20in'),this[_0x226a59(0x180)](_0x226a59(0x121),_0x226a59(0xe8)),![];try{const _0x119c52=await remoteGetQuota(this[_0x226a59(0x139)]),_0x205bea=Number(_0x119c52[_0x226a59(0x189)]||0x0);if(_0x205bea>=this[_0x226a59(0x19f)]){this['saveQuotaCache'](this['currentMemberId'],_0x119c52);const _0x2b8765=this[_0x226a59(0x1a0)](_0x119c52),_0x3f911c=_0x2b8765?_0x226a59(0x173)+this[_0x226a59(0x13c)](_0x2b8765)+'.':'';return this[_0x226a59(0x177)](_0x226a59(0xa6)+this[_0x226a59(0x19f)]+')\x20reached\x20for\x20account\x20ID\x20'+this[_0x226a59(0x139)]+'.'+_0x3f911c),this[_0x226a59(0x180)](_0x226a59(0xf5),_0x226a59(0xe8)),![];}const _0x1bb239=await remoteBumpQuota(this[_0x226a59(0x139)]);return this[_0x226a59(0xf9)](this['currentMemberId'],_0x1bb239),!![];}catch(_0x3ba8b8){return this[_0x226a59(0x177)](_0x226a59(0x15e)),this[_0x226a59(0x180)](_0x226a59(0xe3),'error'),![];}}[_0x5ef3d6(0x8a)](){const _0x162fc8=_0x5ef3d6;this[_0x162fc8(0x11e)][_0x162fc8(0x149)](_0x162fc8(0x17d),()=>{const _0x549ca9=_0x162fc8;this[_0x549ca9(0x16f)]||this['isSending']?this[_0x549ca9(0x154)]():this['sendMessage']();}),this['messageInput'][_0x162fc8(0x149)](_0x162fc8(0x171),_0xdaad7e=>{const _0x12b588=_0x162fc8;_0xdaad7e['key']===_0x12b588(0x92)&&!_0xdaad7e[_0x12b588(0x19e)]&&(_0xdaad7e[_0x12b588(0x88)](),this[_0x12b588(0x8d)]());}),this[_0x162fc8(0x73)]['addEventListener'](_0x162fc8(0x136),_0x250234=>{const _0x5716db=_0x162fc8;_0x250234[_0x5716db(0xa9)]['style']['height']='auto',_0x250234['target']['style']['height']=Math[_0x5716db(0x6e)](_0x250234[_0x5716db(0xa9)]['scrollHeight'],0x96)+'px',this[_0x5716db(0x18b)](_0x250234[_0x5716db(0xa9)]['value']);}),this[_0x162fc8(0x100)][_0x162fc8(0x149)](_0x162fc8(0x17d),()=>this[_0x162fc8(0xcd)]());if(this[_0x162fc8(0x124)])this[_0x162fc8(0x124)][_0x162fc8(0x149)](_0x162fc8(0x17d),()=>this[_0x162fc8(0xe9)]());this['suggestions']['addEventListener'](_0x162fc8(0x17d),_0x5b4aec=>{const _0xcf955a=_0x162fc8,_0x2f9838=_0x5b4aec[_0xcf955a(0xa9)]['closest'](_0xcf955a(0xdc));if(!_0x2f9838)return;const _0x578599=_0x2f9838['getAttribute'](_0xcf955a(0xd9))||'';this[_0xcf955a(0x73)][_0xcf955a(0x77)]=_0x578599;const _0x2df28b=_0x578599[_0xcf955a(0x68)](),_0xec07=_0x2df28b['includes'](_0xcf955a(0x1a2))||_0x2df28b[_0xcf955a(0xff)](_0xcf955a(0xb6))||_0x2df28b[_0xcf955a(0xff)](_0xcf955a(0x1a5))||_0x2df28b['includes']('plot')||_0x2df28b[_0xcf955a(0xff)]('bar\x20chart')||_0x2df28b['includes']('heatmap')||_0x2df28b[_0xcf955a(0xff)](_0xcf955a(0xd4))||_0x2df28b['includes'](_0xcf955a(0x116))||_0x2df28b['includes'](_0xcf955a(0x19a))||_0x2df28b[_0xcf955a(0xff)]('xg')&&_0x2df28b[_0xcf955a(0xff)]('goals');_0xec07&&!this['chartsEnabled']&&this[_0xcf955a(0xcd)]();this[_0xcf955a(0x73)]['style']['height']=_0xcf955a(0x108),this[_0xcf955a(0x73)][_0xcf955a(0x162)][_0xcf955a(0x70)]=Math['min'](this[_0xcf955a(0x73)][_0xcf955a(0x15b)],0x96)+'px',this['messageInput'][_0xcf955a(0x65)]();const _0x40a40e=this[_0xcf955a(0x73)][_0xcf955a(0x77)][_0xcf955a(0x103)];this[_0xcf955a(0x73)][_0xcf955a(0x153)](_0x40a40e,_0x40a40e);}),window[_0x162fc8(0xdf)]=this;}['updateContextualSuggestions'](_0x1a6287){const _0x579ae7=_0x5ef3d6;if(_0x1a6287[_0x579ae7(0x103)]<0x3)return;const _0x444c19=this[_0x579ae7(0x15f)](_0x1a6287);_0x444c19[_0x579ae7(0x103)]>0x0&&this[_0x579ae7(0x17b)](_0x444c19);}['generateSmartSuggestions'](_0x5ea09c){const _0x34a4e5=_0x5ef3d6,_0x3aad5d=_0x5ea09c['toLowerCase'](),_0x3c607b=[];if(this[_0x34a4e5(0x16b)][_0x34a4e5(0x187)]>0x0){const _0x41532d=Array[_0x34a4e5(0x7c)](this['playerIndex']['keys']())[_0x34a4e5(0x17e)](_0x1f9bff=>_0x1f9bff[_0x34a4e5(0x68)]()['includes'](_0x3aad5d))[_0x34a4e5(0xc9)](0x0,0x3);_0x41532d[_0x34a4e5(0x14e)](_0x2edda3=>{const _0x5de5a7=_0x34a4e5;_0x3c607b['push']({'text':_0x5de5a7(0xcf)+_0x2edda3,'query':_0x5de5a7(0xb3)+_0x2edda3});});}if(_0x3aad5d[_0x34a4e5(0xff)]('compare'))_0x3c607b[_0x34a4e5(0xf2)]({'text':_0x34a4e5(0x13d),'query':_0x34a4e5(0x66)});else(_0x3aad5d[_0x34a4e5(0xff)](_0x34a4e5(0x194))||_0x3aad5d[_0x34a4e5(0xff)](_0x34a4e5(0x10f)))&&_0x3c607b['push']({'text':_0x34a4e5(0xea),'query':_0x5ea09c+_0x34a4e5(0x143)});return _0x3c607b[_0x34a4e5(0xc9)](0x0,0x4);}[_0x5ef3d6(0x17b)](_0x126f9b){const _0x31e8ed=_0x5ef3d6;this['suggestions'][_0x31e8ed(0x156)]=_0x126f9b['map'](_0x466a5a=>_0x31e8ed(0x104)+_0x466a5a['query']+'\x22><i\x20class=\x22fas\x20fa-wand-magic-sparkles\x22></i><span>'+_0x466a5a[_0x31e8ed(0x14d)]+_0x31e8ed(0xa7))['join']('');}[_0x5ef3d6(0x188)](_0x5100d9){const _0xa460f1=_0x5ef3d6;this[_0xa460f1(0x73)]['value']=_0x5100d9,this[_0xa460f1(0x8d)]();}['toggleCharts'](){const _0x285b29=_0x5ef3d6;this[_0x285b29(0x6d)]=!this[_0x285b29(0x6d)];this['chartsEnabled']?(this[_0x285b29(0x100)][_0x285b29(0xc6)][_0x285b29(0x13e)]('active'),this['chartToggle'][_0x285b29(0x152)](_0x285b29(0x10e))[_0x285b29(0x168)]='ON',this[_0x285b29(0x100)]['title']=_0x285b29(0xfc)):(this[_0x285b29(0x100)][_0x285b29(0xc6)][_0x285b29(0x12c)]('active'),this[_0x285b29(0x100)]['querySelector'](_0x285b29(0x10e))['textContent']=_0x285b29(0x10c),this[_0x285b29(0x100)]['title']='Charts\x20disabled\x20-\x20AI\x20will\x20provide\x20text-only\x20responses');const _0x52bac0=this[_0x285b29(0x6d)]?_0x285b29(0x140):_0x285b29(0x186);this[_0x285b29(0x180)](_0x52bac0,this[_0x285b29(0x6d)]?'ready':_0x285b29(0x9b)),setTimeout(()=>{const _0x13e29e=_0x285b29;this[_0x13e29e(0x81)]&&this['updateStatus'](_0x13e29e(0xb0),_0x13e29e(0x166));},0x5dc);}async[_0x5ef3d6(0x196)](){const _0x556978=_0x5ef3d6;try{const _0x325f0f=await fetch(_0x556978(0x159),{'headers':{'Authorization':_0x556978(0xc5)+this[_0x556978(0x172)],'OpenAI-Beta':_0x556978(0x12d)},'signal':this[_0x556978(0x10d)]&&this[_0x556978(0x10d)][_0x556978(0xdd)]||undefined});if(_0x325f0f['ok']){const _0x3c4282=await _0x325f0f[_0x556978(0x110)](),_0x2540fe=_0x3c4282[_0x556978(0x18d)]['find'](_0xbb9899=>_0xbb9899[_0x556978(0x195)]===_0x556978(0x146));if(_0x2540fe)return this['assistantId']=_0x2540fe['id'],!![];}}catch(_0x4fe425){}return![];}async[_0x5ef3d6(0x15a)](){const _0x5b29a3=_0x5ef3d6;try{await this[_0x5b29a3(0x191)],this[_0x5b29a3(0x155)](!![]);const _0x4899ed=[];this[_0x5b29a3(0x180)](_0x5b29a3(0x11f),_0x5b29a3(0x9b)),_0x4899ed[_0x5b29a3(0xf2)](this[_0x5b29a3(0x89)]());this[_0x5b29a3(0x128)]&&(this[_0x5b29a3(0x180)](_0x5b29a3(0xec),_0x5b29a3(0x9b)),_0x4899ed[_0x5b29a3(0xf2)](this[_0x5b29a3(0x196)]()));const [,_0x227242]=await Promise[_0x5b29a3(0x141)](_0x4899ed);!_0x227242?(this['updateStatus'](_0x5b29a3(0x6b),_0x5b29a3(0x9b)),await this[_0x5b29a3(0x1a3)]()):this[_0x5b29a3(0x180)](_0x5b29a3(0xec),'loading'),this[_0x5b29a3(0x180)](_0x5b29a3(0x13b),'loading'),await this[_0x5b29a3(0x10b)](),this[_0x5b29a3(0x6f)](),this['updateStatus'](_0x5b29a3(0xb0),_0x5b29a3(0x166)),this['isInitialized']=!![],this[_0x5b29a3(0x155)](![]),this[_0x5b29a3(0x73)]['disabled']=![],this[_0x5b29a3(0x11e)]['disabled']=![];}catch(_0x475748){this[_0x5b29a3(0x177)](_0x5b29a3(0x18a)+_0x475748['message']),this[_0x5b29a3(0x180)](_0x5b29a3(0x164),_0x5b29a3(0xe8)),this[_0x5b29a3(0x155)](![]);}}async[_0x5ef3d6(0x89)](){const _0x2637fc=_0x5ef3d6;try{const _0x5a0b52=await fetch(_0x2637fc(0x197),{'signal':this['fetchController']&&this[_0x2637fc(0x10d)][_0x2637fc(0xdd)]||undefined});if(!_0x5a0b52['ok'])throw new Error(_0x2637fc(0x17f)+_0x5a0b52[_0x2637fc(0x14c)]);const _0x343603=await _0x5a0b52[_0x2637fc(0x14d)](),_0x41c90d=new Blob([_0x343603],{'type':'text/csv'}),_0xe9f348=new FormData();_0xe9f348['append'](_0x2637fc(0x165),_0x41c90d,_0x2637fc(0xca)),_0xe9f348[_0x2637fc(0xfa)](_0x2637fc(0x132),_0x2637fc(0xc8));const _0x5afd0d=await fetch(_0x2637fc(0x11c),{'method':_0x2637fc(0x11d),'headers':{'Authorization':_0x2637fc(0xc5)+this['acToAdj']},'body':_0xe9f348});if(!_0x5afd0d['ok']){const _0x17ceeb=await _0x5afd0d['json']();throw new Error('Upload\x20failed:\x20'+(_0x17ceeb[_0x2637fc(0xe8)]?.[_0x2637fc(0x7e)]||_0x5afd0d[_0x2637fc(0x157)]));}const _0x4f2c0f=await _0x5afd0d[_0x2637fc(0x110)]();this[_0x2637fc(0x114)]=_0x4f2c0f['id'];try{const _0x132f70=await fetch('./guide.html',{'signal':this[_0x2637fc(0x10d)]&&this[_0x2637fc(0x10d)][_0x2637fc(0xdd)]||undefined});if(_0x132f70['ok']){const _0x2346a3=await _0x132f70[_0x2637fc(0x14d)](),_0x26a10f=new Blob([_0x2346a3],{'type':_0x2637fc(0x113)}),_0x52cb23=new FormData();_0x52cb23['append'](_0x2637fc(0x165),_0x26a10f,'guide.html'),_0x52cb23[_0x2637fc(0xfa)](_0x2637fc(0x132),_0x2637fc(0xc8));const _0xb013fb=await fetch(_0x2637fc(0x11c),{'method':_0x2637fc(0x11d),'headers':{'Authorization':_0x2637fc(0xc5)+this[_0x2637fc(0x172)]},'body':_0x52cb23});if(_0xb013fb['ok']){const _0x3823a4=await _0xb013fb[_0x2637fc(0x110)]();this[_0x2637fc(0xd6)]=_0x3823a4['id'];}else{}}else{}}catch(_0x3097d8){}}catch(_0xf3ecad){}}async[_0x5ef3d6(0x1a3)](){const _0x1bb781=_0x5ef3d6,_0x425b42=await fetch(_0x1bb781(0xa2))[_0x1bb781(0x198)](_0xf7b8d5=>_0xf7b8d5[_0x1bb781(0x14d)]()),_0x93a81b=await fetch(_0x1bb781(0x91),{'method':_0x1bb781(0x11d),'headers':{'Authorization':_0x1bb781(0xc5)+this[_0x1bb781(0x172)],'Content-Type':_0x1bb781(0x137),'OpenAI-Beta':_0x1bb781(0x12d)},'body':JSON[_0x1bb781(0x138)]({'model':_0x1bb781(0x170),'name':_0x1bb781(0x146),'description':_0x1bb781(0x78),'instructions':_0x425b42,'tools':[{'type':_0x1bb781(0x111)}],'tool_resources':{'code_interpreter':{'file_ids':[this[_0x1bb781(0x114)]][_0x1bb781(0x179)](this[_0x1bb781(0xd6)]?[this['guideFileId']]:[])}}})});if(!_0x93a81b['ok']){const _0x28dec8=await _0x93a81b[_0x1bb781(0x110)]();throw new Error(_0x1bb781(0x15d)+(_0x28dec8['error']?.[_0x1bb781(0x7e)]||_0x93a81b['statusText']));}const _0x1a99ce=await _0x93a81b['json']();this[_0x1bb781(0xb7)]=_0x1a99ce['id'];}async[_0x5ef3d6(0x10b)](){const _0x5a11d4=_0x5ef3d6,_0x4fceb2=await fetch('https://api.openai.com/v1/threads',{'method':_0x5a11d4(0x11d),'headers':{'Authorization':_0x5a11d4(0xc5)+this[_0x5a11d4(0x172)],'Content-Type':_0x5a11d4(0x137),'OpenAI-Beta':'assistants=v2'},'signal':this[_0x5a11d4(0x10d)]&&this['fetchController'][_0x5a11d4(0xdd)]||undefined});if(!_0x4fceb2['ok']){const _0x480d28=await _0x4fceb2['json']();throw new Error(_0x5a11d4(0xba)+(_0x480d28['error']?.[_0x5a11d4(0x7e)]||_0x4fceb2['statusText']));}const _0x5963ef=await _0x4fceb2['json']();this['threadId']=_0x5963ef['id'];}async['cancelRun'](){const _0x385c81=_0x5ef3d6;try{this[_0x385c81(0x16f)]&&this[_0x385c81(0xa4)]&&await fetch('https://api.openai.com/v1/threads/'+this[_0x385c81(0xa4)]+_0x385c81(0x133)+this[_0x385c81(0x16f)]+'/cancel',{'method':_0x385c81(0x11d),'headers':{'Authorization':_0x385c81(0xc5)+this['acToAdj'],'OpenAI-Beta':_0x385c81(0x12d)}});}catch(_0x4841f1){}}async[_0x5ef3d6(0xe9)](){const _0x1e7ea7=_0x5ef3d6;try{this[_0x1e7ea7(0x180)](_0x1e7ea7(0x13a),_0x1e7ea7(0x9b)),this['cancelRequested']=!![];if(!this[_0x1e7ea7(0x10d)])this[_0x1e7ea7(0x10d)]=new AbortController();try{this[_0x1e7ea7(0x10d)][_0x1e7ea7(0xfb)]();}catch(_0x59e0f2){}await this[_0x1e7ea7(0x69)](),this[_0x1e7ea7(0x10d)]=null,await this[_0x1e7ea7(0x10b)](),this[_0x1e7ea7(0x120)][_0x1e7ea7(0x156)]='',this[_0x1e7ea7(0x71)]=[],this[_0x1e7ea7(0x16f)]=null,this[_0x1e7ea7(0xcb)]=![],this[_0x1e7ea7(0x10d)]=null,this[_0x1e7ea7(0x155)](![]),this['messageInput'][_0x1e7ea7(0x77)]='',this[_0x1e7ea7(0x6f)](),this[_0x1e7ea7(0x180)]('Ready!',_0x1e7ea7(0x166));}catch(_0x512268){this['showError'](_0x1e7ea7(0x11a)),this[_0x1e7ea7(0x180)]('Error',_0x1e7ea7(0xe8));}}async[_0x5ef3d6(0x8d)](){const _0x18c0ad=_0x5ef3d6;if(!this[_0x18c0ad(0x81)]||!this[_0x18c0ad(0x73)][_0x18c0ad(0x77)]['trim']())return;const _0x1b5f26=this['messageInput']['value'][_0x18c0ad(0x17a)]();this[_0x18c0ad(0x73)][_0x18c0ad(0x77)]='',this[_0x18c0ad(0x73)][_0x18c0ad(0x162)][_0x18c0ad(0x70)]='auto',this[_0x18c0ad(0x94)](_0x1b5f26,_0x18c0ad(0xa3));if(!this[_0x18c0ad(0xd8)]())return;this[_0x18c0ad(0x12b)](),this['isSending']=!![],this[_0x18c0ad(0x155)](!![]),this[_0x18c0ad(0x193)](!![]);try{this[_0x18c0ad(0xcb)]=![],this['fetchController']=new AbortController();const _0x5e4dce=/\b(what\s+is|explain|definition|how\s+(is|was)\s+.*(computed|calculated)|methodology)\b/i[_0x18c0ad(0x182)](_0x1b5f26);let _0x528147='';const _0x5640f1=[/performance\s*index/i,/possession\s*\+\-?/i,/xg\s*per\s*90/i,/xg/i,/xa/i,/progressive\s+passes?/i,/key\s+passes?/i];for(const _0x3d99a5 of _0x5640f1){const _0x131fe9=_0x1b5f26[_0x18c0ad(0x130)](_0x3d99a5);if(_0x131fe9&&_0x131fe9[0x0]){_0x528147=_0x131fe9[0x0];break;}}let _0x454e37=_0x1b5f26+(this[_0x18c0ad(0x6d)]?_0x18c0ad(0xf4):_0x18c0ad(0x12e));const _0x9321b7=this[_0x18c0ad(0xfd)](_0x1b5f26);_0x9321b7&&(_0x454e37+=_0x18c0ad(0xb1)+_0x9321b7[_0x18c0ad(0x195)]+_0x18c0ad(0x184)+_0x9321b7['list']['join'](',\x20')+']',_0x454e37+=_0x18c0ad(0x161)+_0x9321b7[_0x18c0ad(0xf0)]['join'](',\x20')+'}]');_0x5e4dce&&(_0x454e37+=_0x18c0ad(0xe7),_0x528147&&(_0x454e37+=_0x18c0ad(0x99)+_0x528147+']',/performance\s*index/i['test'](_0x528147)&&(_0x454e37+='\x0a[GUIDE\x20ANCHOR\x20HINT:\x20id=\x22performanceindex\x22\x20and\x20<h4>Performance\x20Index</h4>]')),_0x454e37+='\x0a[ATTACHED\x20FILES:\x20data.csv,\x20guide.html.\x20Access\x20with\x20open(\x27guide.html\x27,\x20encoding=\x27utf-8\x27).]',_0x454e37+=_0x18c0ad(0xef));const _0xee8cc6=await fetch(_0x18c0ad(0x105)+this[_0x18c0ad(0xa4)]+_0x18c0ad(0x150),{'method':_0x18c0ad(0x11d),'headers':{'Authorization':_0x18c0ad(0xc5)+this[_0x18c0ad(0x172)],'Content-Type':_0x18c0ad(0x137),'OpenAI-Beta':_0x18c0ad(0x12d)},'body':JSON[_0x18c0ad(0x138)]({'role':_0x18c0ad(0xa3),'content':_0x454e37}),'signal':this[_0x18c0ad(0x10d)]&&this[_0x18c0ad(0x10d)]['signal']||undefined});if(!_0xee8cc6['ok'])throw new Error(_0x18c0ad(0xc3)+_0xee8cc6[_0x18c0ad(0x157)]);const _0x25d688=await fetch(_0x18c0ad(0x105)+this[_0x18c0ad(0xa4)]+_0x18c0ad(0x119),{'method':'POST','headers':{'Authorization':_0x18c0ad(0xc5)+this[_0x18c0ad(0x172)],'Content-Type':'application/json','OpenAI-Beta':_0x18c0ad(0x12d)},'body':JSON['stringify']({'assistant_id':this['assistantId'],'stream':![]}),'signal':this[_0x18c0ad(0x10d)]&&this[_0x18c0ad(0x10d)]['signal']||undefined});if(!_0x25d688['ok'])throw new Error('Run\x20creation\x20failed:\x20'+_0x25d688['statusText']);const _0x3133fa=await _0x25d688['json']();this[_0x18c0ad(0x16f)]=_0x3133fa['id'],await this[_0x18c0ad(0x135)](_0x3133fa['id']);}catch(_0x118419){!this[_0x18c0ad(0xee)](_0x118419)&&this['showError'](_0x18c0ad(0x76)+_0x118419[_0x18c0ad(0x7e)]);}finally{this[_0x18c0ad(0x155)](![]),this[_0x18c0ad(0x193)](![]),this[_0x18c0ad(0x183)]=![],this[_0x18c0ad(0x16f)]=null;}}async[_0x5ef3d6(0x135)](_0x403060){const _0x5a32ad=_0x5ef3d6,_0x806e0f=Date['now']();let _0x1dec61=0x1f4;const _0x18abcf=0xbb8;while(!![]){if(this[_0x5a32ad(0xcb)])throw new Error(_0x5a32ad(0x106));try{const _0x5e9f86=await fetch('https://api.openai.com/v1/threads/'+this[_0x5a32ad(0xa4)]+'/runs/'+_0x403060,{'headers':{'Authorization':'Bearer\x20'+this['acToAdj'],'OpenAI-Beta':_0x5a32ad(0x12d)},'signal':this[_0x5a32ad(0x10d)]&&this[_0x5a32ad(0x10d)][_0x5a32ad(0xdd)]||undefined});if(!_0x5e9f86['ok']){if(this[_0x5a32ad(0xcb)])throw new Error(_0x5a32ad(0x106));throw new Error(_0x5a32ad(0x1a1)+_0x5e9f86['statusText']);}const _0x1b807a=await _0x5e9f86[_0x5a32ad(0x110)]();if(_0x1b807a[_0x5a32ad(0x14c)]===_0x5a32ad(0x9d))this['updateStatus'](_0x5a32ad(0x8c),_0x5a32ad(0x9b));else _0x1b807a[_0x5a32ad(0x14c)]===_0x5a32ad(0x16a)&&this[_0x5a32ad(0x180)](_0x5a32ad(0x72),_0x5a32ad(0x9b));if(_0x1b807a['status']==='completed'){await this[_0x5a32ad(0x82)]();break;}else{if(_0x1b807a[_0x5a32ad(0x14c)]===_0x5a32ad(0xe2)||_0x1b807a['status']===_0x5a32ad(0x79)||_0x1b807a[_0x5a32ad(0x14c)]===_0x5a32ad(0xf3)){if(this[_0x5a32ad(0xcb)])throw new Error('Cancelled');throw new Error('Analysis\x20'+_0x1b807a['status']+':\x20'+(_0x1b807a['last_error']?.[_0x5a32ad(0x7e)]||_0x5a32ad(0xc1)));}}const _0x2d9705=Date['now']()-_0x806e0f;_0x2d9705>0x2710&&(_0x1dec61=Math[_0x5a32ad(0x6e)](_0x18abcf,_0x1dec61*1.2)),await new Promise(_0x95af73=>setTimeout(_0x95af73,_0x1dec61));}catch(_0x448ade){if(this[_0x5a32ad(0xcb)])throw new Error(_0x5a32ad(0x106));throw _0x448ade;}}}async[_0x5ef3d6(0x82)](){const _0x47f57d=_0x5ef3d6,_0x33c76d=await fetch(_0x47f57d(0x105)+this[_0x47f57d(0xa4)]+_0x47f57d(0xe6),{'headers':{'Authorization':'Bearer\x20'+this[_0x47f57d(0x172)],'OpenAI-Beta':'assistants=v2'},'signal':this[_0x47f57d(0x10d)]&&this[_0x47f57d(0x10d)][_0x47f57d(0xdd)]||undefined});if(!_0x33c76d['ok'])throw new Error(_0x47f57d(0x7b)+_0x33c76d['statusText']);const _0x2ad451=await _0x33c76d[_0x47f57d(0x110)](),_0x38cb4c=_0x2ad451[_0x47f57d(0x18d)][0x0];if(_0x38cb4c&&_0x38cb4c[_0x47f57d(0x14b)]===_0x47f57d(0x98)){let _0x371ae3='';for(const _0x41009b of _0x38cb4c['content']){if(_0x41009b[_0x47f57d(0x181)]===_0x47f57d(0x14d))_0x371ae3+=_0x41009b['text'][_0x47f57d(0x77)];else _0x41009b[_0x47f57d(0x181)]==='image_file'&&(_0x371ae3+='',await this['displayImageFile'](_0x41009b[_0x47f57d(0xc7)]['file_id']));}_0x371ae3&&(this['addMessage'](_0x371ae3,_0x47f57d(0x98)),this[_0x47f57d(0x180)](_0x47f57d(0x1a6),_0x47f57d(0x166)));}}async[_0x5ef3d6(0xd7)](_0x1bbfcf){const _0x108b61=_0x5ef3d6;try{const _0x5ade2f=await fetch('https://api.openai.com/v1/files/'+_0x1bbfcf+_0x108b61(0xce),{'headers':{'Authorization':_0x108b61(0xc5)+this['acToAdj']},'signal':this['fetchController']&&this[_0x108b61(0x10d)][_0x108b61(0xdd)]||undefined});if(!_0x5ade2f['ok'])throw new Error(_0x108b61(0x134)+_0x5ade2f[_0x108b61(0x14c)]+')');const _0x3fb5e9=await _0x5ade2f[_0x108b61(0x101)](),_0x1c374d=URL[_0x108b61(0x148)](_0x3fb5e9),_0x1842f7=document[_0x108b61(0x95)](_0x108b61(0xd0));_0x1842f7[_0x108b61(0x84)]=_0x108b61(0x80),_0x1842f7[_0x108b61(0x156)]=_0x108b61(0x122)+_0x1c374d+_0x108b61(0x11b),this[_0x108b61(0x120)][_0x108b61(0xf6)](_0x1842f7),this[_0x108b61(0xb5)]();}catch(_0x1cc1c5){}}['createMessageContainer'](_0x1d0048){const _0x884d09=_0x5ef3d6,_0x40d264=document[_0x884d09(0x95)](_0x884d09(0xd0));_0x40d264['className']=_0x884d09(0xd1)+_0x1d0048;const _0x124bc9=document[_0x884d09(0x95)]('div');_0x124bc9[_0x884d09(0x84)]=_0x884d09(0x86);_0x1d0048===_0x884d09(0xa3)?_0x124bc9['textContent']=_0x884d09(0xe5):_0x124bc9[_0x884d09(0x156)]=_0x884d09(0xaa);const _0xddecf4=document[_0x884d09(0x95)](_0x884d09(0xd0));return _0xddecf4[_0x884d09(0x84)]=_0x884d09(0x16c),_0x40d264[_0x884d09(0xf6)](_0x124bc9),_0x40d264[_0x884d09(0xf6)](_0xddecf4),this[_0x884d09(0x120)][_0x884d09(0xf6)](_0x40d264),this['scrollToBottom'](),_0x40d264;}[_0x5ef3d6(0x94)](_0x5f3290,_0x3a19d1){const _0x47c296=_0x5ef3d6,_0x1d1fbe=this['createMessageContainer'](_0x3a19d1),_0x18ac86=_0x1d1fbe[_0x47c296(0x152)](_0x47c296(0x83));_0x18ac86[_0x47c296(0x156)]=this[_0x47c296(0x163)](_0x5f3290);}[_0x5ef3d6(0x163)](_0x1af44a){const _0x120949=_0x5ef3d6;try{window[_0x120949(0x176)]&&marked[_0x120949(0x9f)]({'gfm':!![],'breaks':!![]});const _0x1b6467=window[_0x120949(0x176)]?marked[_0x120949(0x1a4)](_0x1af44a||''):(_0x1af44a||'')[_0x120949(0xd3)](/\n/g,'<br>'),_0x484135=window[_0x120949(0x102)]?DOMPurify[_0x120949(0xcc)](_0x1b6467):_0x1b6467,_0x240291=document[_0x120949(0x95)]('div'),_0x406072=(_0x1af44a||'')['trim']()[_0x120949(0x9e)]('\x0a')===-0x1&&(_0x1af44a||'')['trim']()[_0x120949(0x103)]<=0x3c;_0x240291['className']='markdown-body'+(_0x406072?_0x120949(0x158):''),_0x240291[_0x120949(0x156)]=_0x484135;const _0x243b3c=_0x240291[_0x120949(0x129)](_0x120949(0xd5));return _0x243b3c[_0x120949(0x14e)](_0x1167e9=>{const _0x2e8a72=_0x120949;_0x1167e9[_0x2e8a72(0xc6)][_0x2e8a72(0x13e)]('data-table');const _0x3ff628=_0x1167e9['querySelectorAll'](_0x2e8a72(0xa0))[_0x2e8a72(0x103)],_0xb6cafd=document[_0x2e8a72(0x95)](_0x2e8a72(0xd0));_0xb6cafd['className']=_0x2e8a72(0x74);if(_0x3ff628>0xa){_0xb6cafd[_0x2e8a72(0xc6)][_0x2e8a72(0x13e)](_0x2e8a72(0xaf));const _0x573658=document[_0x2e8a72(0x95)]('div');_0x573658[_0x2e8a72(0x84)]='table-controls',_0x573658['innerHTML']=_0x2e8a72(0x19c)+Math[_0x2e8a72(0x6e)](0xa,_0x3ff628)+_0x2e8a72(0x8f)+_0x3ff628+'\x20results</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20class=\x22expand-button\x22\x20onclick=\x22toggleTable(this)\x22>Show\x20All</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20',_0xb6cafd['appendChild'](_0x573658);}_0x1167e9[_0x2e8a72(0xed)][_0x2e8a72(0x7a)](_0xb6cafd,_0x1167e9),_0xb6cafd[_0x2e8a72(0xf6)](_0x1167e9);const _0x14e493=document[_0x2e8a72(0x95)]('div');_0x14e493[_0x2e8a72(0x162)][_0x2e8a72(0x70)]=_0x2e8a72(0xbd),_0xb6cafd[_0x2e8a72(0x18e)](_0x14e493);}),_0x240291[_0x120949(0x144)];}catch(_0x44d5d4){return(_0x1af44a||'')[_0x120949(0xd3)](/&/g,_0x120949(0x18c))[_0x120949(0xd3)](/</g,_0x120949(0x12a))[_0x120949(0xd3)](/>/g,_0x120949(0x96))[_0x120949(0xd3)](/\n/g,'<br>');}}[_0x5ef3d6(0xb5)](){setTimeout(()=>{const _0x4e7cad=_0x1ef1;this[_0x4e7cad(0x120)]['scrollTop']=this[_0x4e7cad(0x120)]['scrollHeight'];},0x64);}[_0x5ef3d6(0x155)](_0x2f0e5e){const _0x25bda8=_0x5ef3d6;this['messageInput'][_0x25bda8(0x115)]=_0x2f0e5e;if(_0x2f0e5e){if(!this[_0x25bda8(0xb9)]){const _0x3938a2=this[_0x25bda8(0xc0)](_0x25bda8(0x98));_0x3938a2[_0x25bda8(0xc6)][_0x25bda8(0x13e)](_0x25bda8(0xb2)),_0x3938a2[_0x25bda8(0x152)]('.message-content')[_0x25bda8(0x156)]='\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22typing\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22typing-dot\x22></div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22typing-dot\x22></div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22typing-dot\x22></div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20',this['typingMessageEl']=_0x3938a2;}}else this[_0x25bda8(0xb9)]&&(this['typingMessageEl'][_0x25bda8(0x12c)](),this[_0x25bda8(0xb9)]=null);}[_0x5ef3d6(0x193)](_0x547d91){const _0x3e0c29=_0x5ef3d6;try{const _0x3ce0f1=this['sendButton'][_0x3e0c29(0x152)](_0x3e0c29(0x15c));if(_0x547d91){this[_0x3e0c29(0x11e)][_0x3e0c29(0xc6)]['add'](_0x3e0c29(0xde));if(_0x3ce0f1)_0x3ce0f1[_0x3e0c29(0x156)]=_0x3e0c29(0xf7);this[_0x3e0c29(0x11e)][_0x3e0c29(0xe4)]=_0x3e0c29(0xe0);}else{this[_0x3e0c29(0x11e)][_0x3e0c29(0xc6)][_0x3e0c29(0x12c)](_0x3e0c29(0xde));if(_0x3ce0f1)_0x3ce0f1[_0x3e0c29(0x156)]=_0x3e0c29(0xfe);this[_0x3e0c29(0x11e)][_0x3e0c29(0xe4)]=_0x3e0c29(0x16d);}}catch(_0x5e3651){}}async[_0x5ef3d6(0x154)](){const _0x54002b=_0x5ef3d6;try{this[_0x54002b(0xcb)]=!![];if(!this[_0x54002b(0x10d)])this[_0x54002b(0x10d)]=new AbortController();try{this[_0x54002b(0x10d)]['abort']();}catch(_0x5b914d){}await this[_0x54002b(0x69)](),this[_0x54002b(0x180)]('Stopped','ready');}catch(_0x437526){}finally{this[_0x54002b(0x155)](![]),this[_0x54002b(0x193)](![]),this[_0x54002b(0xcb)]=![],this[_0x54002b(0x10d)]=null,this[_0x54002b(0x16f)]=null;}}[_0x5ef3d6(0xee)](_0x4dfdc4){const _0x3adc86=_0x5ef3d6;if(!_0x4dfdc4)return![];const _0x1b7bef=String(_0x4dfdc4&&(_0x4dfdc4['message']||_0x4dfdc4[_0x3adc86(0xb4)]()||''));return _0x4dfdc4[_0x3adc86(0x195)]===_0x3adc86(0x174)||/aborted/i[_0x3adc86(0x182)](_0x1b7bef)||/cancelled/i[_0x3adc86(0x182)](_0x1b7bef)||/canceled/i[_0x3adc86(0x182)](_0x1b7bef);}[_0x5ef3d6(0x180)](_0x13eefa,_0x29f478){const _0x305236=_0x5ef3d6,_0x5c2b1e=this[_0x305236(0x14c)],_0x24ae1f=_0x5c2b1e['querySelector'](_0x305236(0x87));_0x5c2b1e['innerHTML']=_0x305236(0x178)+_0x13eefa+_0x305236(0x90);const _0x409dd4=_0x5c2b1e[_0x305236(0x152)](_0x305236(0x87));switch(_0x29f478){case _0x305236(0x9b):_0x409dd4['style']['background']=_0x305236(0x19d);break;case'ready':_0x409dd4[_0x305236(0x162)][_0x305236(0xf8)]=_0x305236(0x93);break;case'error':_0x409dd4['style'][_0x305236(0xf8)]='#ef4444';break;}}[_0x5ef3d6(0x6f)](){const _0x1bb677=_0x5ef3d6,_0x2bbc37=_0x1bb677(0x18f),_0x299cbf=this[_0x1bb677(0xc0)](_0x1bb677(0x98)),_0x4ec108=_0x299cbf['querySelector'](_0x1bb677(0x83));_0x4ec108[_0x1bb677(0x156)]=_0x2bbc37;}[_0x5ef3d6(0x177)](_0x1194ac){const _0x14a494=_0x5ef3d6,_0x48ffbe='\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22error\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x1194ac+_0x14a494(0x127),_0x2ffaca=this[_0x14a494(0xc0)](_0x14a494(0x98)),_0x1e8214=_0x2ffaca['querySelector']('.message-content');_0x1e8214[_0x14a494(0x156)]=_0x48ffbe;}['resolveLeagueAliases'](_0x347075){const _0x52e7c7=_0x5ef3d6;if(!_0x347075)return null;const _0x3e2421=_0x347075['toLowerCase'](),_0x1937f0=['Premier\x20League',_0x52e7c7(0x167),_0x52e7c7(0x190),'Serie\x20A','Ligue\x201'],_0x185628=[_0x52e7c7(0x117),'La\x20Liga',_0x52e7c7(0x190),_0x52e7c7(0x192),_0x52e7c7(0xb8),_0x52e7c7(0x97),'Eredivisie'],_0x2d7cf9=/(europe'?s\s*top\s*5|\btop\s*5\s*leagues\b|\bbig\s*5\b)/i[_0x52e7c7(0x182)](_0x347075),_0x46e0e1=/(europe'?s\s*top\s*7|\btop\s*7\s*leagues\b)/i[_0x52e7c7(0x182)](_0x347075);if(_0x46e0e1)return{'name':_0x52e7c7(0xad),'list':_0x185628};if(_0x2d7cf9)return{'name':'Europe\x27s\x20Top\x205','list':_0x1937f0};return null;}}document[_0x5ef3d6(0x149)](_0x5ef3d6(0x185),function(){new UltimateFootballAI();});function _0x1ef1(_0x2c912d,_0x46793d){const _0x2ed9b9=_0x2ed9();return _0x1ef1=function(_0x1ef1d3,_0x23a5f4){_0x1ef1d3=_0x1ef1d3-0x65;let _0x3f1cb1=_0x2ed9b9[_0x1ef1d3];return _0x3f1cb1;},_0x1ef1(_0x2c912d,_0x46793d);}function toggleTable(_0x1de4d6){const _0x2d7a08=_0x5ef3d6,_0x4a7350=_0x1de4d6[_0x2d7a08(0xf1)](_0x2d7a08(0xda)),_0x1b63d5=_0x4a7350[_0x2d7a08(0xc6)][_0x2d7a08(0x75)](_0x2d7a08(0xe1));_0x1b63d5?(_0x4a7350[_0x2d7a08(0xc6)][_0x2d7a08(0x12c)]('expanded'),_0x4a7350[_0x2d7a08(0xc6)]['add'](_0x2d7a08(0xaf)),_0x1de4d6[_0x2d7a08(0x168)]=_0x2d7a08(0x109)):(_0x4a7350['classList'][_0x2d7a08(0x12c)](_0x2d7a08(0xaf)),_0x4a7350[_0x2d7a08(0xc6)][_0x2d7a08(0x13e)]('expanded'),_0x1de4d6[_0x2d7a08(0x168)]=_0x2d7a08(0xeb));}
     </script>
 
 </body>
