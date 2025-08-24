@@ -1,5 +1,5 @@
 {
-"welcomeMsg": "Comment puis-je vous aider aujourd'hui ? <br><br>Je suis entraîné sur les données 2024/25 et 2025 de DataMB Pro (40 championnats). Je peux répondre à toutes les questions sur les données et traiter des demandes complexes — des définitions de métriques aux analyses avancées, rapports de scouting et insights approfondis. <br><br>Activez les graphiques pour les requêtes visuelles.",
+"welcomeMsg": "Comment puis-je vous aider aujourd'hui ? <br><br>Je suis entraîné sur les données 2025/26 et 2025 de DataMB Pro (40 championnats). Je peux répondre à toutes les questions sur les données et traiter des demandes complexes — des définitions de métriques aux analyses avancées, rapports de scouting et insights approfondis. <br><br>Activez les graphiques pour les requêtes visuelles.",
 "disclaimer": "L'IA peut se tromper. Consultez les autres outils pour référence.",
 "placeholder": "Posez une question…",
 "status": {
@@ -13,14 +13,16 @@
     "settingUpConversation": "Configuration de la conversation...",
     "loadingAIAssistant": "Chargement de l'assistant IA...",
     "readingDataset": "Lecture de la base de données...",
+    "noAccess": "Pas d'accès",
     "monthlyLimitReached": "Limite mensuelle atteinte",
     "loginRequired": "Connexion requise"
 },
 "errors": {
-    "monthlyLimitReachedForAccount1": "Limite mensuelle ",
-    "monthlyLimitReachedForAccount2": " atteinte pour l'ID de compte",
-    "resets": "Réinitialisation le ",
-    "loginRequired": "Vous devez être connecté"
+    "monthlyLimitReached": "Limite de requêtes mensuelles atteinte.",
+    "resets": "Réinitialisation le",
+    "loginRequired": "Vous devez être connecté",
+    "addMoreRequestsInfo": "Vous pouvez ajouter 100 requêtes si vous ne voulez pas attendre.",
+    "bannedUser": "Les comptes gratuits n'ont pas accès à l'IA, abonnez-vous pour essayer DataMB Chat"
 },
 "tooltips": {
     "stop": "Arrêter",
@@ -44,6 +46,11 @@
     "radarChart": "Créez un graphique radar comparant Pedri et Bellingham",
     "xGvsGoals": "Tracez le xG total par rapport au nombre de buts total pour les attaquants de Premier League",
     "topScorers": "Qui a marqué le plus de buts en Premier League cette saison"
+},
+"payment": {
+    "addMoreRequests": "Acheter (10€)",
+    "reloadMessage": "Page de paiement ouverte dans un nouvel onglet. Après avoir complété le paiement, cliquez sur le bouton ci-dessous pour actualiser la page.",
+    "subscribe": "S'abonner"
 }
 }
 
