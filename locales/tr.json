@@ -1,5 +1,5 @@
 {
-    "welcomeMsg": "Bugün size nasıl yardımcı olabilirim? <br><br>2024/25 ve 2025 DataMB veri seti (40 lig) üzerinde eğitildim. Verilerle ilgili tüm soruları yanıtlayabilir ve metrik tanımlarından ileri analizlere, scouting raporlarına ve derin içgörülere kadar karmaşık istekleri yerine getirebilirim. <br><br>Anlık grafikler ve görsel sorgular için grafik geçişini etkinleştirin.",
+    "welcomeMsg": "Bugün size nasıl yardımcı olabilirim? <br><br>2025/26 ve 2025 DataMB Pro veri seti (40 lig) üzerinde eğitildim. Verilerle ilgili tüm soruları yanıtlayabilir ve metrik tanımlarından ileri analizlere, scouting raporlarına ve derin içgörülere kadar karmaşık istekleri yerine getirebilirim. <br><br>Anlık grafikler ve görsel sorgular için grafik geçişini etkinleştirin.",
     "disclaimer": "Yapay zeka hata yapabilir. Referans için diğer araçları kontrol edin.",
     "placeholder": "Her şeyi sor…",
     "status": {
@@ -13,14 +13,16 @@
         "settingUpConversation": "Sohbet ayarlanıyor...",
         "loadingAIAssistant": "Yapay zeka asistanı yükleniyor...",
         "readingDataset": "Veri seti okunuyor...",
+        "noAccess": "Erişim yok",
         "monthlyLimitReached": "Aylık limit doldu",
         "loginRequired": "Giriş gerekli"
     },
     "errors": {
-        "monthlyLimitReachedForAccount1": "Aylık limit ",
-        "monthlyLimitReachedForAccount2": " bu hesap kimliği için doldu",
-        "resets": "Sıfırlanma tarihi ",
-        "loginRequired": "Giriş yapmanız gerekiyor"
+        "monthlyLimitReached": "Hesabınız için aylık sorgu limiti doldu.",
+        "resets": "Sıfırlanma tarihi",
+        "loginRequired": "Giriş yapmanız gerekiyor",
+        "addMoreRequestsInfo": "Beklemek istemiyorsanız 100 istek ekleyebilirsiniz.",
+        "bannedUser": "Ücretsiz hesaplar yapay zeka erişimine sahip değildir, DataMB Chat'i denemek için abone olun"
     },
     "tooltips": {
         "stop": "Durdur",
@@ -38,12 +40,17 @@
         "topScorers": "Gol krallığı"
     },
     "suggestionInputs": {
-        "scoutReport": "Baleba için scouting raporu",
-        "definitions": "Performans Endeksi'nin nasıl hesaplandığını açıklayın",
-        "mostCreative": "Avrupa'nın ilk 5 ligindeki en yaratıcı oyuncuları gösterin",
-        "radarChart": "Pedri ve Bellingham'ı karşılaştıran bir radar grafiği oluşturun",
-        "xGvsGoals": "Premier League forvetleri için toplam xG ile toplam golleri karşılaştırın",
-        "topScorers": "Bu sezon Premier League'de en çok golü kim attı"
+        "scoutReport": "Baleba için scout raporu",
+        "definitions": "Performans Endeksi'nin nasıl hesaplandığını açıkla",
+        "mostCreative": "Avrupa'nın en iyi 5 ligindeki en yaratıcı oyuncuları göster",
+        "radarChart": "Pedri ve Bellingham'ı karşılaştıran radar grafiği oluştur",
+        "xGvsGoals": "Premier Lig forvetleri için toplam xG vs toplam goller grafiği çiz",
+        "topScorers": "Bu sezon Premier Lig'de en çok gol atan"
+    },
+    "payment": {
+        "addMoreRequests": "Satın al (10€)",
+        "reloadMessage": "Ödeme sayfası yeni sekmede açıldı. Ödemeyi tamamladıktan sonra kotanızı yenilemek için aşağıdaki düğmeye tıklayın.",
+        "subscribe": "Abone ol"
     }
 }
 
