@@ -1,0 +1,55 @@
+{
+  "welcomeMsg": "Come posso aiutarti oggi? <br><br>Sono addestrato sul dataset DataMB Pro 2025/26 e 2025 (40 campionati). Posso rispondere a qualsiasi domanda sui dati e gestire richieste complesse — dalle definizioni delle metriche all'analisi avanzata, report di scouting e approfondimenti. <br><br>Attiva il toggle dei grafici per visualizzazioni on-demand e query visive.",
+  "disclaimer": "L'IA può commettere errori. Verifica con altri strumenti.",
+  "placeholder": "Chiedi qualsiasi cosa…",
+  "status": {
+    "stopped": "Fermato",
+    "analysisComplete": "Analisi completata!",
+    "analyzingData": "Analisi dati in corso...",
+    "runningCalculations": "Calcoli in corso...",
+    "error": "Errore",
+    "ready": "Pronto!",
+    "startingNewChat": "Avvio nuova chat...",
+    "settingUpConversation": "Configurazione conversazione...",
+    "loadingAIAssistant": "Caricamento assistente IA...",
+    "readingDataset": "Lettura dataset...",
+    "noAccess": "Nessun accesso",
+    "monthlyLimitReached": "Limite mensile raggiunto",
+    "loginRequired": "Accesso richiesto"
+  },
+  "errors": {
+    "monthlyLimitReached": "Limite mensile di query raggiunto.",
+    "resets": "Si reimposta",
+    "loginRequired": "Devi essere connesso",
+    "addMoreRequestsInfo": "Puoi aggiungere 100 richieste se non vuoi aspettare.",
+    "bannedUser": "Gli account gratuiti non hanno accesso all'IA, crea un nuovo account per provare DataMB Chat"
+  },
+  "tooltips": {
+    "stop": "Ferma",
+    "send": "Invia",
+    "chartsDisabled": "Grafici disabilitati",
+    "chartsEnabled": "Grafici abilitati",
+    "newChat": "Nuova Chat"
+  },
+  "suggestions": {
+    "scoutReport": "Report Scouting",
+    "definitions": "Definizioni",
+    "mostCreative": "Più Creativi",
+    "radarChart": "Grafico Radar",
+    "xGvsGoals": "xG vs Gol",
+    "topScorers": "Capocannonieri"
+  },
+  "suggestionInputs": {
+    "scoutReport": "Report scouting per Baleba",
+    "definitions": "Spiega come viene calcolato il Performance Index",
+    "mostCreative": "Mostrami i giocatori più creativi nei primi 5 campionati europei",
+    "radarChart": "Crea un grafico radar confrontando Pedri e Bellingham",
+    "xGvsGoals": "Mostra xG totali vs gol totali per gli attaccanti della Premier League",
+    "topScorers": "Più gol in Premier League questa stagione"
+  },
+  "payment": {
+    "addMoreRequests": "Acquista (€10)",
+    "reloadMessage": "Pagina di pagamento aperta in nuova scheda. Dopo aver completato il pagamento, clicca il pulsante sotto per ricaricare la pagina.",
+    "subscribe": "Abbonati"
+  }
+}

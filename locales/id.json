@@ -1,0 +1,55 @@
+{
+  "welcomeMsg": "Bagaimana saya bisa membantu Anda hari ini? <br><br>Saya dilatih dengan dataset DataMB Pro 2025/26 dan 2025 (40 liga). Saya dapat menjawab pertanyaan apapun tentang data dan menangani permintaan kompleks — dari definisi metrik hingga analisis lanjutan, laporan scouting, dan wawasan mendalam. <br><br>Aktifkan toggle grafik untuk chart on-demand dan kueri visual.",
+  "disclaimer": "AI bisa membuat kesalahan. Periksa dengan alat lain untuk referensi.",
+  "placeholder": "Tanya apapun…",
+  "status": {
+    "stopped": "Berhenti",
+    "analysisComplete": "Analisis selesai!",
+    "analyzingData": "Menganalisis data...",
+    "runningCalculations": "Menjalankan perhitungan...",
+    "error": "Error",
+    "ready": "Siap!",
+    "startingNewChat": "Memulai chat baru...",
+    "settingUpConversation": "Menyiapkan percakapan...",
+    "loadingAIAssistant": "Memuat asisten AI...",
+    "readingDataset": "Membaca dataset...",
+    "noAccess": "Tidak ada akses",
+    "monthlyLimitReached": "Batas bulanan tercapai",
+    "loginRequired": "Login diperlukan"
+  },
+  "errors": {
+    "monthlyLimitReached": "Batas kueri bulanan tercapai.",
+    "resets": "Direset",
+    "loginRequired": "Anda harus login",
+    "addMoreRequestsInfo": "Anda bisa menambah 100 permintaan jika tidak ingin menunggu.",
+    "bannedUser": "Akun gratis tidak mendapat akses AI, buat akun baru untuk mencoba DataMB Chat"
+  },
+  "tooltips": {
+    "stop": "Berhenti",
+    "send": "Kirim",
+    "chartsDisabled": "Grafik dinonaktifkan",
+    "chartsEnabled": "Grafik diaktifkan",
+    "newChat": "Chat Baru"
+  },
+  "suggestions": {
+    "scoutReport": "Laporan Scout",
+    "definitions": "Definisi",
+    "mostCreative": "Paling Kreatif",
+    "radarChart": "Grafik Radar",
+    "xGvsGoals": "xG vs Gol",
+    "topScorers": "Pencetak Gol Teratas"
+  },
+  "suggestionInputs": {
+    "scoutReport": "Laporan scout untuk Baleba",
+    "definitions": "Jelaskan bagaimana Performance Index dihitung",
+    "mostCreative": "Tunjukkan pemain paling kreatif di 5 liga top Eropa",
+    "radarChart": "Buat grafik radar membandingkan Pedri dan Bellingham",
+    "xGvsGoals": "Plot total xG vs total gol untuk striker Premier League",
+    "topScorers": "Gol terbanyak di Premier League musim ini"
+  },
+  "payment": {
+    "addMoreRequests": "Beli (€10)",
+    "reloadMessage": "Halaman pembayaran dibuka di tab baru. Setelah menyelesaikan pembayaran, klik tombol di bawah untuk memuat ulang halaman.",
+    "subscribe": "Berlangganan"
+  }
+}

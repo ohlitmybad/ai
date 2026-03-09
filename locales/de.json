@@ -1,0 +1,55 @@
+{
+  "welcomeMsg": "Wie kann ich dir heute helfen? <br><br>Ich bin mit dem DataMB Pro Datensatz 2025/26 und 2025 (40 Ligen) trainiert. Ich kann jede Frage zu den Daten beantworten und komplexe Anfragen bearbeiten — von Metrik-Definitionen bis hin zu fortgeschrittenen Analysen, Scouting-Berichten und tieferen Einblicken. <br><br>Aktiviere den Diagramm-Schalter für On-Demand-Charts und visuelle Abfragen.",
+  "disclaimer": "KI kann Fehler machen. Nutze andere Tools zur Überprüfung.",
+  "placeholder": "Frag alles…",
+  "status": {
+    "stopped": "Gestoppt",
+    "analysisComplete": "Analyse abgeschlossen!",
+    "analyzingData": "Daten werden analysiert...",
+    "runningCalculations": "Berechnungen laufen...",
+    "error": "Fehler",
+    "ready": "Bereit!",
+    "startingNewChat": "Neuer Chat wird gestartet...",
+    "settingUpConversation": "Konversation wird eingerichtet...",
+    "loadingAIAssistant": "KI-Assistent wird geladen...",
+    "readingDataset": "Datensatz wird gelesen...",
+    "noAccess": "Kein Zugang",
+    "monthlyLimitReached": "Monatliches Limit erreicht",
+    "loginRequired": "Anmeldung erforderlich"
+  },
+  "errors": {
+    "monthlyLimitReached": "Monatliches Abfragelimit erreicht.",
+    "resets": "Wird zurückgesetzt",
+    "loginRequired": "Du musst angemeldet sein",
+    "addMoreRequestsInfo": "Du kannst 100 Anfragen hinzufügen, wenn du nicht warten möchtest.",
+    "bannedUser": "Kostenlose Konten haben keinen KI-Zugang, erstelle ein neues Konto um DataMB Chat zu testen"
+  },
+  "tooltips": {
+    "stop": "Stopp",
+    "send": "Senden",
+    "chartsDisabled": "Diagramme deaktiviert",
+    "chartsEnabled": "Diagramme aktiviert",
+    "newChat": "Neuer Chat"
+  },
+  "suggestions": {
+    "scoutReport": "Scouting-Bericht",
+    "definitions": "Definitionen",
+    "mostCreative": "Kreativste Spieler",
+    "radarChart": "Radar-Diagramm",
+    "xGvsGoals": "xG vs Tore",
+    "topScorers": "Torjäger"
+  },
+  "suggestionInputs": {
+    "scoutReport": "Scouting-Bericht für Baleba",
+    "definitions": "Erkläre wie der Performance Index berechnet wird",
+    "mostCreative": "Zeig mir die kreativsten Spieler in Europas Top 5 Ligen",
+    "radarChart": "Erstelle ein Radar-Diagramm zum Vergleich von Pedri und Bellingham",
+    "xGvsGoals": "Plotte xG gegen Tore für Premier League Stürmer",
+    "topScorers": "Die meisten Tore in der Premier League diese Saison"
+  },
+  "payment": {
+    "addMoreRequests": "Kaufen (10€)",
+    "reloadMessage": "Zahlungsseite in neuem Tab geöffnet. Nach Abschluss der Zahlung klicke auf den Button unten, um die Seite neu zu laden.",
+    "subscribe": "Abonnieren"
+  }
+}
