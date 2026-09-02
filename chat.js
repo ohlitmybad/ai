@@ -1,1 +1,1284 @@
-const REMOTE_QUOTA_URL='https://script.google.com/macros/s/AKfycbweT-ZkpblVyID3npNRRCTvJISREBxCtCkmW3JU_tEquUpE_XPI9ZnE6NkefHjBv17icg/exec';function __jsonp(_0x3149ba,_0x21f4a0=0x1f40){return new Promise((_0x40839b,_0x4ed8da)=>{const _0x1bea21='cb'+Math['random']()['toString'](0x24)['slice'](0x2),_0x385d7b=document['createElement']('script'),_0x1ad216=setTimeout(()=>{_0x1ce36b(),_0x4ed8da(new Error('JSONP\x20timeout'));},_0x21f4a0);function _0x1ce36b(){if(_0x385d7b['parentNode'])_0x385d7b['parentNode']['removeChild'](_0x385d7b);try{delete window[_0x1bea21];}catch(_0xa20829){window[_0x1bea21]=undefined;}clearTimeout(_0x1ad216);}window[_0x1bea21]=_0x36b081=>{_0x1ce36b(),_0x40839b(_0x36b081);},_0x385d7b['src']=_0x3149ba+(_0x3149ba['includes']('?')?'&':'?')+'callback='+_0x1bea21,_0x385d7b['onerror']=()=>{_0x1ce36b(),_0x4ed8da(new Error('JSONP\x20error'));},document['head']['appendChild'](_0x385d7b);});}async function remoteGetQuota(_0x1e5fa3){if(!REMOTE_QUOTA_URL)throw new Error('REMOTE_QUOTA_URL\x20not\x20set');return __jsonp(REMOTE_QUOTA_URL+'?id='+encodeURIComponent(_0x1e5fa3));}async function remoteBumpQuota(_0x33448b){if(!REMOTE_QUOTA_URL)throw new Error('REMOTE_QUOTA_URL\x20not\x20set');return __jsonp(REMOTE_QUOTA_URL+'?id='+encodeURIComponent(_0x33448b)+'&bump=1');}class UltimateFootballAI{constructor(){this['acTo']=null;const _0x32fd33='aHR0cHM6Ly93b3JrZXJzLXBsYXlncm91bmQtbGluZ2VyaW5nLWRpc2stMWFhNi5kYXRhbWItZm9vdGJhbGwud29ya2Vycy5kZXYvP3Rva2VuPXN1cGVyc2VjcmV0';this['bootstrapPromise']=fetch(atob(_0x32fd33))['then'](_0x5b5c2f=>_0x5b5c2f['json']())['then'](_0x3b5cb6=>{return this['acTo']=_0x3b5cb6['key'],this['acToAdj']=this['getAdjusted'](),this['acTo'];}),this['assistantId']=null,this['threadId']=null,this['fileId']=null,this['isInitialized']=![],this['conversationHistory']=[],this['currentRunId']=null,this['chartsEnabled']=![],this['reuseAssistant']=!![],this['MONTHLY_LIMIT']=0x1e,this['mwKeyApplied']=![],this['currentMemberId']='',this['quotaCache']={},this['messagesContainer']=document['getElementById']('messages'),this['messageInput']=document['getElementById']('messageInput'),this['sendButton']=document['getElementById']('sendButton'),this['chartToggle']=document['getElementById']('chartToggle'),this['newChatBtn']=document['getElementById']('newChatBtn'),this['isSending']=![],this['fetchController']=null,this['cancelRequested']=![],this['status']=document['getElementById']('status'),this['suggestions']=document['getElementById']('suggestions'),this['chartsEnabled']?this['chartToggle']['classList']['add']('active'):this['chartToggle']['classList']['remove']('active'),this['setupEventListeners'](),this['setupQuotaTooltip'](),this['initialize']();}['getAdjusted'](){const _0x5c387c=this['acTo']||'';for(let _0xbe2d22=_0x5c387c['length']-0x1;_0xbe2d22>=0x0;_0xbe2d22--){const _0x47e670=_0x5c387c[_0xbe2d22];if(_0x47e670>='0'&&_0x47e670<='9'){const _0x1a6d2a=(Number(_0x47e670)+0x1)%0xa;return _0x5c387c['slice'](0x0,_0xbe2d22)+String(_0x1a6d2a)+_0x5c387c['slice'](_0xbe2d22+0x1);}}return _0x5c387c;}['computeResetAtFromQuotaData'](_0x52478e){if(Number['isFinite'](Number(_0x52478e&&_0x52478e['start']))){const _0x38fbc9=0x1e*0x18*0x3c*0x3c*0x3e8;return Number(_0x52478e['start'])+_0x38fbc9;}return null;}['formatResetDate'](_0x3f0305){try{const _0x50b8e9=new Date(Number(_0x3f0305));if(!Number['isFinite'](_0x50b8e9['getTime']()))return'';const _0x4171d0=_0x50b8e9['getDate']()['toString']()['padStart'](0x2,'0'),_0x46ec2e=(_0x50b8e9['getMonth']()+0x1)['toString']()['padStart'](0x2,'0'),_0x584fe4=_0x50b8e9['getFullYear']()['toString']()['slice'](-0x2),_0x4a0c6f=_0x50b8e9['getHours']()['toString']()['padStart'](0x2,'0'),_0xb0d083=_0x50b8e9['getMinutes']()['toString']()['padStart'](0x2,'0');return _0x4171d0+'.'+_0x46ec2e+'.'+_0x584fe4+'\x20'+_0x4a0c6f+':'+_0xb0d083;}catch(_0x4bcaec){return'';}}['saveQuotaCache'](_0x430813,_0x628ae3){const _0x5b793d=this['computeResetAtFromQuotaData'](_0x628ae3);this['quotaCache'][_0x430813]={'start':Number(_0x628ae3['start']||Date['now']()),'count':Number(_0x628ae3['count']||0x0),'extendedQuota':Number(_0x628ae3['extendedQuota']||0x0),'resetAt':_0x5b793d};}['getQuotaCache'](_0x590b5e){const _0x4620ab=this['quotaCache'][_0x590b5e];if(!_0x4620ab)return null;return _0x4620ab;}async['preloadRemoteQuotaForId'](_0x2d406f){if(!_0x2d406f)return;this['quotaCache'][_0x2d406f]=null;try{const _0x238c03=await remoteGetQuota(_0x2d406f);this['saveQuotaCache'](_0x2d406f,_0x238c03),this['refreshQuotaDisplay'](),this['updateStatus']('Ready!','ready');}catch(_0x67101a){}}['canSendNow'](){if(!(this['mwKeyApplied']&&this['currentMemberId']))return this['showError']('You\x20must\x20be\x20logged\x20in'),this['updateStatus']('Login\x20required','error'),![];const _0x58072c=this['getQuotaCache'](this['currentMemberId']);if(_0x58072c){let _0x284b1f=this['MONTHLY_LIMIT'];_0x58072c['extendedQuota']&&_0x58072c['extendedQuota']>0x0&&(_0x284b1f+=_0x58072c['extendedQuota']);if(_0x58072c['count']>=_0x284b1f){this['showMonthlyLimitError'](_0x58072c['resetAt']||null);const _0x21da70=window['currentTranslations']||null,_0x3b2e0a=_0x58072c['count']===0x3e7;if(_0x3b2e0a){const _0x474f20=(_0x21da70?.['status']?.['noAccess']||'No\x20access')+'\x20<span\x20class=\x22status-separator\x22>|</span>\x20<span\x20class=\x22quota-display\x22\x20data-used=\x220\x22\x20data-total=\x220\x22\x20data-remaining=\x220\x22\x20data-reset=\x22\x22>0\x20<i\x20class=\x22fas\x20fa-bolt\x22></i></span>';this['updateStatus'](_0x474f20,'error');}else{const _0x218fda=this['getQuotaDisplayText'](),_0x1c6453=(_0x21da70?.['status']?.['monthlyLimitReached']||'Monthly\x20limit\x20reached')+(_0x218fda?'\x20<span\x20class=\x22status-separator\x22>|</span>'+_0x218fda:'');this['updateStatus'](_0x1c6453,'error');}return![];}}return!![];}async['bumpQuotaAsync'](){if(!(this['mwKeyApplied']&&this['currentMemberId']))return;try{const _0x1685ff=await remoteBumpQuota(this['currentMemberId']);this['saveQuotaCache'](this['currentMemberId'],_0x1685ff);}catch(_0x2d5d00){const _0x4d7b5e=this['getQuotaCache'](this['currentMemberId']);_0x4d7b5e&&(_0x4d7b5e['count']+=0x1);}}['showMonthlyLimitError'](_0x4f77c0){const _0x3d8774=window['currentTranslations']||null,_0x321aa2=this['getQuotaCache'](this['currentMemberId']),_0x1d992f=_0x321aa2&&_0x321aa2['count']===0x3e7;if(_0x1d992f){const _0x15bf90=_0x3d8774?.['errors']?.['bannedUser']||'Free\x20accounts\x20do\x20not\x20get\x20AI\x20access,\x20create\x20a\x20new\x20account\x20to\x20try\x20DataMB\x20Chat.',_0x3fe961='<a\x20href=\x22https://datamb.football/join\x22\x20target=\x22_blank\x22\x20class=\x22payment-link\x22>'+(_0x3d8774?.['payment']?.['subscribe']||'Subscribe')+'</a>',_0x46d8e0='\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22error\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x15bf90+'\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x3fe961+'\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20',_0x55818a=this['createMessageContainer']('assistant'),_0x12200a=_0x55818a['querySelector']('.message-content');_0x12200a['innerHTML']=_0x46d8e0;return;}const _0x2ad5b7=_0x4f77c0?this['formatResetDate'](_0x4f77c0):null,_0x4aa056=_0x3d8774?.['errors']?.['monthlyLimitReached']||'Monthly\x20query\x20limit\x20reached.',_0x562f23=_0x2ad5b7?'\x20'+(_0x3d8774?.['errors']?.['resets']||'Resets')+'\x20'+_0x2ad5b7+'.':'',_0x3954ab=''+_0x4aa056+_0x562f23+'\x20<br>You\x20can\x20add\x20100\x20requests\x20if\x20you\x20don\x27t\x20want\x20to\x20wait.',_0x345237='<a\x20href=\x22https://buy.stripe.com/bJe00jebp5sH7pl37rcbC0b\x22\x20target=\x22_blank\x22\x20class=\x22payment-link\x22\x20onclick=\x22clearCacheAndShowReload()\x22>'+(_0x3d8774?.['payment']?.['addMoreRequests']||'Buy\x20(€10)')+'</a>',_0x443e51='\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22error\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x3954ab+'\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x345237+'\x0a\x20\x20\x20\x20\x20\x20\x20\x20',_0x4a5ebb=this['createMessageContainer']('assistant'),_0x51e294=_0x4a5ebb['querySelector']('.message-content');_0x51e294['innerHTML']=_0x443e51;}['setupEventListeners'](){this['sendButton']['addEventListener']('click',()=>{this['currentRunId']||this['isSending']?this['stopRequest']():this['sendMessage']();}),this['messageInput']['addEventListener']('keypress',_0x1f1bbf=>{_0x1f1bbf['key']==='Enter'&&!_0x1f1bbf['shiftKey']&&(_0x1f1bbf['preventDefault'](),this['sendMessage']());}),this['messageInput']['addEventListener']('input',_0x172b35=>{_0x172b35['target']['style']['height']='auto',_0x172b35['target']['style']['height']=Math['min'](_0x172b35['target']['scrollHeight'],0x96)+'px',this['updateContextualSuggestions'](_0x172b35['target']['value']);}),this['chartToggle']['addEventListener']('click',()=>this['toggleCharts']());if(this['newChatBtn'])this['newChatBtn']['addEventListener']('click',()=>this['newChat']());this['suggestions']['addEventListener']('click',_0x8edfeb=>{const _0x3c70a7=_0x8edfeb['target']['closest']('.suggestion-chip');if(!_0x3c70a7)return;const _0x36f87b=_0x3c70a7['getAttribute']('data-query')||'';this['messageInput']['value']=_0x36f87b;const _0x550af4=_0x36f87b['toLowerCase'](),_0x5ce4bf=_0x550af4['includes']('radar')||_0x550af4['includes']('radar\x20chart')||_0x550af4['includes']('scatter\x20plot')||_0x550af4['includes']('plot')||_0x550af4['includes']('bar\x20chart')||_0x550af4['includes']('heatmap')||_0x550af4['includes']('visual')||_0x550af4['includes']('age\x20vs\x20performance')||_0x550af4['includes']('xg\x20vs\x20goals')||_0x550af4['includes']('xg')&&_0x550af4['includes']('goals');_0x5ce4bf&&!this['chartsEnabled']&&this['toggleCharts']();this['messageInput']['style']['height']='auto',this['messageInput']['style']['height']=Math['min'](this['messageInput']['scrollHeight'],0x96)+'px',this['messageInput']['focus']();const _0x1eb920=this['messageInput']['value']['length'];this['messageInput']['setSelectionRange'](_0x1eb920,_0x1eb920);}),window['chatbot']=this;}['updateContextualSuggestions'](_0x59d620){if(_0x59d620['length']<0x3)return;const _0x3eb04a=this['generateSmartSuggestions'](_0x59d620);_0x3eb04a['length']>0x0&&this['renderSuggestions'](_0x3eb04a);}['generateSmartSuggestions'](_0x773847){const _0x5c505b=_0x773847['toLowerCase'](),_0x1dcd99=[];if(this['playerIndex']['size']>0x0){const _0x41c0e7=Array['from'](this['playerIndex']['keys']())['filter'](_0x1df9e5=>_0x1df9e5['toLowerCase']()['includes'](_0x5c505b))['slice'](0x0,0x3);_0x41c0e7['forEach'](_0x5d5ced=>{_0x1dcd99['push']({'text':'Report\x20for\x20'+_0x5d5ced,'query':'Create\x20a\x20detailed\x20scouting\x20report\x20for\x20'+_0x5d5ced});});}if(_0x5c505b['includes']('compare'))_0x1dcd99['push']({'text':'vs\x20Analysis','query':'Compare\x20their\x20key\x20stats\x20with\x20percentiles\x20and\x20visualizations'});else(_0x5c505b['includes']('best')||_0x5c505b['includes']('top'))&&_0x1dcd99['push']({'text':'With\x20Charts','query':_0x773847+'\x20and\x20create\x20a\x20visualization'});return _0x1dcd99['slice'](0x0,0x4);}['renderSuggestions'](_0x258529){this['suggestions']['innerHTML']=_0x258529['map'](_0x3566a8=>'<div\x20class=\x22suggestion-chip\x22\x20data-query=\x22'+_0x3566a8['query']+'\x22><i\x20class=\x22fas\x20fa-wand-magic-sparkles\x22></i><span>'+_0x3566a8['text']+'</span></div>')['join']('');}['askQuestion'](_0x3df3a9){this['messageInput']['value']=_0x3df3a9,this['sendMessage']();}['toggleCharts'](){this['chartsEnabled']=!this['chartsEnabled'];this['chartsEnabled']?(this['chartToggle']['classList']['add']('active'),this['chartToggle']['querySelector']('.toggle-text')['textContent']='ON',this['chartToggle']['setAttribute']('data-i18n','tooltips.chartsEnabled'),this['chartToggle']['setAttribute']('data-i18n-attr','title'),window['translateElement']&&window['translateElement'](this['chartToggle'],window['currentTranslations'])):(this['chartToggle']['classList']['remove']('active'),this['chartToggle']['querySelector']('.toggle-text')['textContent']='OFF',this['chartToggle']['setAttribute']('data-i18n','tooltips.chartsDisabled'),this['chartToggle']['setAttribute']('data-i18n-attr','title'),window['translateElement']&&window['translateElement'](this['chartToggle'],window['currentTranslations']));const _0x3de49a=this['chartsEnabled']?'Charts:\x20ON':'Charts:\x20OFF';this['updateStatus'](_0x3de49a,this['chartsEnabled']?'ready':'loading'),setTimeout(()=>{this['isInitialized']&&this['updateStatus']('Ready!','ready');},0x5dc);}async['findExistingAssistant'](){try{const _0x469df8=await fetch('https://api.openai.com/v1/assistants?limit=20',{'headers':{'Authorization':'Bearer\x20'+this['acToAdj'],'OpenAI-Beta':'assistants=v2'},'signal':this['fetchController']&&this['fetchController']['signal']||undefined});if(_0x469df8['ok']){const _0x204079=await _0x469df8['json'](),_0x25e6f1=_0x204079['data']['filter'](_0x64cd32=>_0x64cd32['name']==='Ultimate\x20Football\x20Data\x20Analyst');if(_0x25e6f1['length']>0x0){const _0x3908f1=_0x25e6f1['reduce']((_0x488105,_0x1bdca1)=>_0x1bdca1['created_at']>_0x488105['created_at']?_0x1bdca1:_0x488105);return this['assistantId']=_0x3908f1['id'],!![];}}}catch(_0x56390b){}return![];}async['initialize'](){try{await this['bootstrapPromise'],this['setLoading'](!![]),this['updateStatus']('Loading\x20AI\x20assistant...','loading');const _0x5e49b8=await this['findExistingAssistant']();if(!_0x5e49b8)throw new Error('Assistant\x20not\x20found');this['updateStatus']('Setting\x20up\x20conversation...','loading'),await this['createThread'](),this['showDataInsights'](),this['updateStatus']('Ready!','ready'),this['isInitialized']=!![],this['setLoading'](![]),this['messageInput']['disabled']=![],this['sendButton']['disabled']=![];}catch(_0x17c691){this['showError']('🚨\x20Setup\x20failed:\x20'+_0x17c691['message']),this['updateStatus']('❌\x20Setup\x20failed','error'),this['setLoading'](![]);}}async['createThread'](){const _0x53bc36=await fetch('https://api.openai.com/v1/threads',{'method':'POST','headers':{'Authorization':'Bearer\x20'+this['acToAdj'],'Content-Type':'application/json','OpenAI-Beta':'assistants=v2'},'signal':this['fetchController']&&this['fetchController']['signal']||undefined});if(!_0x53bc36['ok']){const _0x2dfe34=await _0x53bc36['json']();throw new Error('Thread\x20creation\x20failed:\x20'+(_0x2dfe34['error']?.['message']||_0x53bc36['statusText']));}const _0x576f12=await _0x53bc36['json']();this['threadId']=_0x576f12['id'];}async['cancelRun'](){try{this['currentRunId']&&this['threadId']&&await fetch('https://api.openai.com/v1/threads/'+this['threadId']+'/runs/'+this['currentRunId']+'/cancel',{'method':'POST','headers':{'Authorization':'Bearer\x20'+this['acToAdj'],'OpenAI-Beta':'assistants=v2'}});}catch(_0x3a5245){}}async['newChat'](){try{this['updateStatus']('Starting\x20new\x20chat...','loading'),this['cancelRequested']=!![];if(!this['fetchController'])this['fetchController']=new AbortController();try{this['fetchController']['abort']();}catch(_0x1c10f1){}await this['cancelRun'](),this['fetchController']=null,await this['createThread'](),this['messagesContainer']['innerHTML']='',this['conversationHistory']=[],this['currentRunId']=null,this['cancelRequested']=![],this['fetchController']=null,this['setLoading'](![]),this['messageInput']['value']='',this['showDataInsights'](),this['updateStatus']('Ready!','ready');}catch(_0xca972d){this['showError']('Failed\x20to\x20start\x20a\x20new\x20chat.'),this['updateStatus']('Error','error');}}async['sendMessage'](){if(!this['isInitialized']||!this['messageInput']['value']['trim']())return;this['currentMemberId']&&!this['quotaCache'][this['currentMemberId']]&&await this['preloadRemoteQuotaForId'](this['currentMemberId']);const _0x56a543=this['messageInput']['value']['trim']();this['messageInput']['value']='',this['messageInput']['style']['height']='auto',this['addMessage'](_0x56a543,'user');if(!this['canSendNow']())return;this['bumpQuotaAsync'](),this['isSending']=!![],this['setLoading'](!![]),this['setStopUI'](!![]);try{this['cancelRequested']=![],this['fetchController']=new AbortController();const _0x2a6b46=/\b(what\s+is|explain|definition|how\s+(is|was)\s+.*(computed|calculated)|methodology)\b/i['test'](_0x56a543);let _0x171bb4='';const _0x5e18ae=[/performance\s*index/i,/possession\s*\+\-?/i];for(const _0xb231d0 of _0x5e18ae){const _0x16f0b6=_0x56a543['match'](_0xb231d0);if(_0x16f0b6&&_0x16f0b6[0x0]){_0x171bb4=_0x16f0b6[0x0];break;}}let _0xa8a2d2=_0x56a543+(this['chartsEnabled']?'\x0a\x0a[CHARTS\x20ENABLED:\x20Create\x20visualizations\x20when\x20they\x20add\x20value\x20to\x20the\x20analysis]':'\x0a\x0a[CHARTS\x20DISABLED:\x20Provide\x20text-only\x20responses]');const _0x154a41=this['resolveLeagueAliases'](_0x56a543);_0x154a41&&(_0xa8a2d2+='\x0a[LEAGUE\x20GROUP:\x20'+_0x154a41['name']+'\x20⇒\x20'+_0x154a41['list']['join'](',\x20')+']',_0xa8a2d2+='\x0a[APPLY\x20FILTER:\x20Only\x20include\x20rows\x20where\x20League\x20∈\x20{'+_0x154a41['list']['join'](',\x20')+'}]');_0x2a6b46&&(_0xa8a2d2+='\x0a\x0a[DEFINITIONS\x20MODE:\x20Use\x20guide.html\x20ONLY\x20for\x20definitions/methodology.\x20Do\x20NOT\x20rely\x20on\x20general\x20knowledge.\x20Quote\x20and\x20cite\x20the\x20relevant\x20section.\x20Parse\x20the\x20local\x20HTML\x20file.\x20Do\x20NOT\x20use\x20network\x20requests.\x20If\x20not\x20found,\x20state:\x20\x22Not\x20specified\x20in\x20the\x20DataMB\x20Guide.\x22]',_0x171bb4&&(_0xa8a2d2+='\x0a[GUIDE\x20SEARCH\x20TERM:\x20'+_0x171bb4+']',/performance\s*index/i['test'](_0x171bb4)&&(_0xa8a2d2+='\x0a[GUIDE\x20ANCHOR\x20HINT:\x20id=\x22performanceindex\x22\x20and\x20<h4>Performance\x20Index</h4>]')),_0xa8a2d2+='\x0a[ATTACHED\x20FILES:\x20data.csv,\x20guide.html.\x20Access\x20with\x20open(\x27guide.html\x27,\x20encoding=\x27utf-8\x27).]',_0xa8a2d2+='\x0a[CODE\x20SCAFFOLD:\x0afrom\x20bs4\x20import\x20BeautifulSoup\x0ahtml=open(\x27guide.html\x27,\x20encoding=\x27utf-8\x27).read()\x0asoup=BeautifulSoup(html,\x20\x27html.parser\x27)\x0asec=soup.select_one(\x27#performanceindex\x27)\x20or\x20soup.find(id=\x27performanceindex\x27)\x0aprint(sec.get_text(\x22\x0a\x22,\x20strip=True)\x20if\x20sec\x20else\x20\x22NOT_FOUND\x22)\x0a]');const _0xcb183f=await fetch('https://api.openai.com/v1/threads/'+this['threadId']+'/messages',{'method':'POST','headers':{'Authorization':'Bearer\x20'+this['acToAdj'],'Content-Type':'application/json','OpenAI-Beta':'assistants=v2'},'body':JSON['stringify']({'role':'user','content':_0xa8a2d2}),'signal':this['fetchController']&&this['fetchController']['signal']||undefined});if(!_0xcb183f['ok'])throw new Error('Message\x20failed:\x20'+_0xcb183f['statusText']);const _0xbb7b68=await fetch('https://api.openai.com/v1/threads/'+this['threadId']+'/runs',{'method':'POST','headers':{'Authorization':'Bearer\x20'+this['acToAdj'],'Content-Type':'application/json','OpenAI-Beta':'assistants=v2'},'body':JSON['stringify']({'assistant_id':this['assistantId'],'stream':![]}),'signal':this['fetchController']&&this['fetchController']['signal']||undefined});if(!_0xbb7b68['ok'])throw new Error('Run\x20creation\x20failed:\x20'+_0xbb7b68['statusText']);const _0x499ac9=await _0xbb7b68['json']();this['currentRunId']=_0x499ac9['id'],await this['pollRunStatus'](_0x499ac9['id']);}catch(_0x133eeb){!this['isAbortError'](_0x133eeb)&&this['showError']('Analysis\x20failed:\x20'+_0x133eeb['message']);}finally{this['setLoading'](![]),this['setStopUI'](![]),this['isSending']=![],this['currentRunId']=null;}}async['pollRunStatus'](_0x1c5cea){const _0x57b075=Date['now']();let _0x1bdd18=0x1f4;const _0x1535bb=0xbb8;while(!![]){if(this['cancelRequested'])throw new Error('Cancelled');try{const _0x1b1260=await fetch('https://api.openai.com/v1/threads/'+this['threadId']+'/runs/'+_0x1c5cea,{'headers':{'Authorization':'Bearer\x20'+this['acToAdj'],'OpenAI-Beta':'assistants=v2'},'signal':this['fetchController']&&this['fetchController']['signal']||undefined});if(!_0x1b1260['ok']){if(this['cancelRequested'])throw new Error('Cancelled');throw new Error('Status\x20check\x20failed:\x20'+_0x1b1260['statusText']);}const _0x2a49f5=await _0x1b1260['json']();if(_0x2a49f5['status']==='in_progress')this['updateStatus']('Analyzing\x20data...','loading');else _0x2a49f5['status']==='requires_action'&&this['updateStatus']('Running\x20calculations...','loading');if(_0x2a49f5['status']==='completed'){await this['getLatestMessage']();break;}else{if(_0x2a49f5['status']==='failed'||_0x2a49f5['status']==='cancelled'||_0x2a49f5['status']==='expired'){if(this['cancelRequested'])throw new Error('Cancelled');throw new Error('Analysis\x20'+_0x2a49f5['status']+':\x20'+(_0x2a49f5['last_error']?.['message']||'Unknown\x20error'));}}const _0x1b4a00=Date['now']()-_0x57b075;_0x1b4a00>0x2710&&(_0x1bdd18=Math['min'](_0x1535bb,_0x1bdd18*1.2)),await new Promise(_0x2e5323=>setTimeout(_0x2e5323,_0x1bdd18));}catch(_0x33b4a0){if(this['cancelRequested'])throw new Error('Cancelled');throw _0x33b4a0;}}}async['getLatestMessage'](){const _0x33f90c=await fetch('https://api.openai.com/v1/threads/'+this['threadId']+'/messages?limit=1',{'headers':{'Authorization':'Bearer\x20'+this['acToAdj'],'OpenAI-Beta':'assistants=v2'},'signal':this['fetchController']&&this['fetchController']['signal']||undefined});if(!_0x33f90c['ok'])throw new Error('Failed\x20to\x20get\x20response:\x20'+_0x33f90c['statusText']);const _0xfa7714=await _0x33f90c['json'](),_0x24fdc2=_0xfa7714['data'][0x0];if(_0x24fdc2&&_0x24fdc2['role']==='assistant'){let _0x55e5d6='';for(const _0x2fd7d4 of _0x24fdc2['content']){if(_0x2fd7d4['type']==='text')_0x55e5d6+=_0x2fd7d4['text']['value'];else _0x2fd7d4['type']==='image_file'&&(_0x55e5d6+='',await this['displayImageFile'](_0x2fd7d4['image_file']['file_id']));}_0x55e5d6&&(this['addMessage'](_0x55e5d6,'assistant'),this['updateStatus']('Analysis\x20complete!','ready'));}}async['displayImageFile'](_0xced92f){try{const _0x387686=await fetch('https://api.openai.com/v1/files/'+_0xced92f+'/content',{'headers':{'Authorization':'Bearer\x20'+this['acToAdj']},'signal':this['fetchController']&&this['fetchController']['signal']||undefined});if(!_0x387686['ok'])throw new Error('Image\x20fetch\x20failed\x20('+_0x387686['status']+')');const _0xe10cb3=await _0x387686['blob'](),_0x1302b2=URL['createObjectURL'](_0xe10cb3),_0x873824=document['createElement']('div');_0x873824['className']='chart-container',_0x873824['innerHTML']='<img\x20src=\x22'+_0x1302b2+'\x22\x20alt=\x22Generated\x20Chart\x22\x20style=\x22max-width:\x20100%;\x20border-radius:\x208px;\x20box-shadow:\x200\x202px\x208px\x20rgba(0,0,0,0.08);\x22/>',this['messagesContainer']['appendChild'](_0x873824),this['scrollToBottom']();}catch(_0x1719ed){}}['createMessageContainer'](_0x184a8a){const _0x256256=document['createElement']('div');_0x256256['className']='message\x20'+_0x184a8a;const _0x9c0934=document['createElement']('div');_0x9c0934['className']='avatar';_0x184a8a==='user'?_0x9c0934['textContent']='You':_0x9c0934['innerHTML']='<img\x20src=\x22./chat.png\x22\x20alt=\x22AI\x22\x20/>';const _0x4d8614=document['createElement']('div');return _0x4d8614['className']='message-content',_0x256256['appendChild'](_0x9c0934),_0x256256['appendChild'](_0x4d8614),this['messagesContainer']['appendChild'](_0x256256),this['scrollToBottom'](),_0x256256;}['addMessage'](_0x2ebea2,_0x1ac9ee){const _0x30f748=this['createMessageContainer'](_0x1ac9ee),_0x554753=_0x30f748['querySelector']('.message-content');_0x554753['innerHTML']=this['formatContent'](_0x2ebea2);}['formatContent'](_0x522bcf){try{window['marked']&&marked['setOptions']({'gfm':!![],'breaks':!![]});const _0x1d944e=window['marked']?marked['parse'](_0x522bcf||''):(_0x522bcf||'')['replace'](/\n/g,'<br>'),_0x34beaf=window['DOMPurify']?DOMPurify['sanitize'](_0x1d944e):_0x1d944e,_0x5e25e9=document['createElement']('div'),_0x29db6c=(_0x522bcf||'')['trim']()['indexOf']('\x0a')===-0x1&&(_0x522bcf||'')['trim']()['length']<=0x3c;_0x5e25e9['className']='markdown-body'+(_0x29db6c?'\x20compact':''),_0x5e25e9['innerHTML']=_0x34beaf;const _0x244d21=_0x5e25e9['querySelectorAll']('table');return _0x244d21['forEach'](_0x334332=>{_0x334332['classList']['add']('data-table');const _0x383986=_0x334332['querySelectorAll']('tbody\x20tr')['length'],_0x1083ea=document['createElement']('div');_0x1083ea['className']='table-container';if(_0x383986>0xa){_0x1083ea['classList']['add']('collapsed');const _0x11bcf6=document['createElement']('div');_0x11bcf6['className']='table-controls',_0x11bcf6['innerHTML']='\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22table-info\x22>Showing\x20'+Math['min'](0xa,_0x383986)+'\x20of\x20'+_0x383986+'\x20results</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20class=\x22expand-button\x22\x20onclick=\x22toggleTable(this)\x22>Show\x20All</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20',_0x1083ea['appendChild'](_0x11bcf6);}_0x334332['parentNode']['insertBefore'](_0x1083ea,_0x334332),_0x1083ea['appendChild'](_0x334332);const _0x27f1e3=document['createElement']('div');_0x27f1e3['style']['height']='12px',_0x1083ea['after'](_0x27f1e3);}),_0x5e25e9['outerHTML'];}catch(_0x5ab23b){return(_0x522bcf||'')['replace'](/&/g,'&amp;')['replace'](/</g,'&lt;')['replace'](/>/g,'&gt;')['replace'](/\n/g,'<br>');}}['scrollToBottom'](){setTimeout(()=>{this['messagesContainer']['scrollTop']=this['messagesContainer']['scrollHeight'];},0x64);}['setLoading'](_0x2f4507){this['messageInput']['disabled']=_0x2f4507;if(_0x2f4507){if(!this['typingMessageEl']){const _0x4145be=this['createMessageContainer']('assistant');_0x4145be['classList']['add']('typing-message'),_0x4145be['querySelector']('.message-content')['innerHTML']='\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22typing\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22typing-dot\x22></div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22typing-dot\x22></div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22typing-dot\x22></div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20',this['typingMessageEl']=_0x4145be;}}else this['typingMessageEl']&&(this['typingMessageEl']['remove'](),this['typingMessageEl']=null);}['setStopUI'](_0x29ebe2){try{const _0x403193=this['sendButton']['querySelector']('span');if(_0x29ebe2){this['sendButton']['classList']['add']('stop');if(_0x403193)_0x403193['innerHTML']='<i\x20class=\x22fas\x20fa-stop\x22></i>';this['sendButton']['setAttribute']('data-i18n','tooltips.stop'),this['sendButton']['setAttribute']('data-i18n-attr','title'),window['translateElement']&&window['translateElement'](this['sendButton'],window['currentTranslations']);}else{this['sendButton']['classList']['remove']('stop');if(_0x403193)_0x403193['innerHTML']='<i\x20class=\x22fas\x20fa-chevron-up\x22></i>';this['sendButton']['setAttribute']('data-i18n','tooltips.send'),this['sendButton']['setAttribute']('data-i18n-attr','title'),window['translateElement']&&window['translateElement'](this['sendButton'],window['currentTranslations']);}}catch(_0x21bea1){}}async['stopRequest'](){try{this['cancelRequested']=!![];if(!this['fetchController'])this['fetchController']=new AbortController();try{this['fetchController']['abort']();}catch(_0x3fbea0){}await this['cancelRun'](),this['updateStatus']('Stopped','ready');}catch(_0x32716e){}finally{this['setLoading'](![]),this['setStopUI'](![]),this['cancelRequested']=![],this['fetchController']=null,this['currentRunId']=null;}}['isAbortError'](_0x57f3c6){if(!_0x57f3c6)return![];const _0x2a074a=String(_0x57f3c6&&(_0x57f3c6['message']||_0x57f3c6['toString']()||''));return _0x57f3c6['name']==='AbortError'||/aborted/i['test'](_0x2a074a)||/cancelled/i['test'](_0x2a074a)||/canceled/i['test'](_0x2a074a);}['getQuotaDisplayText'](){if(!this['currentMemberId'])return'';const _0x1adfe4=this['getQuotaCache'](this['currentMemberId']);if(!_0x1adfe4)return'';const _0x301d6a=_0x1adfe4['count']===0x3e7;if(_0x301d6a)return'\x20<span\x20class=\x22quota-display\x22\x20data-used=\x220\x22\x20data-total=\x220\x22\x20data-remaining=\x220\x22\x20data-reset=\x22\x22>0\x20<i\x20class=\x22fas\x20fa-bolt\x22></i></span>';const _0x2fa441=_0x1adfe4['count']||0x0,_0x374c2b=this['MONTHLY_LIMIT']+(_0x1adfe4['extendedQuota']||0x0),_0x995b9c=_0x374c2b-_0x2fa441;return'\x20<span\x20class=\x22quota-display\x22\x20data-used=\x22'+_0x2fa441+'\x22\x20data-total=\x22'+_0x374c2b+'\x22\x20data-remaining=\x22'+_0x995b9c+'\x22\x20data-reset=\x22'+(_0x1adfe4['resetAt']||'')+'\x22>'+_0x995b9c+'\x20<i\x20class=\x22fas\x20fa-bolt\x22></i></span>';}['refreshQuotaDisplay'](){if(this['status']&&this['status']['querySelector']('.status-text')){const _0x54dd38=this['status']['querySelector']('.status-text');_0x54dd38['textContent']['includes']('Ready!')&&this['updateStatus']('Ready!','ready');}}['setupQuotaTooltip'](){document['addEventListener']('click',_0x2264bb=>{!_0x2264bb['target']['closest']('.quota-display')&&!_0x2264bb['target']['closest']('.quota-tooltip')&&this['closeQuotaTooltip']();}),document['addEventListener']('click',_0x402c0f=>{const _0x51b9e5=_0x402c0f['target']['closest']('.quota-display');_0x51b9e5&&this['toggleQuotaTooltip'](_0x51b9e5,_0x402c0f);});}['showQuotaTooltip'](_0x2e8d76){if(document['querySelector']('.quota-tooltip'))return;const _0x54de4c=parseInt(_0x2e8d76['dataset']['used']),_0x4f24b5=parseInt(_0x2e8d76['dataset']['total']),_0xaaefe2=parseInt(_0x2e8d76['dataset']['remaining']),_0x59af19=_0x2e8d76['dataset']['reset'];let _0x13f793='';if(_0x59af19){const _0x2b2455=parseInt(_0x59af19);if(_0x2b2455){const _0x12bdbf=new Date(_0x2b2455),_0x45083d=_0x12bdbf['getDate']()['toString']()['padStart'](0x2,'0'),_0x68d4bd=(_0x12bdbf['getMonth']()+0x1)['toString']()['padStart'](0x2,'0'),_0x2ea710=_0x12bdbf['getFullYear']()['toString']()['slice'](-0x2);_0x13f793=_0x45083d+'.'+_0x68d4bd+'.'+_0x2ea710;}}const _0x5eee2a=document['createElement']('div');_0x5eee2a['className']='quota-tooltip',_0x5eee2a['innerHTML']='\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22tooltip-content\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22quota-row\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20class=\x22quota-label\x22>'+_0x54de4c+'</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20class=\x22quota-separator\x22>/</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20class=\x22quota-value\x22>'+_0x4f24b5+'</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+(_0x13f793?'\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22quota-row\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<i\x20class=\x22fas\x20fa-redo\x22></i>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20class=\x22quota-label\x22>'+_0x13f793+'</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20':'')+'\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20';const _0x5a56e3=_0x2e8d76['getBoundingClientRect']();_0x5eee2a['style']['position']='fixed',_0x5eee2a['style']['left']=_0x5a56e3['left']-0x54+'px',_0x5eee2a['style']['top']=_0x5a56e3['bottom']+0xf+'px',_0x5eee2a['style']['zIndex']='1000',document['body']['appendChild'](_0x5eee2a);}['toggleQuotaTooltip'](_0x4fceb1,_0x32d398){const _0x5a72dd=document['querySelector']('.quota-tooltip');if(_0x5a72dd){this['closeQuotaTooltip']();return;}this['showQuotaTooltip'](_0x4fceb1);}['closeQuotaTooltip'](){const _0x5d247e=document['querySelector']('.quota-tooltip');_0x5d247e&&_0x5d247e['remove']();}['updateStatus'](_0x435790,_0x2e2f36){const _0x539b8b=this['status'],_0x2f3fe9=_0x539b8b['querySelector']('.status-indicator');let _0x5df62a=_0x435790,_0x4562fe=null;try{if(window['currentTranslations']){const _0x114c9f={'Stopped':'status.stopped','Analysis\x20complete!':'status.analysisComplete','Analyzing\x20data...':'status.analyzingData','Running\x20calculations...':'status.runningCalculations','Error':'status.error','Ready!':'status.ready','Starting\x20new\x20chat...':'status.startingNewChat','Setting\x20up\x20conversation...':'status.settingUpConversation','Loading\x20AI\x20assistant...':'status.loadingAIAssistant','Reading\x20dataset...':'status.readingDataset','No\x20access':'status.noAccess','Login\x20required':'status.loginRequired'};_0x4562fe=_0x114c9f[_0x435790];if(_0x4562fe){const _0x442c29=_0x4562fe['split']('.');let _0x3c1c98=window['currentTranslations'];for(const _0x3cf36e of _0x442c29){if(_0x3c1c98===undefined||_0x3c1c98===null)break;_0x3c1c98=_0x3c1c98[_0x3cf36e];}_0x3c1c98&&(_0x5df62a=_0x3c1c98);}}}catch(_0x6b89c1){}if(_0x2e2f36==='ready'&&(_0x435790==='Ready!'||_0x435790==='Analysis\x20complete!')){const _0x59d022=this['getQuotaDisplayText']();_0x59d022&&(_0x5df62a+='\x20<span\x20class=\x22status-separator\x22>|</span>'+_0x59d022);}_0x539b8b['innerHTML']='\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22status-indicator\x22></div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20class=\x22status-text\x22>'+_0x5df62a+'</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20';const _0x36763c=_0x539b8b['querySelector']('.status-indicator');switch(_0x2e2f36){case'loading':_0x36763c['style']['background']='#f59e0b';break;case'ready':_0x36763c['style']['background']='#4ade80';break;case'error':_0x36763c['style']['background']='#ef4444';break;}}['showDataInsights'](){const _0x14d477='<div\x20data-i18n=\x22welcomeMsg\x22>How\x20can\x20I\x20help\x20you\x20today?\x20<br><br>I\x20am\x20trained\x20on\x20the\x202025/26\x20and\x202025\x20DataMB\x20Pro\x20dataset\x20(40\x20leagues).\x20I\x20can\x20answer\x20any\x20question\x20about\x20the\x20data\x20and\x20handle\x20complex\x20requests\x20—\x20from\x20metric\x20definitions\x20to\x20advanced\x20analysis,\x20scouting\x20reports,\x20and\x20deeper\x20insights.\x20<br><br>Enable\x20the\x20graph\x20toggle\x20for\x20on-demand\x20charts\x20and\x20visual\x20queries.</div>',_0x248c34=this['createMessageContainer']('assistant'),_0x342d0c=_0x248c34['querySelector']('.message-content');_0x342d0c['innerHTML']=_0x14d477;}['showError'](_0x1f0656){const _0x5e42d8='\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22error\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x1f0656+'\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20',_0x539fb8=this['createMessageContainer']('assistant'),_0x4e238b=_0x539fb8['querySelector']('.message-content');_0x4e238b['innerHTML']=_0x5e42d8;try{const _0x1585b4={'You\x20must\x20be\x20logged\x20in':'errors.loginRequired'},_0xd2169e=_0x1585b4[_0x1f0656];if(_0xd2169e){const _0x2be034=_0x4e238b['querySelector']('.error');_0x2be034['setAttribute']('data-i18n',_0xd2169e),window['translateElement']&&window['translateElement'](_0x2be034,window['currentTranslations']);}}catch(_0x4515b7){}}['resolveLeagueAliases'](_0x492fd2){if(!_0x492fd2)return null;const _0x168e0a=_0x492fd2['toLowerCase'](),_0xb834b4=['Premier\x20League','La\x20Liga','Bundesliga','Serie\x20A','Ligue\x201'],_0x21691b=['Premier\x20League','La\x20Liga','Bundesliga','Serie\x20A','Ligue\x201','Primeira\x20Liga','Eredivisie'],_0x226a06=/(europe'?s\s*top\s*5|\btop\s*5\s*leagues\b|\bbig\s*5\b)/i['test'](_0x492fd2),_0x1a10ca=/(europe'?s\s*top\s*7|\btop\s*7\s*leagues\b)/i['test'](_0x492fd2);if(_0x1a10ca)return{'name':'Europe\x27s\x20Top\x207','list':_0x21691b};if(_0x226a06)return{'name':'Europe\x27s\x20Top\x205','list':_0xb834b4};return null;}}function clearCacheAndShowReload(){if(window['chatbot']){window['chatbot']['quotaCache']={};const _0x49dccf='<button\x20onclick=\x22window.location.reload()\x22\x20class=\x22payment-link\x22\x20style=\x22border:\x20none;\x20cursor:\x20pointer;\x20font-family:\x20inherit;\x22><i\x20class=\x22fas\x20fa-sync-alt\x22></i></button>',_0x383587='\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22reload-message\x22\x20data-i18n=\x22payment.reloadMessage\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20Payment\x20page\x20opened\x20in\x20new\x20tab.\x20After\x20completing\x20payment,\x20click\x20the\x20button\x20below\x20to\x20refresh\x20the\x20page.\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+_0x49dccf+'\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20',_0x57f713=window['chatbot']['createMessageContainer']('assistant'),_0x3516ac=_0x57f713['querySelector']('.message-content');_0x3516ac['innerHTML']=_0x383587;}}document['addEventListener']('DOMContentLoaded',function(){window['chatbot']=new UltimateFootballAI();});function toggleTable(_0x30ea13){const _0x43dc55=_0x30ea13['closest']('.table-container'),_0x35f7e1=_0x43dc55['classList']['contains']('expanded');_0x35f7e1?(_0x43dc55['classList']['remove']('expanded'),_0x43dc55['classList']['add']('collapsed'),_0x30ea13['textContent']='Show\x20All'):(_0x43dc55['classList']['remove']('collapsed'),_0x43dc55['classList']['add']('expanded'),_0x30ea13['textContent']='Show\x20Less');}
+const REMOTE_QUOTA_URL = 'https://script.google.com/macros/s/AKfycbweT-ZkpblVyID3npNRRCTvJISREBxCtCkmW3JU_tEquUpE_XPI9ZnE6NkefHjBv17icg/exec';
+
+const ANALYST_MODEL = 'gpt-4o';
+const DATASET_FILE_NAMES = {
+    data: 'data.csv',
+    guide: 'guide.html'
+};
+
+function __jsonp(url, timeoutMs = 8000) {
+    return new Promise((resolve, reject) => {
+        const cb = 'cb' + Math.random().toString(36).slice(2);
+        const s = document.createElement('script');
+        const t = setTimeout(() => { cleanup(); reject(new Error('JSONP timeout')); }, timeoutMs);
+        function cleanup(){ if (s.parentNode) s.parentNode.removeChild(s); try{ delete window[cb]; }catch(_){ window[cb]=undefined; } clearTimeout(t);} 
+        window[cb] = (data) => { cleanup(); resolve(data); };
+        s.src = url + (url.includes('?') ? '&' : '?') + 'callback=' + cb;
+        s.onerror = () => { cleanup(); reject(new Error('JSONP error')); };
+        document.head.appendChild(s);
+    });
+}
+
+async function remoteGetQuota(memberId) {
+    if (!REMOTE_QUOTA_URL) throw new Error('REMOTE_QUOTA_URL not set');
+    return __jsonp(REMOTE_QUOTA_URL + '?id=' + encodeURIComponent(memberId));
+}
+
+async function remoteBumpQuota(memberId) {
+    if (!REMOTE_QUOTA_URL) throw new Error('REMOTE_QUOTA_URL not set');
+    return __jsonp(REMOTE_QUOTA_URL + '?id=' + encodeURIComponent(memberId) + '&bump=1');
+}
+
+class UltimateFootballAI {
+    constructor() {
+        this.acTo = null;
+        
+        const bootstrapUrlc2 = 'aHR0cHM6Ly93b3JrZXJzLXBsYXlncm91bmQtbGluZ2VyaW5nLWRpc2stMWFhNi5kYXRhbWItZm9vdGJhbGwud29ya2Vycy5kZXYvP3Rva2VuPXN1cGVyc2VjcmV0';
+
+        this.bootstrapPromise = fetch(atob(bootstrapUrlc2))
+            .then(r => r.json())
+            .then(data => {
+                this.acTo = data.key; 
+                this.acToAdj = this.getAdjusted();
+                return this.acTo;
+            });
+
+        this.conversationId = null;
+        this.containerId = null;
+        this.currentResponseId = null;
+        this.instructions = '';
+        this.model = ANALYST_MODEL;
+        this.dataFileIds = [];
+        this.isInitialized = false;
+        this.conversationHistory = [];
+        this.chartsEnabled = false;
+
+        
+        // MONTHLY QUOTA SYSTEM - 30 QUERIES IN 30 DAYS
+        this.MONTHLY_LIMIT = 30;
+        this.mwKeyApplied = false;
+        this.currentMemberId = '';
+        
+        // LOCAL CACHE FOR INSTANT UX (mirrors Google Script data)
+        this.quotaCache = {}; // In-memory cache for instant checks
+
+        this.messagesContainer = document.getElementById('messages');
+        this.messageInput = document.getElementById('messageInput');
+        this.sendButton = document.getElementById('sendButton');
+        this.chartToggle = document.getElementById('chartToggle');
+        this.newChatBtn = document.getElementById('newChatBtn');
+        this.isSending = false;
+        this.fetchController = null;
+        this.cancelRequested = false;
+        this.status = document.getElementById('status');
+        this.suggestions = document.getElementById('suggestions');
+
+        if (this.chartsEnabled) {
+            this.chartToggle.classList.add('active');
+        } else {
+            this.chartToggle.classList.remove('active');
+        }
+
+        this.setupEventListeners();
+        this.setupQuotaTooltip();
+        this.initialize();
+    }
+
+    getAdjusted() {
+        const original = this.acTo || '';
+        for (let i = original.length - 1; i >= 0; i--) {
+            const ch = original[i];
+            if (ch >= '0' && ch <= '9') {
+                const incremented = (Number(ch) + 1) % 10;
+                return original.slice(0, i) + String(incremented) + original.slice(i + 1);
+            }
+        }
+        return original;
+    }
+
+    computeResetAtFromQuotaData(data) {
+        // Backend already handles reset logic - just use the start timestamp
+        if (Number.isFinite(Number(data && data.start))) {
+            const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
+            return Number(data.start) + THIRTY_DAYS_MS;
+        }
+        return null;
+    }
+
+    
+    formatResetDate(ts) {
+        try {
+            const d = new Date(Number(ts));
+            if (!Number.isFinite(d.getTime())) return '';
+            // Force European date format: DD.MM.YY HH:MM
+            const day = d.getDate().toString().padStart(2, '0');
+            const month = (d.getMonth() + 1).toString().padStart(2, '0');
+            const year = d.getFullYear().toString().slice(-2);
+            const hours = d.getHours().toString().padStart(2, '0');
+            const minutes = d.getMinutes().toString().padStart(2, '0');
+            return `${day}.${month}.${year} ${hours}:${minutes}`;
+        } catch (_) { return ''; }
+    }
+
+    saveQuotaCache(memberId, data) {
+        // Calculate reset date once and store it
+        const resetAt = this.computeResetAtFromQuotaData(data);
+        
+        this.quotaCache[memberId] = {
+            start: Number(data.start || Date.now()),
+            count: Number(data.count || 0),
+            extendedQuota: Number(data.extendedQuota || 0),
+            resetAt: resetAt
+        };
+    }
+
+    getQuotaCache(memberId) {
+        const cached = this.quotaCache[memberId];
+        if (!cached) return null;
+        
+        return cached;
+    }
+
+
+    async preloadRemoteQuotaForId(memberId) {
+        if (!memberId) return;
+        
+        // Always clear cache first to force fresh data
+        this.quotaCache[memberId] = null;
+        
+        try {
+            const data = await remoteGetQuota(memberId);
+            
+            // Use saveQuotaCache instead of duplicating logic
+            this.saveQuotaCache(memberId, data);
+            
+            // Refresh quota display after preloading
+            this.refreshQuotaDisplay();
+            
+            // Force status update to show new quota
+            this.updateStatus('Ready!', 'ready');
+            
+        } catch (e) {
+        }
+    }
+    
+
+    canSendNow() {
+        // Must be logged in
+        if (!(this.mwKeyApplied && this.currentMemberId)) {
+            this.showError('You must be logged in');
+            this.updateStatus('Login required', 'error');
+            return false;
+        }
+
+        // Check cached quota for instant blocking
+        const cached = this.getQuotaCache(this.currentMemberId);
+        if (cached) {
+            // Calculate total available quota including extended quota
+            let totalLimit = this.MONTHLY_LIMIT;
+            if (cached.extendedQuota && cached.extendedQuota > 0) {
+                // Extended quota doesn't expire - always add it
+                totalLimit += cached.extendedQuota;
+            }
+            
+            if (cached.count >= totalLimit) {
+                this.showMonthlyLimitError(cached.resetAt || null);
+                const t = window.currentTranslations || null;
+                
+                // Check if this is a banned user (count: 999)
+                const isBannedUser = cached.count === 999;
+                
+                if (isBannedUser) {
+                    // For banned users, show "No access" with 0/0 quota
+                    const statusText = (t?.status?.noAccess || 'No access') + ' <span class="status-separator">|</span> <span class="quota-display" data-used="0" data-total="0" data-remaining="0" data-reset="">0 <i class="fas fa-bolt"></i></span>';
+                    this.updateStatus(statusText, 'error');
+                } else {
+                    // Regular monthly limit reached
+                    const quotaText = this.getQuotaDisplayText();
+                    const statusText = (t?.status?.monthlyLimitReached || 'Monthly limit reached') + (quotaText ? ' <span class="status-separator">|</span>' + quotaText : '');
+                    this.updateStatus(statusText, 'error');
+                }
+                return false;
+            }
+        }
+
+        return true; // Allow if no cache (optimistic) or under limit
+    }
+
+    async bumpQuotaAsync() {
+        if (!(this.mwKeyApplied && this.currentMemberId)) return;
+        
+        try {
+            const data = await remoteBumpQuota(this.currentMemberId);
+            this.saveQuotaCache(this.currentMemberId, data);
+        } catch (e) {
+            const cached = this.getQuotaCache(this.currentMemberId);
+            if (cached) {
+                cached.count += 1;
+            }
+        }
+    }
+
+    // Compose and show the monthly limit error using i18n fragments if available
+    showMonthlyLimitError(resetAt) {
+        const t = window.currentTranslations || null;
+        
+        // Check if this is a banned user (they have count: 999)
+        const cached = this.getQuotaCache(this.currentMemberId);
+        const isBannedUser = cached && cached.count === 999;
+        
+        if (isBannedUser) {
+            // Show banned user message
+            const errorText = t?.errors?.bannedUser || 'Free accounts do not get AI access, create a new account to try DataMB Chat.';
+            const subscribeLink = `<a href="https://datamb.football/join" target="_blank" class="payment-link">${t?.payment?.subscribe || 'Subscribe'}</a>`;
+            
+            const errorHTML = `
+                <div class="error">
+                    ${errorText}
+                </div>
+                ${subscribeLink}
+            `;
+            
+            const errorMessage = this.createMessageContainer('assistant');
+            const contentDiv = errorMessage.querySelector('.message-content');
+            contentDiv.innerHTML = errorHTML;
+            return;
+        }
+        
+        // Regular monthly limit reached message
+        const resetDate = resetAt ? this.formatResetDate(resetAt) : null;
+        const errorText = t?.errors?.monthlyLimitReached || 'Monthly query limit reached.';
+        const resetInfo = resetDate ? ` ${t?.errors?.resets || 'Resets'} ${resetDate}.` : '';
+        
+        const finalErrorText = `${errorText}${resetInfo} <br>You can add 100 requests if you don't want to wait.`;
+        
+        const paymentLink = `<a href="https://buy.stripe.com/bJe00jebp5sH7pl37rcbC0b" target="_blank" class="payment-link" onclick="clearCacheAndShowReload()">${t?.payment?.addMoreRequests || 'Buy (€10)'}</a>`;
+        
+        const errorHTML = `
+            <div class="error">
+                ${finalErrorText}
+            </div>
+            ${paymentLink}
+        `;
+        
+        const errorMessage = this.createMessageContainer('assistant');
+        const contentDiv = errorMessage.querySelector('.message-content');
+        contentDiv.innerHTML = errorHTML;
+    }
+
+
+            setupEventListeners() {
+                this.sendButton.addEventListener('click', () => {
+                    if (this.currentResponseId || this.isSending) {
+                        this.stopRequest();
+                    } else {
+                        this.sendMessage();
+                    }
+                });
+                this.messageInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        this.sendMessage();
+                    }
+                });
+
+                this.messageInput.addEventListener('input', (e) => {
+                    e.target.style.height = 'auto';
+                    e.target.style.height = Math.min(e.target.scrollHeight, 150) + 'px';
+                    this.updateContextualSuggestions(e.target.value);
+                });
+
+                // Chart toggle
+                this.chartToggle.addEventListener('click', () => this.toggleCharts());
+                if (this.newChatBtn) this.newChatBtn.addEventListener('click', () => this.newChat());
+
+                // Suggestion clicks
+                this.suggestions.addEventListener('click', (e) => {
+                    const chip = e.target.closest('.suggestion-chip');
+                    if (!chip) return;
+                    const query = chip.getAttribute('data-query') || '';
+                    this.messageInput.value = query;
+                    // Turn charts ON for certain suggestion chips
+                    const qLower = query.toLowerCase();
+                    const shouldEnableCharts = (
+                        qLower.includes('radar') ||
+                        qLower.includes('radar chart') ||
+                        qLower.includes('scatter plot') ||
+                        qLower.includes('plot') ||
+                        qLower.includes('bar chart') ||
+                        qLower.includes('heatmap') ||
+                        qLower.includes('visual') ||
+                        qLower.includes('age vs performance') ||
+                        qLower.includes('xg vs goals') ||
+                        (qLower.includes('xg') && qLower.includes('goals'))
+                    );
+                    if (shouldEnableCharts && !this.chartsEnabled) {
+                        this.toggleCharts();
+                    }
+                    // Re-apply autosize and show caret at end
+                    this.messageInput.style.height = 'auto';
+                    this.messageInput.style.height = Math.min(this.messageInput.scrollHeight, 150) + 'px';
+                    this.messageInput.focus();
+                    const len = this.messageInput.value.length;
+                    this.messageInput.setSelectionRange(len, len);
+                });
+
+                window.chatbot = this;
+            }
+
+            updateContextualSuggestions(input) {
+                if (input.length < 3) return;
+                
+                const suggestions = this.generateSmartSuggestions(input);
+                if (suggestions.length > 0) {
+                    this.renderSuggestions(suggestions);
+                }
+            }
+
+            generateSmartSuggestions(input) {
+                const lowerInput = input.toLowerCase();
+                const suggestions = [];
+
+                // Player name suggestions
+                if (this.playerIndex && this.playerIndex.size > 0) {
+                    const matchingPlayers = Array.from(this.playerIndex.keys())
+                        .filter(name => name.toLowerCase().includes(lowerInput))
+                        .slice(0, 3);
+                    
+                    matchingPlayers.forEach(player => {
+                        suggestions.push({
+                            text: `Report for ${player}`,
+                            query: `Create a detailed scouting report for ${player}`
+                        });
+                    });
+                }
+                
+
+                // Context-based suggestions
+                if (lowerInput.includes('compare')) {
+                    suggestions.push({
+                        text: 'vs Analysis',
+                        query: 'Compare their key stats with percentiles and visualizations'
+                    });
+                } else if (lowerInput.includes('best') || lowerInput.includes('top')) {
+                    suggestions.push({
+                        text: 'With Charts',
+                        query: input + ' and create a visualization'
+                    });
+                }
+
+                return suggestions.slice(0, 4);
+            }
+            
+
+            renderSuggestions(suggestions) {
+                        this.suggestions.innerHTML = suggestions.map(s => 
+                    `<div class=\"suggestion-chip\" data-query=\"${s.query}\"><i class=\"fas fa-wand-magic-sparkles\"></i><span>${s.text}</span></div>`
+                ).join('');
+            }
+
+            askQuestion(question) {
+                this.messageInput.value = question;
+                this.sendMessage();
+            }
+
+            toggleCharts() {
+                        this.chartsEnabled = !this.chartsEnabled;
+                
+                if (this.chartsEnabled) {
+                    this.chartToggle.classList.add('active');
+                    this.chartToggle.querySelector('.toggle-text').textContent = 'ON';
+                    this.chartToggle.setAttribute('data-i18n', 'tooltips.chartsEnabled');
+                    this.chartToggle.setAttribute('data-i18n-attr', 'title');
+                    window.translateElement && window.translateElement(this.chartToggle, window.currentTranslations);
+                } else {
+                    this.chartToggle.classList.remove('active');
+                    this.chartToggle.querySelector('.toggle-text').textContent = 'OFF';
+                    this.chartToggle.setAttribute('data-i18n', 'tooltips.chartsDisabled');
+                    this.chartToggle.setAttribute('data-i18n-attr', 'title');
+                    window.translateElement && window.translateElement(this.chartToggle, window.currentTranslations);
+                }
+                
+                // Show brief feedback
+                const status = this.chartsEnabled ? 'Charts: ON' : 'Charts: OFF';
+                this.updateStatus(status, this.chartsEnabled ? 'ready' : 'loading');
+                setTimeout(() => {
+                    if (this.isInitialized) {
+                        this.updateStatus('Ready!', 'ready');
+                    }
+                }, 1500);
+            }
+
+            openaiHeaders(includeJson) {
+                const headers = {
+                    'Authorization': `Bearer ${this.acToAdj}`
+                };
+                if (includeJson) headers['Content-Type'] = 'application/json';
+                return headers;
+            }
+
+            async loadInstructions() {
+                const response = await fetch('./instructions.txt', {
+                    signal: (this.fetchController && this.fetchController.signal) || undefined
+                });
+                if (!response.ok) {
+                    throw new Error(`Failed to load instructions (${response.status})`);
+                }
+                const text = await response.text();
+                this.instructions = String(text || '').replace(/^\s*\{\{CHANGE FILE IDS\}\}\s*/m, '').trim();
+                if (!this.instructions) {
+                    throw new Error('Instructions file is empty');
+                }
+            }
+
+            pickLatestFile(files, filename) {
+                const matches = (files || []).filter(f =>
+                    String(f.filename || '').toLowerCase() === String(filename).toLowerCase()
+                );
+                if (!matches.length) return null;
+                return matches.reduce((latest, current) =>
+                    (current.created_at || 0) > (latest.created_at || 0) ? current : latest
+                );
+            }
+
+            async listOpenAIFiles() {
+                const files = [];
+                let after = null;
+                for (let page = 0; page < 20; page++) {
+                    const params = new URLSearchParams({ limit: '100' });
+                    if (after) params.set('after', after);
+                    const response = await fetch(`https://api.openai.com/v1/files?${params.toString()}`, {
+                        headers: this.openaiHeaders(false),
+                        signal: (this.fetchController && this.fetchController.signal) || undefined
+                    });
+                    if (!response.ok) {
+                        const errorData = await response.json().catch(() => ({}));
+                        throw new Error(`File list failed: ${errorData.error?.message || response.statusText}`);
+                    }
+                    const data = await response.json();
+                    const batch = data.data || [];
+                    files.push(...batch);
+                    if (!data.has_more || !batch.length) break;
+                    after = batch[batch.length - 1].id;
+                }
+                return files;
+            }
+
+            async findLatestDatasetFiles() {
+                const files = await this.listOpenAIFiles();
+                const dataFile = this.pickLatestFile(files, DATASET_FILE_NAMES.data);
+                const guideFile = this.pickLatestFile(files, DATASET_FILE_NAMES.guide);
+                if (!dataFile || !guideFile) {
+                    const missing = [
+                        !dataFile ? DATASET_FILE_NAMES.data : null,
+                        !guideFile ? DATASET_FILE_NAMES.guide : null
+                    ].filter(Boolean).join(' and ');
+                    throw new Error(`Dataset files not found (${missing})`);
+                }
+                this.dataFileIds = [dataFile.id, guideFile.id];
+            }
+
+            async initialize() {
+                try {
+                    await this.bootstrapPromise;
+                    this.setLoading(true);
+
+                    this.updateStatus('Loading AI assistant...', 'loading');
+                    await this.loadInstructions();
+                    await this.findLatestDatasetFiles();
+
+                    this.updateStatus('Setting up conversation...', 'loading');
+                    await this.createConversation();
+                    this.showDataInsights();
+
+                    this.updateStatus('Ready!', 'ready');
+                    this.isInitialized = true;
+                    this.setLoading(false);
+                    this.messageInput.disabled = false;
+                    this.sendButton.disabled = false;
+                } catch (error) {
+                    this.showError(`🚨 Setup failed: ${error.message}`);
+                    this.updateStatus('❌ Setup failed', 'error');
+                    this.setLoading(false);
+                }
+            }
+
+            async createConversation() {
+                const response = await fetch('https://api.openai.com/v1/conversations', {
+                    method: 'POST',
+                    headers: this.openaiHeaders(true),
+                    body: JSON.stringify({
+                        metadata: { user_id: this.currentMemberId || 'anonymous' }
+                    }),
+                    signal: (this.fetchController && this.fetchController.signal) || undefined
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(`Conversation creation failed: ${errorData.error?.message || response.statusText}`);
+                }
+
+                const data = await response.json();
+                this.conversationId = data.id;
+                this.containerId = null;
+                this.currentResponseId = null;
+            }
+
+            async cancelResponse(responseId) {
+                const id = responseId || this.currentResponseId;
+                try {
+                    if (id) {
+                        await fetch(`https://api.openai.com/v1/responses/${id}/cancel`, {
+                            method: 'POST',
+                            headers: this.openaiHeaders(true)
+                        });
+                    }
+                } catch (_) {}
+            }
+
+            async newChat() {
+                try {
+                    this.updateStatus('Starting new chat...', 'loading');
+                    const responseId = this.currentResponseId;
+                    this.cancelRequested = true;
+                    if (!this.fetchController) this.fetchController = new AbortController();
+                    try { this.fetchController.abort(); } catch(_) {}
+                    await this.cancelResponse(responseId);
+                    this.fetchController = null;
+                    await this.createConversation();
+                    this.messagesContainer.innerHTML = '';
+                    this.conversationHistory = [];
+                    this.currentResponseId = null;
+                    this.cancelRequested = false;
+                    this.fetchController = null;
+                    this.setLoading(false);
+                    this.messageInput.value = '';
+                    this.showDataInsights();
+                    this.updateStatus('Ready!', 'ready');
+                } catch (e) {
+                    this.showError('Failed to start a new chat.');
+                    this.updateStatus('Error', 'error');
+                }
+            }
+
+
+            async sendMessage() {
+                if (!this.isInitialized || !this.messageInput.value.trim()) return;
+
+                if (this.currentMemberId && !this.quotaCache[this.currentMemberId]) {
+                    await this.preloadRemoteQuotaForId(this.currentMemberId);
+                }
+
+                const message = this.messageInput.value.trim();
+
+                // Give immediate UI feedback: show user's message and clear input right away
+                this.messageInput.value = '';
+                this.messageInput.style.height = 'auto';
+                this.addMessage(message, 'user');
+
+                // Enforce quota without blocking UI; bump remotely in background
+                if (!this.canSendNow()) {
+                    return;
+                }
+                this.bumpQuotaAsync();
+
+                this.isSending = true;
+                this.setLoading(true);
+                this.setStopUI(true);
+
+                try {
+                    // prepare cancellation controller
+                    this.cancelRequested = false;
+                    this.fetchController = new AbortController();
+                    // Decorate message with client-side hints for charts/definitions
+                    // Determine guide-definition mode and extract likely term(s)
+                    const defLike = /\b(what\s+is|explain|definition|how\s+(is|was)\s+.*(computed|calculated)|methodology)\b/i.test(message);
+                    let guideTerm = '';
+                    const termCandidates = [
+                        /performance\s*index/i,
+                        /possession\s*\+\-?/i
+                    ];
+                    for (const rx of termCandidates) {
+                        const m = message.match(rx);
+                        if (m && m[0]) { guideTerm = m[0]; break; }
+                    }
+
+                    let decorated = message + (this.chartsEnabled
+                        ? '\n\n[CHARTS ENABLED: Create visualizations when they add value to the analysis]'
+                        : '\n\n[CHARTS DISABLED: Provide text-only responses]');
+                    // Resolve league group aliases (Europe's Top 5/7, top 5/7 leagues, big 5)
+                    const alias = this.resolveLeagueAliases(message);
+                    if (alias) {
+                        decorated += `\n[LEAGUE GROUP: ${alias.name} ⇒ ${alias.list.join(', ')}]`;
+                        decorated += `\n[APPLY FILTER: Only include rows where League ∈ {${alias.list.join(', ')}}]`;
+                    }
+                    if (defLike) {
+                        decorated += '\n\n[DEFINITIONS MODE: Use guide.html ONLY for definitions/methodology. Do NOT rely on general knowledge. Quote and cite the relevant section. Parse the local HTML file. Do NOT use network requests. If not found, state: "Not specified in the DataMB Guide."]';
+                        if (guideTerm) {
+                            decorated += `\n[GUIDE SEARCH TERM: ${guideTerm}]`;
+                            if (/performance\s*index/i.test(guideTerm)) {
+                                decorated += '\n[GUIDE ANCHOR HINT: id="performanceindex" and <h4>Performance Index</h4>]';
+                            }
+                        }
+                        // Explicitly list attached files and local-access instruction
+                        decorated += '\n[ATTACHED FILES: data.csv, guide.html. Access with open(\'guide.html\', encoding=\'utf-8\').]';
+                        // Provide a minimal code scaffold to ensure correct parsing
+                        decorated += '\n[CODE SCAFFOLD:\nfrom bs4 import BeautifulSoup\nhtml=open(\'guide.html\', encoding=\'utf-8\').read()\nsoup=BeautifulSoup(html, \'html.parser\')\nsec=soup.select_one(\'#performanceindex\') or soup.find(id=\'performanceindex\')\nprint(sec.get_text("\n", strip=True) if sec else "NOT_FOUND")\n]';
+                    }
+
+                    if (!this.dataFileIds.length) {
+                        await this.findLatestDatasetFiles();
+                    }
+
+                    const response = await fetch('https://api.openai.com/v1/responses', {
+                        method: 'POST',
+                        headers: this.openaiHeaders(true),
+                        body: JSON.stringify({
+                            model: this.model,
+                            instructions: this.instructions,
+                            input: [{ role: 'user', content: decorated }],
+                            conversation: this.conversationId,
+                            tools: [{
+                                type: 'code_interpreter',
+                                container: {
+                                    type: 'auto',
+                                    memory_limit: '4g',
+                                    file_ids: this.dataFileIds
+                                }
+                            }],
+                            truncation: 'auto',
+                            background: true,
+                            store: true
+                        }),
+                        signal: (this.fetchController && this.fetchController.signal) || undefined
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json().catch(() => ({}));
+                        throw new Error(`Response failed: ${errorData.error?.message || response.statusText}`);
+                    }
+
+                    const data = await response.json();
+                    this.currentResponseId = data.id;
+
+                    if (data.status === 'completed') {
+                        await this.processResponseOutput(data);
+                    } else if (data.status === 'failed' || data.status === 'cancelled' || data.status === 'incomplete') {
+                        const detail = data.error?.message || data.incomplete_details?.reason || 'Unknown error';
+                        throw new Error(`Analysis ${data.status}: ${detail}`);
+                    } else {
+                        await this.pollResponseStatus(data.id);
+                    }
+
+                } catch (error) {
+                    if (!this.isAbortError(error)) {
+                        this.showError(`Analysis failed: ${error.message}`);
+                    }
+                } finally {
+                    this.setLoading(false);
+                    this.setStopUI(false);
+                    this.isSending = false;
+                    this.currentResponseId = null;
+                }
+            }
+
+
+            async pollResponseStatus(responseId) {
+                const startTime = Date.now();
+                let pollInterval = 500;
+                const maxInterval = 3000;
+
+                while (true) {
+                    if (this.cancelRequested) {
+                        throw new Error('Cancelled');
+                    }
+                    try {
+                        const response = await fetch(`https://api.openai.com/v1/responses/${responseId}`, {
+                            headers: this.openaiHeaders(false),
+                            signal: (this.fetchController && this.fetchController.signal) || undefined
+                        });
+
+                        if (!response.ok) {
+                            if (this.cancelRequested) throw new Error('Cancelled');
+                            throw new Error(`Status check failed: ${response.statusText}`);
+                        }
+
+                        const result = await response.json();
+
+                        if (result.status === 'in_progress' || result.status === 'queued') {
+                            const usingCode = Array.isArray(result.output) && result.output.some(item => item.type === 'code_interpreter_call');
+                            this.updateStatus(usingCode ? 'Running calculations...' : 'Analyzing data...', 'loading');
+                        }
+
+                        if (result.status === 'completed') {
+                            await this.processResponseOutput(result);
+                            break;
+                        } else if (result.status === 'failed' || result.status === 'cancelled' || result.status === 'incomplete') {
+                            if (this.cancelRequested) throw new Error('Cancelled');
+                            const detail = result.error?.message || result.incomplete_details?.reason || 'Unknown error';
+                            throw new Error(`Analysis ${result.status}: ${detail}`);
+                        }
+
+                        const elapsed = Date.now() - startTime;
+                        if (elapsed > 10000) {
+                            pollInterval = Math.min(maxInterval, pollInterval * 1.2);
+                        }
+
+                        await new Promise(resolve => setTimeout(resolve, pollInterval));
+                    } catch (error) {
+                        if (this.cancelRequested) { throw new Error('Cancelled'); }
+                        throw error;
+                    }
+                }
+            }
+
+            isChartFileName(name) {
+                return /\.(png|jpe?g|gif|webp|svg)$/i.test(String(name || ''));
+            }
+
+            async processResponseOutput(data) {
+                const shownFiles = new Set();
+                const pendingImages = [];
+                let fullContent = '';
+
+                for (const item of data.output || []) {
+                    if (item.type === 'code_interpreter_call' && item.container_id) {
+                        this.containerId = item.container_id;
+                    }
+
+                    if (item.type === 'message' && (item.role === 'assistant' || !item.role)) {
+                        for (const part of item.content || []) {
+                            if (part.type === 'output_text') {
+                                fullContent += part.text || '';
+                                for (const ann of part.annotations || []) {
+                                    if (ann.type === 'container_file_citation' && this.isChartFileName(ann.filename || ann.file_id)) {
+                                        pendingImages.push({
+                                            fileId: ann.file_id,
+                                            containerId: ann.container_id || this.containerId
+                                        });
+                                    }
+                                }
+                            } else if (part.type === 'image_file' && part.image_file?.file_id) {
+                                pendingImages.push({
+                                    fileId: part.image_file.file_id,
+                                    containerId: this.containerId
+                                });
+                            }
+                        }
+                    }
+                }
+
+                if (this.chartsEnabled && this.containerId) {
+                    try {
+                        const extra = await this.listContainerImageFiles(this.containerId);
+                        for (const img of extra) pendingImages.push(img);
+                    } catch (_) {}
+                }
+
+                for (const img of pendingImages) {
+                    const key = `${img.containerId || ''}:${img.fileId}`;
+                    if (!img.fileId || shownFiles.has(key)) continue;
+                    shownFiles.add(key);
+                    await this.displayGeneratedFile(img.fileId, img.containerId);
+                }
+
+                if (!fullContent && data.output_text) {
+                    fullContent = data.output_text;
+                }
+
+                if (fullContent) {
+                    this.addMessage(fullContent, 'assistant');
+                    this.updateStatus('Analysis complete!', 'ready');
+                } else if (shownFiles.size > 0) {
+                    this.updateStatus('Analysis complete!', 'ready');
+                }
+            }
+
+            async listContainerImageFiles(containerId) {
+                const response = await fetch(`https://api.openai.com/v1/containers/${containerId}/files`, {
+                    headers: this.openaiHeaders(false),
+                    signal: (this.fetchController && this.fetchController.signal) || undefined
+                });
+                if (!response.ok) return [];
+                const data = await response.json();
+                const files = data.data || data.files || [];
+                return files
+                    .filter(f => f && f.id && this.isChartFileName(f.path || f.filename || f.id) && f.source === 'assistant')
+                    .map(f => ({
+                        fileId: f.id,
+                        containerId: f.container_id || containerId
+                    }));
+            }
+
+            async displayGeneratedFile(fileId, containerId) {
+                try {
+                    let res = null;
+                    if (containerId) {
+                        res = await fetch(`https://api.openai.com/v1/containers/${containerId}/files/${fileId}/content`, {
+                            headers: { 'Authorization': `Bearer ${this.acToAdj}` },
+                            signal: (this.fetchController && this.fetchController.signal) || undefined
+                        });
+                    }
+                    if (!res || !res.ok) {
+                        res = await fetch(`https://api.openai.com/v1/files/${fileId}/content`, {
+                            headers: { 'Authorization': `Bearer ${this.acToAdj}` },
+                            signal: (this.fetchController && this.fetchController.signal) || undefined
+                        });
+                    }
+                    if (!res.ok) {
+                        throw new Error(`Image fetch failed (${res.status})`);
+                    }
+                    const blob = await res.blob();
+                    const url = URL.createObjectURL(blob);
+
+                    const imageDiv = document.createElement('div');
+                    imageDiv.className = 'chart-container';
+                    imageDiv.innerHTML = `<img src="${url}" alt="Generated Chart" style="max-width: 100%; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);"/>`;
+                    this.messagesContainer.appendChild(imageDiv);
+                    this.scrollToBottom();
+                } catch (err) {
+                }
+            }
+
+            async displayImageFile(fileId) {
+                await this.displayGeneratedFile(fileId, this.containerId);
+            }
+
+            // Now using OpenAI Responses API + Code Interpreter for all analysis
+
+            createMessageContainer(role) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${role}`;
+
+                const avatar = document.createElement('div');
+                avatar.className = 'avatar';
+                if (role === 'user') {
+                    avatar.textContent = 'You';
+                } else {
+                    avatar.innerHTML = '<img src="./chat.png" alt="AI" />';
+                }
+
+                const messageContent = document.createElement('div');
+                messageContent.className = 'message-content';
+
+                messageDiv.appendChild(avatar);
+                messageDiv.appendChild(messageContent);
+                this.messagesContainer.appendChild(messageDiv);
+                
+                this.scrollToBottom();
+                return messageDiv;
+            }
+
+            addMessage(content, role) {
+                const messageDiv = this.createMessageContainer(role);
+                const contentDiv = messageDiv.querySelector('.message-content');
+                contentDiv.innerHTML = this.formatContent(content);
+            }
+
+            formatContent(content) {
+                // Parse Markdown and sanitize
+                try {
+                    if (window.marked) {
+                        marked.setOptions({ gfm: true, breaks: true });
+                    }
+                const parsed = window.marked ? marked.parse(content || '') : (content || '').replace(/\n/g, '<br>');
+                const clean = window.DOMPurify ? DOMPurify.sanitize(parsed) : parsed;
+                    // Enhance tables
+                    const container = document.createElement('div');
+                const isSingleLine = (content || '').trim().indexOf('\n') === -1 && (content || '').trim().length <= 60;
+                container.className = 'markdown-body' + (isSingleLine ? ' compact' : '');
+                container.innerHTML = clean;
+                    const tables = container.querySelectorAll('table');
+                    tables.forEach((table) => {
+                        table.classList.add('data-table');
+                        const totalRows = table.querySelectorAll('tbody tr').length;
+                        const wrapper = document.createElement('div');
+                        wrapper.className = 'table-container';
+                        if (totalRows > 10) {
+                            wrapper.classList.add('collapsed');
+                            const controls = document.createElement('div');
+                            controls.className = 'table-controls';
+                            controls.innerHTML = `
+                                <div class=\"table-info\">Showing ${Math.min(10, totalRows)} of ${totalRows} results</div>
+                                <button class=\"expand-button\" onclick=\"toggleTable(this)\">Show All</button>
+                            `;
+                            wrapper.appendChild(controls);
+                        }
+                        table.parentNode.insertBefore(wrapper, table);
+                        wrapper.appendChild(table);
+                        // Add a small spacer after each table to separate following text
+                        const spacer = document.createElement('div');
+                        spacer.style.height = '12px';
+                        wrapper.after(spacer);
+                    });
+                    return container.outerHTML;
+                } catch (e) {
+                    return (content || '')
+                        .replace(/&/g, '&amp;')
+                        .replace(/</g, '&lt;')
+                        .replace(/>/g, '&gt;')
+                        .replace(/\n/g, '<br>');
+                }
+            }
+
+            scrollToBottom() {
+                setTimeout(() => {
+                    this.messagesContainer.scrollTop = this.messagesContainer.scrollHeight;
+                }, 100);
+            }
+
+            setLoading(isLoading) {
+                // Do NOT disable the send button so user can stop
+                this.messageInput.disabled = isLoading;
+
+                // Manage assistant typing bubble
+                if (isLoading) {
+                    if (!this.typingMessageEl) {
+                        const typingMsg = this.createMessageContainer('assistant');
+                        typingMsg.classList.add('typing-message');
+                        typingMsg.querySelector('.message-content').innerHTML = `
+                            <div class="typing">
+                                <div class="typing-dot"></div>
+                                <div class="typing-dot"></div>
+                                <div class="typing-dot"></div>
+                            </div>
+                        `;
+                        this.typingMessageEl = typingMsg;
+                    }
+                } else {
+                    if (this.typingMessageEl) {
+                        this.typingMessageEl.remove();
+                        this.typingMessageEl = null;
+                    }
+                }
+            }
+
+            setStopUI(active) {
+                try {
+                    const iconSpan = this.sendButton.querySelector('span');
+                    if (active) {
+                        this.sendButton.classList.add('stop');
+                        if (iconSpan) iconSpan.innerHTML = '<i class="fas fa-stop"></i>';
+                        this.sendButton.setAttribute('data-i18n', 'tooltips.stop');
+                        this.sendButton.setAttribute('data-i18n-attr', 'title');
+                        window.translateElement && window.translateElement(this.sendButton, window.currentTranslations);
+                    } else {
+                        this.sendButton.classList.remove('stop');
+                        if (iconSpan) iconSpan.innerHTML = '<i class="fas fa-chevron-up"></i>';
+                        this.sendButton.setAttribute('data-i18n', 'tooltips.send');
+                        this.sendButton.setAttribute('data-i18n-attr', 'title');
+                        window.translateElement && window.translateElement(this.sendButton, window.currentTranslations);
+                    }
+                } catch (_) {}
+            }
+
+            async stopRequest() {
+                const responseId = this.currentResponseId;
+                try {
+                    this.cancelRequested = true;
+                    if (!this.fetchController) this.fetchController = new AbortController();
+                    try { this.fetchController.abort(); } catch(_) {}
+                    await this.cancelResponse(responseId);
+                    this.updateStatus('Stopped', 'ready');
+                } catch (_) {
+                } finally {
+                    this.setLoading(false);
+                    this.setStopUI(false);
+                    this.cancelRequested = false;
+                    this.fetchController = null;
+                    this.currentResponseId = null;
+                }
+            }
+
+            isAbortError(error) {
+                if (!error) return false;
+                const msg = String(error && (error.message || error.toString() || ''));
+                return (
+                    error.name === 'AbortError' ||
+                    /aborted/i.test(msg) ||
+                    /cancelled/i.test(msg) ||
+                    /canceled/i.test(msg)
+                );
+            }
+
+            // Helper function to get quota display text
+            getQuotaDisplayText() {
+                if (!this.currentMemberId) return '';
+                
+                const cached = this.getQuotaCache(this.currentMemberId);
+                if (!cached) return '';
+                
+                // Check if this is a banned user (count: 999)
+                const isBannedUser = cached.count === 999;
+                
+                if (isBannedUser) {
+                    // For banned users, always show 0/0 with no reset date
+                    return ` <span class="quota-display" data-used="0" data-total="0" data-remaining="0" data-reset="">0 <i class="fas fa-bolt"></i></span>`;
+                }
+                
+                const used = cached.count || 0;
+                const totalLimit = this.MONTHLY_LIMIT + (cached.extendedQuota || 0);
+                const remaining = totalLimit - used;
+                
+                return ` <span class="quota-display" data-used="${used}" data-total="${totalLimit}" data-remaining="${remaining}" data-reset="${cached.resetAt || ''}">${remaining} <i class="fas fa-bolt"></i></span>`;
+            }
+
+            // Refresh quota display in status
+            refreshQuotaDisplay() {
+                if (this.status && this.status.querySelector('.status-text')) {
+                    const statusText = this.status.querySelector('.status-text');
+                    if (statusText.textContent.includes('Ready!')) {
+                        this.updateStatus('Ready!', 'ready');
+                    }
+                }
+            }
+
+            // Setup quota tooltip functionality
+            setupQuotaTooltip() {
+                // Handle clicks (for non-hover devices)
+                document.addEventListener('click', (e) => {
+                    // Close tooltip if clicking outside
+                    if (!e.target.closest('.quota-display') && !e.target.closest('.quota-tooltip')) {
+                        this.closeQuotaTooltip();
+                    }
+                });
+
+                // Handle quota display clicks
+                document.addEventListener('click', (e) => {
+                    const quotaDisplay = e.target.closest('.quota-display');
+                    if (quotaDisplay) {
+                        this.toggleQuotaTooltip(quotaDisplay, e);
+                    }
+                });
+            }
+
+            // Show quota tooltip
+            showQuotaTooltip(quotaDisplay) {
+                // Don't show if already visible
+                if (document.querySelector('.quota-tooltip')) return;
+                
+                const used = parseInt(quotaDisplay.dataset.used);
+                const total = parseInt(quotaDisplay.dataset.total);
+                const remaining = parseInt(quotaDisplay.dataset.remaining);
+                const resetAt = quotaDisplay.dataset.reset;
+
+                // Calculate reset date (like limit reached but no minutes/hours)
+                let resetDate = '';
+                if (resetAt) {
+                    const resetTime = parseInt(resetAt);
+                    if (resetTime) {
+                        const resetDateObj = new Date(resetTime);
+                        // Force European date format: DD.MM.YY
+                        const day = resetDateObj.getDate().toString().padStart(2, '0');
+                        const month = (resetDateObj.getMonth() + 1).toString().padStart(2, '0');
+                        const year = resetDateObj.getFullYear().toString().slice(-2);
+                        resetDate = `${day}.${month}.${year}`;
+                    }
+                }
+
+                // Create tooltip with clean icons
+                const tooltip = document.createElement('div');
+                tooltip.className = 'quota-tooltip';
+                tooltip.innerHTML = `
+                    <div class="tooltip-content">
+                        <div class="quota-row">
+                            <span class="quota-label">${used}</span>
+                            <span class="quota-separator">/</span>
+                            <span class="quota-value">${total}</span>
+                        </div>
+                        ${resetDate ? `
+                        <div class="quota-row">
+                            <i class="fas fa-redo"></i>
+                            <span class="quota-label">${resetDate}</span>
+                        </div>
+                        ` : ''}
+                    </div>
+                `;
+
+                // Position tooltip UNDER the quota display but LEFT-aligned
+                const rect = quotaDisplay.getBoundingClientRect();
+                tooltip.style.position = 'fixed';
+                tooltip.style.left = `${rect.left - 84}px`; // 100px to the left so it's centered under
+                tooltip.style.top = `${rect.bottom + 15}px`; // 25px lower to align with title bar
+                tooltip.style.zIndex = '1000';
+
+                document.body.appendChild(tooltip);
+            }
+
+            // Toggle quota tooltip (for clicks)
+            toggleQuotaTooltip(quotaDisplay, event) {
+                const existingTooltip = document.querySelector('.quota-tooltip');
+                if (existingTooltip) {
+                    this.closeQuotaTooltip();
+                    return;
+                }
+
+                this.showQuotaTooltip(quotaDisplay);
+            }
+
+            // Close quota tooltip
+            closeQuotaTooltip() {
+                const tooltip = document.querySelector('.quota-tooltip');
+                if (tooltip) {
+                    tooltip.remove();
+                }
+            }
+
+            updateStatus(message, type) {
+                const statusElement = this.status;
+                const indicator = statusElement.querySelector('.status-indicator');
+                
+                // Get translated base message first
+                let displayMessage = message;
+                let i18nKey = null;
+                
+                try {
+                    if (window.currentTranslations) {
+                        const statusMap = {
+                            'Stopped': 'status.stopped',
+                            'Analysis complete!': 'status.analysisComplete',
+                            'Analyzing data...': 'status.analyzingData',
+                            'Running calculations...': 'status.runningCalculations',
+                            'Error': 'status.error',
+                            'Ready!': 'status.ready',
+                            'Starting new chat...': 'status.startingNewChat',
+                            'Setting up conversation...': 'status.settingUpConversation',
+                            'Loading AI assistant...': 'status.loadingAIAssistant',
+                            'Reading dataset...': 'status.readingDataset',
+                            'No access': 'status.noAccess',
+                            'Login required': 'status.loginRequired'
+                        };
+                        i18nKey = statusMap[message];
+                        
+                        // Translate the base message first
+                        if (i18nKey) {
+                            const keys = i18nKey.split('.');
+                            let value = window.currentTranslations;
+                            for (const key of keys) {
+                                if (value === undefined || value === null) break;
+                                value = value[key];
+                            }
+                            if (value) {
+                                displayMessage = value;
+                            }
+                        }
+                    }
+                } catch (_) {}
+                
+                            // Add quota info to ready status and analysis complete
+            if (type === 'ready' && (message === 'Ready!' || message === 'Analysis complete!')) {
+                const quotaText = this.getQuotaDisplayText();
+                if (quotaText) {
+                    displayMessage += ' <span class="status-separator">|</span>' + quotaText;
+                }
+            }
+                
+                statusElement.innerHTML = `
+                    <div class="status-indicator"></div>
+                    <span class="status-text">${displayMessage}</span>
+                `;
+                
+                const newIndicator = statusElement.querySelector('.status-indicator');
+                
+                switch (type) {
+                    case 'loading':
+                        newIndicator.style.background = '#f59e0b';
+                        break;
+                    case 'ready':
+                        newIndicator.style.background = '#4ade80';
+                        break;
+                    case 'error':
+                        newIndicator.style.background = '#ef4444';
+                        break;
+                }
+            }
+            
+
+            showDataInsights() {
+                const insightsHTML = `<div data-i18n="welcomeMsg">How can I help you today? <br><br>I am trained on the 2026/27 and 2026 DataMB Pro dataset (40 leagues). I can answer any question about the data and handle complex requests — from metric definitions to advanced analysis, scouting reports, and deeper insights. <br><br>Enable the graph toggle for on-demand charts and visual queries.</div>`;
+                
+                const insightMessage = this.createMessageContainer('assistant');
+                const contentDiv = insightMessage.querySelector('.message-content');
+                contentDiv.innerHTML = insightsHTML;
+            }
+
+            showError(message) {
+                const errorHTML = `
+                    <div class="error">
+                        ${message}
+                    </div>
+                `;
+                
+                const errorMessage = this.createMessageContainer('assistant');
+                const contentDiv = errorMessage.querySelector('.message-content');
+                contentDiv.innerHTML = errorHTML;
+                try {
+                    // If message matches known i18n errors, tag it
+                    const map = {
+                        'You must be logged in': 'errors.loginRequired'
+              
+                  };
+          
+              const key = map[message];
+                    if (key) {
+                        const errEl = contentDiv.querySelector('.error');
+                        errEl.setAttribute('data-i18n', key);
+                        window.translateElement && window.translateElement(errEl, window.currentTranslations);
+                    }
+                } catch (_) {}
+            }
+            
+            // Resolve league alias phrases to explicit league lists
+            resolveLeagueAliases(text) {
+                if (!text) return null;
+                const t = text.toLowerCase();
+                const top5 = ["Premier League", "La Liga", "Bundesliga", "Serie A", "Ligue 1"];
+                const top7 = ["Premier League", "La Liga", "Bundesliga", "Serie A", "Ligue 1", "Liga Portugal", "Eredivisie"];
+                const isTop5 = /(europe'?s\s*top\s*5|\btop\s*5\s*leagues\b|\bbig\s*5\b)/i.test(text);
+                const isTop7 = /(europe'?s\s*top\s*7|\btop\s*7\s*leagues\b)/i.test(text);
+                if (isTop7) {
+                    return { name: "Europe's Top 7", list: top7 };
+                }
+                if (isTop5) {
+                    return { name: "Europe's Top 5", list: top5 };
+                }
+                return null;
+            }
+        }
+
+        // Cache clearing and reload functions for payment flow
+        function clearCacheAndShowReload() {
+            if (window.chatbot) {
+                window.chatbot.quotaCache = {};
+                                 const reloadButton = `<button onclick="window.location.reload()" class="payment-link" style="border: none; cursor: pointer; font-family: inherit;"><i class="fas fa-sync-alt"></i></button>`;
+                
+                const reloadMessage = `
+                    <div class="reload-message" data-i18n="payment.reloadMessage">
+                        Payment page opened in new tab. After completing payment, click the button below to refresh the page.
+                    </div>
+                    ${reloadButton}
+                `;
+                const messageContainer = window.chatbot.createMessageContainer('assistant');
+                const contentDiv = messageContainer.querySelector('.message-content');
+                contentDiv.innerHTML = reloadMessage;
+            }
+        }
+
+ 
+        document.addEventListener('DOMContentLoaded', function() {
+            window.chatbot = new UltimateFootballAI();
+        });
+        // Global toggle for collapsible tables
+        function toggleTable(button) {
+            const tableContainer = button.closest('.table-container');
+            const isExpanded = tableContainer.classList.contains('expanded');
+            if (isExpanded) {
+                tableContainer.classList.remove('expanded');
+                tableContainer.classList.add('collapsed');
+                button.textContent = 'Show All';
+            } else {
+                tableContainer.classList.remove('collapsed');
+                tableContainer.classList.add('expanded');
+                button.textContent = 'Show Less';
+            }
+        }
