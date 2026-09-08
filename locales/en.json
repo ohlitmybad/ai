@@ -1,0 +1,80 @@
+{
+"welcomeMsg": "How can I help you today? <br><br>I am trained on the 2026/27 and 2026 DataMB Pro dataset (55 leagues). I can answer any question about the data and handle complex requests — from metric definitions to advanced analysis, scouting reports, and deeper insights. <br><br>Enable the graph toggle for on-demand charts and visual queries.",
+"disclaimer": "AI can make mistakes. Check other tools for reference.",
+"placeholder": "Ask anything…",
+"status": {
+    "stopped": "Stopped",
+    "analysisComplete": "Analysis complete!",
+    "analyzingData": "Analyzing data...",
+    "runningCalculations": "Running calculations...",
+    "error": "Error",
+    "ready": "Ready!",
+    "startingNewChat": "Starting new chat...",
+    "settingUpConversation": "Setting up conversation...",
+    "loadingAIAssistant": "Loading AI assistant...",
+    "readingDataset": "Reading dataset...",
+    "noAccess": "No access",
+    "monthlyLimitReached": "Monthly limit reached",
+    "loginRequired": "Login required"
+},
+"errors": {
+    "monthlyLimitReached": "Monthly query limit reached.",
+    "resets": "Resets",
+    "loginRequired": "You must be logged in",
+    "addMoreRequestsInfo": "You can add 100 requests if you don't want to wait.",
+    "bannedUser": "Free accounts do not get AI access, create a new account to try DataMB Chat"
+},
+"tooltips": {
+    "stop": "Stop",
+    "send": "Send",
+    "chartsDisabled": "Charts disabled",
+    "chartsEnabled": "Charts enabled",
+    "newChat": "New Chat",
+    "reply": "Reply",
+    "downloadChart": "Download chart",
+    "cancelReply": "Cancel reply"
+},
+"reply": {
+    "banner": "Replying to"
+},
+"playerPicker": {
+    "title": "Which player did you mean?",
+    "minutes": "min",
+    "bestGuess": "Best guess"
+},
+"activity": {
+    "queued": "Queued…",
+    "thinking": "Thinking…",
+    "analyzing": "Analyzing data…",
+    "runningCode": "Running calculations…",
+    "interpreting": "Interpreting results…",
+    "writing": "Writing the answer…",
+    "chart": "Creating a chart…",
+    "matchingPlayers": "Matching player names…",
+    "loadingDataset": "Loading the dataset…",
+    "guide": "Looking up the DataMB Guide…",
+    "percentiles": "Computing percentiles…",
+    "ranking": "Ranking players…"
+},
+"suggestions": {
+    "scoutReport": "Scout Report",
+    "definitions": "Definitions",
+    "mostCreative": "Most Creative",
+    "radarChart": "Radar Chart",
+    "xGvsGoals": "xG vs Goals",
+    "topScorers": "Top Scorers"
+},
+"suggestionInputs": {
+    "scoutReport": "Scout report for Wharton",
+    "definitions": "Explain how the Performance Index is calculated",
+    "mostCreative": "Show me the most creative players in Europe's top 5 leagues",
+    "radarChart": "Create a radar chart comparing Pedri and Bellingham",
+    "xGvsGoals": "Plot total xG vs total goals for Premier League strikers",
+    "topScorers": "Most goals in Premier League this season"
+},
+"payment": {
+    "addMoreRequests": "Buy (€10)",
+    "reloadMessage": "Payment page opened in new tab. After completing payment, click the button below to reload the page.",
+    "subscribe": "Subscribe"
+}
+}
